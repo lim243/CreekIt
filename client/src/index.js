@@ -16,10 +16,8 @@ ReactDOM.render(
       <NavigationBar />
       <Sidebar />
       <Switch>
-        <Route exact path="/" component={Home} />
-    
+        <Route exact path="/" component={Home} /> 
       </Switch>
-      
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
