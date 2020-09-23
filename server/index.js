@@ -1,19 +1,24 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
 const DB = require("./db.js");
+const mountRoutes = require("./routes");
 require("dotenv").config();
 
+const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev")); // For logging
+mountRoutes(app);
 
-// Routes
-app.get("/api/v1/", (req, res) => {
-  // Make whatever calls to DB
-  console.log("req", req.body);
+// Connect to DB
+DB.connect((err) => {
+  if (err) {
+    console.error("connection error", err.stack);
+  } else {
+    console.log(`Connected to DB at port ${process.env.RDS_PORTNUMBER}`);
+  }
 });
 
 // Start Server
