@@ -5,7 +5,7 @@ const router = new Router();
 module.exports = router;
 
 // Router Functions
-router.get("/", getUsers);
+// router.get("/", getUsers);
 
 // Create a post
 router.post("/posts", getPost);
