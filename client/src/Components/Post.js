@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Styles = styled.div`
+  
   .right {
       float: left;
       margin-right: 10px;
@@ -13,7 +14,7 @@ const Styles = styled.div`
   }
   .dateTime {
     text-align: right;
-    margin-right: 5em;
+    margin-right: 1.5em;
   }
   .left {
     float: right;
@@ -31,12 +32,10 @@ export const Post = () => (
                 <p className="left">15:17</p>
                 <p >9/22/2020</p>
             </div>
-            <p className="username">@jackyzheng</p>
+            <p className="username">@jackyzheng</p>         
         </div>
-        <div>
-            <p>Best App</p>
-        </div>
-
+        <p>“Atticus said to Jem one day, “I’d rather you shot at tin cans in the backyard, but I know you’ll go after birds. Shoot all the blue jays you want, if you can hit ‘em, but remember it’s a sin to kill a mockingbird.” 
+        </p>
 
     </Styles>
 )

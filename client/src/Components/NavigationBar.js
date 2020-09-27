@@ -19,11 +19,19 @@ const Styles = styled.div`
     left: 65%;
     right: 15%;
   }
+
+  .sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
 `;
 
 
 export const NavigationBar = () => (
     <Styles>
+        <div className="sticky">
       <Navbar expand="lg">
         <Navbar.Brand href="/">CreekIt</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav"/>
@@ -36,6 +44,7 @@ export const NavigationBar = () => (
           </Nav>
         </Navbar.Collapse>
       </Navbar>
+      </div>
     </Styles>
   )
 
