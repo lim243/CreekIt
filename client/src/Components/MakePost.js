@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
+import {Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 
 const Styles = styled.div`
@@ -19,9 +19,13 @@ const Styles = styled.div`
   }
 
   .box {
-    width: 75%;
+    width: 82%;
     float: left;
     margin-right: 20px;
+  }
+
+  textarea {
+      resize: none;
   }
 
 `;
@@ -32,7 +36,7 @@ export const MakePost = () => (
         <Form>
             <div className="box">
         <Form.Group controlId="formPost">
-        <Form.Control as="textarea" placeholder="Make a post" />
+        <Form.Control as="textarea" placeholder="Make a post" rows="3" />
         </Form.Group>
         </div>
         <div className="submit">

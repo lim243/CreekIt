@@ -1,24 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import NavigationBar from './Components/NavigationBar';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Home } from './Home';
-import { Logout } from './Logout';
-import Sidebar from './Components/SideBar';
+import { BrowserRouter as BrowserRouter} from "react-router-dom";
+import { Feed } from './Feed';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <NavigationBar />
-      <Sidebar />
-      <Switch>
-        <Route exact path="/" component={Home} /> 
-      </Switch>
-    </Router>
+    <BrowserRouter>
+      <Feed></Feed>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

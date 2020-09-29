@@ -16,8 +16,8 @@ const Styles = styled.div`
   }
   .form-center {
     position: absolute !important;
-    left: 65%;
-    right: 15%;
+    left: 60%;
+    right: 20%;
   }
 
   .sticky {
@@ -33,13 +33,15 @@ export const NavigationBar = () => (
     <Styles>
         <div className="sticky">
       <Navbar expand="lg">
-        <Navbar.Brand href="/">CreekIt</Navbar.Brand>
+        <Navbar.Brand href="/feed">CreekIt</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav"/>
         <Form className="form-center">
           <FormControl type="text" placeholder="Search" className="" />
         </Form>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
+            <Nav.Item><Nav.Link href="/profile">My Profile</Nav.Link></Nav.Item> 
+            <Nav.Item><Nav.Link href="/help">FAQ</Nav.Link></Nav.Item> 
             <Nav.Item><Nav.Link href="/logout">Logout</Nav.Link></Nav.Item>
           </Nav>
         </Navbar.Collapse>
