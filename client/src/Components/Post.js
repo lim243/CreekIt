@@ -14,7 +14,7 @@ const Styles = styled.div`
   }
   .dateTime {
     text-align: right;
-    margin-right: 1.5em;
+    margin-right: 0.3em;
   }
   .left {
     float: right;
