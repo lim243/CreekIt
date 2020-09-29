@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
 import './index.css';
 import  HomePage from './HomePage';
-import NavigationBar from './components/NavigationBar'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

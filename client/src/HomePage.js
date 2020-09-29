@@ -3,12 +3,12 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './HomePage.css';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import NavigationBar from "./components/NavigationBar";
-import Help from "./components/FAQ";
-import Forgot from "./components/ForgotPassword";
-import Restore from "./components/RestorePassword";
+import Login from "./Components/Login";
+import Signup from "./Components/Signup";
+import NavigationBar from "./Components/Navigation";
+import Help from "./Components/FAQ";
+import Forgot from "./Components/ForgotPassword";
+import Restore from "./Components/RestorePassword";
 
 function HomePage() {
     return (<Router>

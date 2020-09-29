@@ -16,8 +16,8 @@ const Styles = styled.div`
   }
   .form-center {
     position: absolute !important;
-    left: 57%;
-    right: 23%;
+    left: 60%;
+    right: 20%;
   }
   .sticky {
       position: fixed;
@@ -37,7 +37,6 @@ export const NavigationBar = () => (
       </Form>
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
-          <Nav.Item><Nav.Link href="/">Home</Nav.Link></Nav.Item> 
           <Nav.Item><Nav.Link href="/help">FAQ</Nav.Link></Nav.Item> 
           <Nav.Item><Nav.Link href="/sign-up">Create Account</Nav.Link></Nav.Item>
         </Nav>
