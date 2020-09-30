@@ -5,19 +5,41 @@ const router = express.Router();
 module.exports = router;
 
 // Router Functions
-router.get("/", getPost);
+router.get("/", getAllPosts);
+router.get("/post", getPost);
+router.get("/topic", getTopic);
+router.get("/:pid/upvotes", getUpvotesUsers);
+router.get("/:pid/downvotes", getDownvoteUsers);
 
 router.post("/new", createPost);
+router.post("/:pid/upvote", setUpvote);
+router.post("/:pid/downvote", setDownvote);
+
+router.post("/:pid/topic", setTopic);
 
 /**
  * GET FUNCTIONS
  */
+async function getAllPosts(req, res) {
+  const query = {
+    name: "get-all_post",
+    text: "SELECT * FROM posts",
+  };
 
+  const { rows } = await db.query(query);
+
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
 async function getPost(req, res) {
   const { id } = req.body;
 
   const query = {
-    name: "create-post",
+    name: "get-post",
     text: "SELECT * FROM posts WHERE id = $1;",
     values: [id],
   };
@@ -31,12 +53,63 @@ async function getPost(req, res) {
   };
   return res.status(200).json(msg);
 }
-async function getTopic(req, res) {}
-async function getUpvotes(req, res) {}
-async function getUpvotesUsers(req, res) {}
-async function getDownvotes(req, res) {}
-async function getDownvoteUsers(req, res) {}
-async function getPostComments(req, res) {}
+async function getTopic(req, res) {
+  const { topic } = req.body;
+
+  const query = {
+    name: "get-topic",
+    text: "SELECT * FROM posts WHERE topic = $1;",
+    values: [topic],
+  };
+
+  const { rows } = await db.query(query);
+
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+async function getUpvotesUsers(req, res) {
+  const pid = req.params.pid;
+
+  const query = {
+    name: "get-upvotes",
+    text:
+      "SELECT upvote_users, array_length(upvote_users,1) as count  FROM posts WHERE id = $1;",
+    values: [pid],
+  };
+
+  const { rows } = await db.query(query);
+  console.log("rows", rows);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+async function getDownvoteUsers(req, res) {
+  const pid = req.params.pid;
+
+  const query = {
+    name: "get-downvotes",
+    text:
+      "SELECT downvote_users, array_length(downvote_users,1) as count  FROM posts WHERE id = $1;",
+    values: [pid],
+  };
+
+  const { rows } = await db.query(query);
+  console.log("rows", rows);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+async function getComments(req, res) {}
 async function getSaved(req, res) {}
 async function getId(req, res) {}
 
@@ -50,9 +123,6 @@ async function createPost(req, res) {
 
   // Date
   date = Date.now();
-  // console.log("date", date);
-
-  // console.log("username", username);
 
   const query = {
     name: "create-post",
@@ -71,13 +141,70 @@ async function createPost(req, res) {
   };
   return res.status(200).json(msg);
 }
-async function setTopic(req, res) {}
-async function setUpvotes(req, res) {}
-async function setUpvotesUsers(req, res) {}
-async function setDownvotes(req, res) {}
-async function setDownvoteUsers(req, res) {}
+async function setTopic(req, res) {
+  const pid = req.params.pid;
+  const { topic } = req.body;
+
+  const query = {
+    name: "set-topic",
+    text: "UPDATE posts SET topic = $2 where id = $1 RETURNING id",
+    values: [pid, topic],
+  };
+
+  const { rows } = await db.query(query);
+  console.log("rows", rows);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+async function setUpvote(req, res) {
+  // TODO: Need to worry about "A user can only upvote or downvote"
+  const pid = req.params.pid;
+  const { username } = req.body;
+
+  const query = {
+    name: "set-upvote",
+    text:
+      "UPDATE posts SET upvotes = upvotes + 1, upvote_users = array_append(upvote_users, $2) where id = $1 RETURNING id",
+    values: [pid, username],
+  };
+
+  const { rows } = await db.query(query);
+  console.log("rows", rows);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+// async function setUpvotesUsers(req, res) {}
+async function setDownvote(req, res) {
+  // TODO: Need to worry about "A user can only upvote or downvote"
+  const pid = req.params.pid;
+  const { username } = req.body;
+
+  const query = {
+    name: "set-downvote",
+    text:
+      "UPDATE posts SET downvotes = downvotes + 1, downvote_users = array_append(downvote_users, $2) where id = $1 RETURNING id",
+    values: [pid, username],
+  };
+
+  const { rows } = await db.query(query);
+  console.log("rows", rows);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+// async function setDownvoteUsers(req, res) {}
 async function setPostComments(req, res) {}
 async function setSaved(req, res) {}
-async function setId(req, res) {}
+// async function setId(req, res) {}
 async function addPostComments(req, res) {}
-async function addSaved(req, res) {}
