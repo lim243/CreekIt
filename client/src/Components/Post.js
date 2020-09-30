@@ -22,22 +22,40 @@ const Styles = styled.div`
 }
 `;
 
-export const Post = () => (
+class Post extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      username: '',
+      time: '',
+      date: '',
+      post: ''
+    }
+  }
+  render() {
     // Use src for image
+    //Get Name
+    //Get Time
+    //Get Date
+    //Get post
+    return(
     <Styles>
         <div>
-            <Avatar name="Jacky Zheng" size="50" round="100px" className="right"/>
-            <h5 style={{fontWeight: "bold"}} className="right">Jacky Zheng</h5>
+            <Avatar name={this.props.name} size="50" round="100px" className="right"/>
+            <h5 style={{fontWeight: "bold"}} className="right">{this.props.name}</h5>
             <div className="dateTime" >
-                <p className="left">15:17</p>
-                <p >9/22/2020</p>
+                <p className="left">{this.props.time}</p>
+                <p >{this.props.date}</p>
             </div>
-            <p className="username">@jackyzheng</p>         
+            <p className="username">@{this.props.username}</p>         
         </div>
-        <p>“Atticus said to Jem one day, “I’d rather you shot at tin cans in the backyard, but I know you’ll go after birds. Shoot all the blue jays you want, if you can hit ‘em, but remember it’s a sin to kill a mockingbird.” 
+        <p>{this.props.post} 
         </p>
 
     </Styles>
-)
+    )
+  }
+}
 
 export default Post;
