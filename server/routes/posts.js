@@ -6,7 +6,7 @@ module.exports = router;
 
 // Router Functions
 router.get("/", getAllPosts);
-router.get("/post", getPost);
+router.get("/:pid", getPost);
 router.get("/topic", getTopic);
 router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
@@ -22,7 +22,7 @@ router.post("/:pid/topic", setTopic);
  */
 async function getAllPosts(req, res) {
   const query = {
-    name: "get-all_post",
+    name: "get-all-post",
     text: "SELECT * FROM posts",
   };
 
@@ -36,12 +36,13 @@ async function getAllPosts(req, res) {
   return res.status(200).json(msg);
 }
 async function getPost(req, res) {
-  const { id } = req.body;
+  const pid = req.params.pid;
 
   const query = {
     name: "get-post",
-    text: "SELECT * FROM posts WHERE id = $1;",
-    values: [id],
+    text:
+      "SELECT p.username, u.name, u.profile_photo, p.date, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.id = $1 AND p.username = u.username;",
+    values: [pid],
   };
 
   const { rows } = await db.query(query);
@@ -101,7 +102,7 @@ async function getDownvoteUsers(req, res) {
   };
 
   const { rows } = await db.query(query);
-  console.log("rows", rows);
+  // console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -110,8 +111,6 @@ async function getDownvoteUsers(req, res) {
   return res.status(200).json(msg);
 }
 async function getComments(req, res) {}
-async function getSaved(req, res) {}
-async function getId(req, res) {}
 
 /**
  * POST FUNCTIONS
