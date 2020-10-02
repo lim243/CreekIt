@@ -1,4 +1,3 @@
-// const Router = require("express-promise-router");
 const db = require("../db");
 const express = require("express");
 const router = express.Router();
@@ -6,7 +5,6 @@ const router = express.Router();
 // Encryption password
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const myPlaintextPassword = "s0//P4$$w0rD";
 
 module.exports = router;
 
