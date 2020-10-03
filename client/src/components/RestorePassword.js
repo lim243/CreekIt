@@ -74,9 +74,9 @@ const RestorePassword = () => (
         }} 
 
         validationSchema={Yup.object().shape({
-            password: Yup.mixed().test('match', 'Verification code does not match', function (password) {
-              return password === code
-            })
+          password: Yup.string()
+            .oneOf([code, null], "Password does not match")
+            .required('Password confirmation is required')
         })}
     >
         {props => {

@@ -1,61 +1,3 @@
-/*import React, { Component } from "react";
-
-export default class SignUp extends Component {
-    render() {
-        return (
-            <form class="needs-validation" novalidate>
-                <h3>Want to create an account?</h3>
-                <p style={{color:"#9FFFCB"}}>
-                    Its simple.
-                </p>
-                <div className="form-group" >
-                    <input type="text" className="form-control" placeholder="First name" />
-                </div>
-
-                <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Last name" />
-                </div>
-
-                <div className="form-group">
-                    <input type="email" className="form-control" placeholder="Email Address" />
-                </div>
-
-                <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Username" />
-                </div>
-
-                <div className="form-group">
-                    <input type="password" className="form-control" placeholder="Password" />
-                </div>
-
-                <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Confirm Password" />
-                </div>
-                <p style={{fontSize:"16px", textAlign: "left"}}>
-                    Birthdate
-                </p>
-                <div class="form-inline">
-                    <label class="sr-only" for="inlineFormInputName2">Name</label>
-                    <input type="text" class="form-control mb-1 mr-sm-1" id="inlineFormInputName2" placeholder="MM"></input>
-
-                    <label class="sr-only" for="inlineFormInputName2">Name</label>
-                    <input type="text" class="form-control mb-1 mr-sm-1" id="inlineFormInputName2" placeholder="DD"></input>
-
-                    <label class="sr-only" for="inlineFormInputName2">Name</label>
-                    <input type="text" class="form-control mb-1 mr-sm-1" id="inlineFormInputName2" placeholder="YYYY"></input>
-                </div>
-
-                <br>
-                </br>
-                <button type="submit" className="btn btn-primary btn-block">Create Account</button>
-                <br></br>
-                <p className="forgot-password text-center" style={{fontSize:"16px"}}>
-                    Already registered? <a href="/sign-in">Sign in.</a>
-                </p>
-            </form>
-        );
-    }
-}*/
 import React, { Component } from "react";
 import { Formik } from "formik"
 import * as Yup from "yup";
@@ -119,7 +61,7 @@ const Styles = styled.div`
 const Signup = () => (
     <Styles>
     <Formik
-        initialValues={{ email: "", password: "", username: "", date: "", }}
+        initialValues={{ email: "", password: "", confirm: "", username: "", date: "", }}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
                 console.log("Logging in", values);
@@ -136,12 +78,15 @@ const Signup = () => (
                 .required("Required")
                 .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
                 .min(8, "Password is too short - should be 8 chars minimum."),
+            confirm: Yup.string()
+                .oneOf([Yup.ref('password'), null], "Password does not match")
+                .required('Password confirmation is required'),
             username: Yup.string()
                 .required("Required")
                 .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
             date: Yup.string()
                 .required("Required")
-                .matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date."),
+                .matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
         })}
     >
         {props => {
@@ -183,6 +128,18 @@ const Signup = () => (
                     />
                     {errors.password && touched.password && (
                         <div className="input-feedback">{errors.password}</div>
+                    )}
+                    <input
+                        name="confirm"
+                        type="password"
+                        placeholder="Confirm Password"
+                        value={values.confirm}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={errors.confirm && touched.confirm && "error"}
+                    />
+                    {errors.confirm && touched.confirm && (
+                        <div className="input-feedback">{errors.confirm}</div>
                     )}
                     <input
                         name="username"
