@@ -21,7 +21,6 @@ const Styles = styled.div`
     }
     
     input {
-        text-align: center;
         display: block;
         width: 100%;
     }
@@ -61,22 +60,26 @@ const Styles = styled.div`
 
 let code = 'abcdefgh';
 
-const RestorePassword = () => (
+const ResetPassword = () => (
     <Styles>
     <Formik
-        initialValues={{ password: ""}}
+        initialValues={{ password: "", confirm: "" }}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
                 console.log("Correct Code...", values);
                 setSubmitting(false);
-                document.location.href = 'http://localhost:3000/reset'
+                document.location.href = 'http://localhost:3000/account'
             }, 500);
         }} 
 
         validationSchema={Yup.object().shape({
-            password: Yup.mixed().test('match', 'Verification code does not match', function (password) {
-              return password === code
-            })
+            password: Yup.string()
+                .required("Required")
+                .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
+                .min(8, "Password is too short - should be 8 chars minimum."),
+            confirm: Yup.string()
+                .oneOf([Yup.ref('password'), null], "Password does not match")
+                .required('Password confirmation is required')
         })}
     >
         {props => {
@@ -91,14 +94,15 @@ const RestorePassword = () => (
             } = props;
             return (
                 <form onSubmit={handleSubmit}>
+                    <h3>Final Step</h3>
                     <p style={{color:"#9FFFCB"}}>
-                        Enter the verification code sent to your email.
+                        Reset your password.
                     </p>
                     <br></br>
                     <input
                         name="password"
-                        type="text"
-                        placeholder="Verification Code"
+                        type="password"
+                        placeholder="New Password"
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -107,18 +111,24 @@ const RestorePassword = () => (
                     {errors.password && touched.password && (
                         <div className="input-feedback">{errors.password}</div>
                     )}
+                    <input
+                        name="confirm"
+                        type="password"
+                        placeholder="Confirm Password"
+                        value={values.confirm}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={errors.confirm && touched.confirm && "error"}
+                    />
+                    {errors.confirm && touched.confirm && (
+                        <div className="input-feedback">{errors.confirm}</div>
+                    )}
+                    <br></br>
                     <button 
                         type="submit"
                         className="btn btn-primary btn-block" 
                         disabled={isSubmitting}>
-                        Continue
-                    </button>
-                    <br></br>
-                    <br></br>
-                    <button
-                        type = "submit"
-                        className="btn btn-primary btn-block">
-                        Resend Verification Code
+                        Login
                     </button>
                 </form>
             );
@@ -127,4 +137,4 @@ const RestorePassword = () => (
     </Styles>
 );
 
-export default RestorePassword;
+export default ResetPassword;

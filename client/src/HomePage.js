@@ -9,6 +9,7 @@ import NavigationBar from "./Components/Navigation";
 import Help from "./Components/FAQ";
 import Forgot from "./Components/ForgotPassword";
 import Restore from "./Components/RestorePassword";
+import Reset from "./Components/ResetPassword";
 import { LoggedIn } from "./LoggedIn";
 
 function HomePage() {
@@ -29,6 +30,7 @@ function HomePage() {
                             <Route path="/forgot" component={Forgot} />
                             <Route path="/restore" component={Restore} />
                             <Route path="/account" component={LoggedIn} />
+                            <Route path="/reset" component={Reset} />
                         </Switch>
                     </div>
                 </div>

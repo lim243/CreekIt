@@ -118,7 +118,7 @@ const Login = () => (
                     <br></br>
                     <input
                         name="email"
-                        types="text"
+                        type="text"
                         placeholder="Email"
                         value={values.email}
                         onChange={handleChange}

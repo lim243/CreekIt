@@ -30,7 +30,7 @@ export const NavigationBar = () => (
   <Styles>
       <div className="sticky">
     <Navbar expand="lg">
-      <Navbar.Brand href="/">CreekIt</Navbar.Brand>
+      <Navbar.Brand href="/sign-in">CreekIt</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav"/>
       <Form className="form-center">
         <FormControl type="text" placeholder="Search" className="" />
