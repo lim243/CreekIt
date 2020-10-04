@@ -24,7 +24,7 @@ async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
     text:
-      "SELECT p.username, u.name, u.profile_photo, (p.date AT TIME ZONE 'EST')::date as date, (p.date AT TIME ZONE 'EST')::time as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = u.username;",
+      "SELECT p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC",
   };
 
   const { rows } = await db.query(query);
@@ -119,16 +119,16 @@ async function getComments(req, res) {}
  */
 
 async function createPost(req, res) {
-  const { username, body, topic } = req.body;
-
+  const { username, body, topic, anonymous } = req.body;
+  console.log("req.body", req.body);
   // Date
   date = Date.now();
 
   const query = {
     name: "create-post",
     text:
-      "INSERT INTO posts (username, date, body, topic) VALUES ($1, to_timestamp($2/1000.0), $3, $4) RETURNING id",
-    values: [username, date, body, topic],
+      "INSERT INTO posts (username, date, body, topic, anonymous) VALUES ($1, to_timestamp($2/1000.0), $3, $4, $5) RETURNING id",
+    values: [username, date, body, topic, anonymous],
   };
 
   const { rows } = await db.query(query);

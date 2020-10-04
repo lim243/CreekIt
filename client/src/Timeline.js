@@ -46,8 +46,8 @@ class Timeline extends React.Component {
             name={item.name}
             username={item.username}
             post={item.body}
-            date={moment(item.date).fromNow()}
-            // time={item.time}
+            date={item.date}
+            time={item.time}
             upvotes={item.upvotes}
             downvotes={item.downvotes}
           />
