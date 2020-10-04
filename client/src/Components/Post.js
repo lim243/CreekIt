@@ -1,6 +1,8 @@
 import Avatar from 'react-avatar';
 import React from 'react';
 import styled from 'styled-components';
+import Upvote from './Upvote'
+import Downvote from './Downvote';
 
 const Styles = styled.div`
   
@@ -19,7 +21,12 @@ const Styles = styled.div`
   .left {
     float: right;
     margin-left: 10px;
-}
+  }
+  .interaction {
+    margin-left: 50px !important;
+    margin-bottom: 20px;
+  }
+
 `;
 
 class Post extends React.Component {
@@ -33,6 +40,17 @@ class Post extends React.Component {
       post: ''
     }
   }
+
+  addCommentHandler = () => {
+    // redirect to comments page
+
+  };
+
+  saveHandler = () => {
+    // mark the post as saved
+
+  };
+
   render() {
     // Use src for image
     //Get Name
@@ -52,7 +70,12 @@ class Post extends React.Component {
         </div>
         <p>{this.props.post} 
         </p>
-
+        <div >
+        <Upvote></Upvote>
+        <Downvote></Downvote>
+        <button onClick={this.addCommentHandler} className="interaction">Comments </button>
+        <button onClick={this.saveHandler} className="interaction">Save </button>
+        </div>
     </Styles>
     )
   }
