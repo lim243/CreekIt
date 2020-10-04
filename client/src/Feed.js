@@ -8,7 +8,7 @@ export const Feed = (props) => (
   <div>
   
   <BrowserRouter>
-    <NavigationBar />
+    {/*<NavigationBar />*/}
     <Sidebar />
     <Switch>
       <Route exact path="/feed" component={Timeline} />

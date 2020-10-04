@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { Formik } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
-import NavigationBar from "./Navigation";
 
 const Styles = styled.div`
     text-align: center;
@@ -60,24 +58,28 @@ const Styles = styled.div`
     }
     `;
 
-const Login = () => (
+let code = 'abcdefgh';
+
+const ResetPassword = () => (
     <Styles>
     <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ password: "", confirm: "" }}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
-                console.log("Logging in", values);
+                console.log("Correct Code...", values);
                 setSubmitting(false);
                 document.location.href = 'http://localhost:3000/account'
             }, 500);
-        }}
+        }} 
 
         validationSchema={Yup.object().shape({
-            email: Yup.string()
-                .email()
-                .required("Required"),
             password: Yup.string()
                 .required("Required")
+                .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
+                .min(8, "Password is too short - should be 8 chars minimum."),
+            confirm: Yup.string()
+                .oneOf([Yup.ref('password'), null], "Password does not match")
+                .required('Password confirmation is required')
         })}
     >
         {props => {
@@ -92,22 +94,15 @@ const Login = () => (
             } = props;
             return (
                 <form onSubmit={handleSubmit}>
-                    <input
-                        name="email"
-                        types="text"
-                        placeholder="Email or username"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={errors.email && touched.email && "error"}
-                    />
-                    {errors.email && touched.email && (
-                        <div className="input-feedback">{errors.email}</div>
-                    )}
+                    <h3>Final Step</h3>
+                    <p style={{color:"#9FFFCB"}}>
+                        Reset your password.
+                    </p>
+                    <br></br>
                     <input
                         name="password"
                         type="password"
-                        placeholder="Password"
+                        placeholder="New Password"
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -116,23 +111,30 @@ const Login = () => (
                     {errors.password && touched.password && (
                         <div className="input-feedback">{errors.password}</div>
                     )}
+                    <input
+                        name="confirm"
+                        type="password"
+                        placeholder="Confirm Password"
+                        value={values.confirm}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={errors.confirm && touched.confirm && "error"}
+                    />
+                    {errors.confirm && touched.confirm && (
+                        <div className="input-feedback">{errors.confirm}</div>
+                    )}
                     <br></br>
                     <button 
                         type="submit"
                         className="btn btn-primary btn-block" 
-                        disabled={isSubmitting}
-                        >
+                        disabled={isSubmitting}>
                         Login
                     </button>
-                    <br></br>
-                    <p className="forgot-password text-center"style={{fontSize:"16px"}}> 
-                        <a href='/forgot'>Forgot password?</a>
-                    </p>
                 </form>
             );
         }}
     </Formik>
     </Styles>
-)
+);
 
-export default withRouter(Login);
+export default ResetPassword;

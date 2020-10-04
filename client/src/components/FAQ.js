@@ -1,9 +1,23 @@
 import React, { Component } from "react";
 import { Button, Accordion, Card } from "react-bootstrap";
+import styled from 'styled-components';
+
+const Styles = styled.div`
+    text-align: center;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    `;
 
 export default class FAQ extends Component {
     render() {
         return (
+            <Styles>
             <form>
             <h3>Have Questions?</h3>
             <p style={{color:"#9FFFCB"}}>
@@ -94,6 +108,7 @@ export default class FAQ extends Component {
                 </Card>
             </Accordion>
             </form>
+            </Styles>
         );
     }
     

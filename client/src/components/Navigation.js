@@ -3,6 +3,7 @@ import { Nav, Navbar, Form, FormControl } from 'react-bootstrap';
 import styled from 'styled-components';
 
 const Styles = styled.div`
+  text-align: left;
   .navbar { background-color: #222; }
   a, .navbar-nav, .navbar-light .nav-link {
     color: #9FFFCB;
@@ -30,7 +31,7 @@ export const NavigationBar = () => (
   <Styles>
       <div className="sticky">
     <Navbar expand="lg">
-      <Navbar.Brand href="/">CreekIt</Navbar.Brand>
+      <Navbar.Brand href="/sign-in">CreekIt</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav"/>
       <Form className="form-center">
         <FormControl type="text" placeholder="Search" className="" />
