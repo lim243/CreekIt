@@ -1,14 +1,13 @@
-import Avatar from 'react-avatar';
-import React from 'react';
-import styled from 'styled-components';
-import Upvote from './Upvote'
-import Downvote from './Downvote';
+import Avatar from "react-avatar";
+import React from "react";
+import styled from "styled-components";
+import Upvote from "./Upvote";
+import Downvote from "./Downvote";
 
 const Styles = styled.div`
-  
   .right {
-      float: left;
-      margin-right: 10px;
+    float: left;
+    margin-right: 10px;
   }
   .username {
     position: relative;
@@ -26,29 +25,26 @@ const Styles = styled.div`
     margin-left: 50px !important;
     margin-bottom: 20px;
   }
-
 `;
 
 class Post extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      username: '',
-      time: '',
-      date: '',
-      post: ''
-    }
+      name: "",
+      username: "",
+      time: "",
+      date: "",
+      post: "",
+    };
   }
 
   addCommentHandler = () => {
     // redirect to comments page
-
   };
 
   saveHandler = () => {
     // mark the post as saved
-
   };
 
   render() {
@@ -57,27 +53,32 @@ class Post extends React.Component {
     //Get Time
     //Get Date
     //Get post
-    return(
-    <Styles>
+    return (
+      <Styles>
         <div>
-            <Avatar name={this.props.name} size="50" round="100px" className="right"/>
-            <h5 style={{fontWeight: "bold"}} className="right">{this.props.name}</h5>
-            <div className="dateTime" >
-                <p className="left">{this.props.time}</p>
-                <p >{this.props.date}</p>
-            </div>
-            <p className="username">@{this.props.username}</p>         
+          <Avatar name={this.props.name} size='50' round='100px' className='right' />
+          <h5 style={{ fontWeight: "bold" }} className='right'>
+            {this.props.name}
+          </h5>
+          <div className='dateTime'>
+            <p className='left'>{this.props.time}</p>
+            <p>{this.props.date}</p>
+          </div>
+          <p className='username'>@{this.props.username}</p>
         </div>
-        <p>{this.props.post} 
-        </p>
-        <div >
-        <Upvote></Upvote>
-        <Downvote></Downvote>
-        <button onClick={this.addCommentHandler} className="interaction">Comments </button>
-        <button onClick={this.saveHandler} className="interaction">Save </button>
+        <p>{this.props.post}</p>
+        <div>
+          <Upvote upvotes={this.props.upvotes} />
+          <Downvote downvotes={this.props.downvotes} />
+          <button onClick={this.addCommentHandler} className='interaction'>
+            Comments{" "}
+          </button>
+          <button onClick={this.saveHandler} className='interaction'>
+            Save{" "}
+          </button>
         </div>
-    </Styles>
-    )
+      </Styles>
+    );
   }
 }
 

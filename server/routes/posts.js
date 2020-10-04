@@ -23,7 +23,8 @@ router.post("/:pid/topic", setTopic);
 async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
-    text: "SELECT * FROM posts",
+    text:
+      "SELECT p.username, u.name, u.profile_photo, (p.date AT TIME ZONE 'EST')::date as date, (p.date AT TIME ZONE 'EST')::time as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = u.username;",
   };
 
   const { rows } = await db.query(query);
