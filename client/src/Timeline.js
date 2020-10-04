@@ -1,7 +1,7 @@
 import React from 'react';
-import Post from './Components/Post';
+import Post from './components/Post';
 import styled from 'styled-components';
-import MakePost from './Components/MakePost';
+import MakePost from './components/MakePost';
 
 const GridWrapper = styled.div`
   display: block;

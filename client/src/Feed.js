@@ -1,7 +1,7 @@
 import React from 'react';
-import NavigationBar from './Components/NavigationBar';
+import NavigationBar from './components/NavigationBar';
 import { BrowserRouter as BrowserRouter, Route, Switch } from "react-router-dom";
-import Sidebar from './Components/SideBar';
+import Sidebar from './components/SideBar';
 import Timeline from './Timeline';
 
 export const Feed = (props) => (
