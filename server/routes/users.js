@@ -3,13 +3,16 @@ const express = require("express");
 const router = express.Router();
 
 // Encryption password
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
+const authenticate = require("./authenticate");
 const saltRounds = 10;
+
 
 module.exports = router;
 
 // Router Functions
-router.get("/", getUsers);
+router.get("/", authenticate.isauth, getUsers);
 router.get("/:username", getOneUserByUsername);
 router.get("/:username/email", getEmail);
 router.get("/:username/name", getName);
@@ -20,35 +23,34 @@ router.get("/:username/dob", getDateOfBirth);
 router.get("/:username/education", getEducation);
 router.get("/:username/aboutme", getAboutMe);
 router.get("/:username/photo", getPhoto);
-router.get("/:username/following", getFollowing); //TODO: Undefined
-router.get("/:username/followed", getFollowed); //TODO: Undefined
+router.get("/:username/following", authenticate.isauth, getFollowing); //TODO: Undefined
+router.get("/:username/followed", authenticate.isauth, getFollowing); //TODO: Undefined
 router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
 
 // SET ROUTER
 router.post("/:username/password", setPassword);
-router.post("/signIn", signIn);
+router.post("/signIn" ,signIn);
 router.post("/signUp", signUp);
 
 /**
  * GET FUNCTIONS
  */
-
 async function getUsers(req, res) {
   const query = {
-    name: "get-post",
+    name: "get-all-user",
     text: "SELECT * FROM users",
   };
 
   const result = await db.query(query);
-
+  console.log("query result",result);
   const { rows, rowCount } = result;
   // console.log("rows", rowCount, rows);
   const data = { rowCount, rows };
 
   // Send data back
-  return res.status(200).json(data);
+  return res.status(200).json(result);
 }
 async function getOneUserByUsername(req, res) {
   // Params
@@ -112,7 +114,7 @@ async function getPassword(username) {
 
   const { rows } = await db.query(query);
   // console.log("res", res);
-
+  console.log("result", rows[0].password);
   return rows[0].password;
 } // TODO: Undefined yet
 async function getGender(req, res) {
@@ -190,8 +192,68 @@ async function getPhoto(req, res) {
   // Send data back
   return res.status(200).json(data);
 }
-async function getFollowing(req, res) {} // TODO: Undefined yet
-async function getFollowed(req, res) {} // TODO: Undefined yet
+async function getFollowing(req, res) {
+  let username = req.params.username;
+  console.log("username", username);
+  const query = {
+    name: "get-following",
+    text: "select following from users where username = $1",
+    values: [username],
+    //rowMode: "array",
+  };
+
+  console.log("query", query);
+
+  db.query(query)
+    .then((data) => {
+      console.log(data);
+      /*const msg = {
+        "success": true,
+        "following": `User ${username} created!`,
+      };*/
+      res.status(200).send(data.rows[0]);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "payload": `ERROR ${error.code}: ${error.detail} - User ${username} was NOT created!`,
+      };
+    });
+} // TODO: Undefined yet
+async function getFollowed(req, res) {
+  let username = req.params.username;
+  console.log("username", username);
+  const query = {
+    name: "get-followed",
+    text: "select followed from users where username = $1",
+    values: [username],
+    //rowMode: "array",
+  };
+
+  console.log("query", query);
+
+  db.query(query)
+    .then((data) => {
+      console.log(data);
+      /*const msg = {
+        "success": true,
+        "following": `User ${username} created!`,
+      };*/
+      
+      /*for (followered in followereds){
+
+      }*/
+      res.status(200).send(data.rows[0]);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "payload": `ERROR ${error.code}: ${error.detail} - User ${username} was NOT created!`,
+      };
+    });
+} // TODO: Undefined yet
 async function getBlocked(req, res) {} // TODO: Undefined yet
 async function getTopics(req, res) {} // TODO: Undefined yet
 async function getPosts(req, res) {} // TODO: Undefined yet
@@ -272,16 +334,26 @@ async function signUp(req, res) {
 }
 
 async function signIn(req, res) {
-  const { username, password } = req.body;
-
+  console.log("req.body", req.body);
+  let username = req.body.username;
+  let password = req.body.password;
   const hashedPw = await getPassword(username);
-  console.log("hashedPw", hashedPw, password);
-
-  bcrypt.compare(password, hashedPw, (err, result) => {
-    if (result) {
-      res.status(200).send("Login Success!");
-    } else {
-      res.status(500).send("Login failed!");
+  bcrypt.compare(password, hashedPw, (err, result) =>{
+    let payload = {username: username};
+    console.log("password", result);
+    if (!result){
+      console.log("Password doest not match!");
+      return res.status(500).send("Password doest not match!")      
     }
+    let accessToken = jwt.sign(payload, "Creekit Secret", {
+        algorithm: "HS256",
+        expiresIn: 30      
+    })
+    console.log("acess Token", accessToken);
+    req.accessToken = accessToken;
+    req.username = username;
+    authenticate.storeToken(username,accessToken);
+    res.status(200).send(accessToken);
+      //req.accessToken = accessToken;
   });
 }
