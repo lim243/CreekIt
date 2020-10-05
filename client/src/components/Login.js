@@ -15,36 +15,30 @@ const Styles = styled.div`
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-
   form {
     max-width: 500px;
     width: 100%;
     margin: 0 auto;
   }
-
   input {
     display: block;
     width: 100%;
   }
-
   input {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 3px;
     border: 1px solid #777;
   }
-
   input.error {
     border-color: red;
   }
-
   .input-feedback {
     color: rgb(235, 54, 54);
     margin-top: -15px;
     font-size: 14px;
     margin-bottom: 20px;
   }
-
   button {
     padding: 10px 15px;
     background-color: rgb(70, 153, 179);
@@ -52,7 +46,6 @@ const Styles = styled.div`
     border: 1px solid rgb(70, 153, 179);
     background-color: 250ms;
   }
-
   button:hover {
     cursor: pointer;
     background-color: white;

@@ -8,7 +8,7 @@ import moment from "moment";
 const GridWrapper = styled.div`
   display: block;
   margin-top: 1em;
-  margin-left: 35em;
+  margin-left: 35%;
   margin-right: 25em;
   padding-top: 75px;
 `;
