@@ -13,21 +13,21 @@ module.exports = router;
 
 // Router Functions
 router.get("/", authenticate.isauth, getUsers);
-router.get("/:email", getOneUserByEmail);
-router.get("/:email/email", getEmail);
-router.get("/:email/name", getName);
-router.get("/:email/username", getUsername); //TODO: Undefined
-router.get("/:email/password", getPassword); //TODO: Undefined
-router.get("/:email/gender", getGender);
-router.get("/:email/dob", getDateOfBirth);
-router.get("/:email/education", getEducation);
-router.get("/:email/aboutme", getAboutMe);
-router.get("/:email/photo", getPhoto);
-router.get("/:email/following", authenticate.isauth, getFollowing); //TODO: Undefined
-router.get("/:email/followed", authenticate.isauth, getFollowing); //TODO: Undefined
-router.get("/:email/blocked", getBlocked); //TODO: Undefined
-router.get("/:email/topics", getTopics); //TODO: Undefined
-router.get("/:email/posts", getPosts); //TODO: Undefined
+router.get("/:username", getOneUserByUsername);
+router.get("/:username/email", getEmail);
+router.get("/:username/name", getName);
+router.get("/:username/username", getUsername); //TODO: Undefined
+router.get("/:username/password", getPassword); //TODO: Undefined
+router.get("/:username/gender", getGender);
+router.get("/:username/dob", getDateOfBirth);
+router.get("/:username/education", getEducation);
+router.get("/:username/aboutme", getAboutMe);
+router.get("/:username/photo", getPhoto);
+router.get("/:username/following", authenticate.isauth, getFollowing); //TODO: Undefined
+router.get("/:username/followed", authenticate.isauth, getFollowing); //TODO: Undefined
+router.get("/:username/blocked", getBlocked); //TODO: Undefined
+router.get("/:username/topics", getTopics); //TODO: Undefined
+router.get("/:username/posts", getPosts); //TODO: Undefined
 
 // SET ROUTER
 router.post("/:username/password", setPassword);
@@ -52,14 +52,14 @@ async function getUsers(req, res) {
   // Send data back
   return res.status(200).json(result);
 }
-async function getOneUserByEmail(req, res) {
+async function getOneUserByUsername(req, res) {
   // Params
-  const email = req.params.email;
+  const username = req.params.username;
 
   const query = {
     name: "get-post",
     text: "SELECT * FROM users WHERE username = $1",
-    values: [email],
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -72,12 +72,11 @@ async function getOneUserByEmail(req, res) {
   return res.status(200).json(data);
 }
 async function getEmail(req, res) {
-  const email = req.params.email;
-  console.log("email",email);
+  const username = req.params.username;
   const query = {
     name: "get-post",
-    text: "SELECT email FROM users WHERE email = $1",
-    values: [email],
+    text: "SELECT email FROM users WHERE username = $1",
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -90,11 +89,11 @@ async function getEmail(req, res) {
 }
 async function getUsername(req, res) {} // TODO: Undefined yet
 async function getName(req, res) {
-  const email = req.params.email;
+  const username = req.params.username;
   const query = {
     name: "get-post",
-    text: "SELECT name FROM users WHERE email = $1",
-    values: [email],
+    text: "SELECT name FROM users WHERE username = $1",
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -119,11 +118,11 @@ async function getPassword(email) {
   return rows[0].password;
 } // TODO: Undefined yet
 async function getGender(req, res) {
-  const email = req.params.email;
+  const username = req.params.username;
   const query = {
     name: "get-post",
-    text: "SELECT gender FROM users WHERE email = $1",
-    values: [email],
+    text: "SELECT gender FROM users WHERE username = $1",
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -134,11 +133,11 @@ async function getGender(req, res) {
   return res.status(200).json(data);
 }
 async function getDateOfBirth(req, res) {
-  const email = req.params.email;
+  const username = req.params.username;
   const query = {
     name: "get-post",
-    text: "SELECT date_of_birth FROM users WHERE email = $1",
-    values: [email],
+    text: "SELECT date_of_birth FROM users WHERE username = $1",
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -149,11 +148,11 @@ async function getDateOfBirth(req, res) {
   return res.status(200).json(data);
 }
 async function getEducation(req, res) {
-  const email = req.params.email;
+  const username = req.params.username;
   const query = {
     name: "get-post",
-    text: "SELECT education FROM users WHERE email = $1",
-    values: [email],
+    text: "SELECT education FROM users WHERE username = $1",
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -164,11 +163,11 @@ async function getEducation(req, res) {
   return res.status(200).json(data);
 }
 async function getAboutMe(req, res) {
-  const email = req.params.email;
+  const username = req.params.username;
   const query = {
     name: "get-post",
     text: "SELECT about_me FROM users WHERE username = $1",
-    values: [email],
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -179,11 +178,11 @@ async function getAboutMe(req, res) {
   return res.status(200).json(data);
 }
 async function getPhoto(req, res) {
-  const email = req.params.email;
+  const username = req.params.username;
   const query = {
     name: "get-post",
     text: "SELECT profile_photo FROM users WHERE username = $1",
-    values: [email],
+    values: [username],
   };
 
   const result = await db.query(query);
@@ -194,12 +193,12 @@ async function getPhoto(req, res) {
   return res.status(200).json(data);
 }
 async function getFollowing(req, res) {
-  let email = req.params.email;
-  console.log("email", email);
+  let username = req.params.username;
+  console.log("username", username);
   const query = {
     name: "get-following",
     text: "select following from users where username = $1",
-    values: [email],
+    values: [username],
     //rowMode: "array",
   };
 
@@ -218,17 +217,17 @@ async function getFollowing(req, res) {
       console.log("error", error);
       const msg = {
         "success": false,
-        "payload": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+        "payload": `ERROR ${error.code}: ${error.detail} - User ${username} was NOT created!`,
       };
     });
 } // TODO: Undefined yet
 async function getFollowed(req, res) {
-  let email = req.params.email;
-  console.log("email", email);
+  let username = req.params.username;
+  console.log("username", username);
   const query = {
     name: "get-followed",
-    text: "select followed from users where email = $1",
-    values: [email],
+    text: "select followed from users where username = $1",
+    values: [username],
     //rowMode: "array",
   };
 
@@ -268,7 +267,7 @@ async function setUsername(req, res) {}
 async function setName(req, res) {}
 async function setPassword(req, res) {
   const { password } = req.body;
-  const email = req.params.email;
+  const username = req.params.username;
   console.log("password", password);
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
@@ -279,7 +278,7 @@ async function setPassword(req, res) {
     const query = {
       name: "update-password",
       text: "UPDATE Users SET password = $2 WHERE username = $1",
-      values: [email, hashPw],
+      values: [username, hashPw],
     };
 
     console.log("query", query);
@@ -287,7 +286,7 @@ async function setPassword(req, res) {
     db.query(query).then((data) => {
       const msg = {
         "success": true,
-        "payload": `User ${email}'s password updated`,
+        "payload": `User ${username}'s password updated`,
       };
       res.status(200).send(msg);
     });
@@ -299,7 +298,6 @@ async function setEducation(req, res) {}
 async function setPhoto(req, res) {}
 async function addFollowing(req, res) {}
 async function addBlocked(req, res) {}
-
 async function signUp(req, res) {
   const { email, password } = req.body;
 
@@ -353,7 +351,7 @@ async function signIn(req, res) {
     console.log("acess Token", accessToken);
     req.accessToken = accessToken;
     req.email = email;
-    //authenticate.storeToken(email,accessToken);
+    //authenticate.storeToken(username,accessToken);
     res.status(200).send(accessToken);
       //req.accessToken = accessToken;
   });
