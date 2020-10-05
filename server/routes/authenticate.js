@@ -2,7 +2,6 @@ const Router = require("express-promise-router");
 const db = require("../db");
 const router = new Router();
 const jwt = require('jsonwebtoken');
-let user_token = new Map();
 
 // Router Functions
 // router.get("/", getUsers);

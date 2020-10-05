@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Formik } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Styles = styled.div`
     text-align: center;
@@ -72,7 +73,7 @@ const RestorePassword = () => (
                 document.location.href = 'http://localhost:3000/reset'
             }, 500);
         }} 
-
+        
         validationSchema={Yup.object().shape({
           password: Yup.string()
             .oneOf([code, null], "Password does not match")

@@ -13,21 +13,21 @@ module.exports = router;
 
 // Router Functions
 router.get("/", authenticate.isauth, getUsers);
-router.get("/:username", getOneUserByUsername);
-router.get("/:username/email", getEmail);
-router.get("/:username/name", getName);
-router.get("/:username/username", getUsername); //TODO: Undefined
-router.get("/:username/password", getPassword); //TODO: Undefined
-router.get("/:username/gender", getGender);
-router.get("/:username/dob", getDateOfBirth);
-router.get("/:username/education", getEducation);
-router.get("/:username/aboutme", getAboutMe);
-router.get("/:username/photo", getPhoto);
-router.get("/:username/following", authenticate.isauth, getFollowing); //TODO: Undefined
-router.get("/:username/followed", authenticate.isauth, getFollowing); //TODO: Undefined
-router.get("/:username/blocked", getBlocked); //TODO: Undefined
-router.get("/:username/topics", getTopics); //TODO: Undefined
-router.get("/:username/posts", getPosts); //TODO: Undefined
+router.get("/:email", getOneUserByEmail);
+router.get("/:email/email", getEmail);
+router.get("/:email/name", getName);
+router.get("/:email/username", getUsername); //TODO: Undefined
+router.get("/:email/password", getPassword); //TODO: Undefined
+router.get("/:email/gender", getGender);
+router.get("/:email/dob", getDateOfBirth);
+router.get("/:email/education", getEducation);
+router.get("/:email/aboutme", getAboutMe);
+router.get("/:email/photo", getPhoto);
+router.get("/:email/following", authenticate.isauth, getFollowing); //TODO: Undefined
+router.get("/:email/followed", authenticate.isauth, getFollowing); //TODO: Undefined
+router.get("/:email/blocked", getBlocked); //TODO: Undefined
+router.get("/:email/topics", getTopics); //TODO: Undefined
+router.get("/:email/posts", getPosts); //TODO: Undefined
 
 // SET ROUTER
 router.post("/:username/password", setPassword);
@@ -52,14 +52,14 @@ async function getUsers(req, res) {
   // Send data back
   return res.status(200).json(result);
 }
-async function getOneUserByUsername(req, res) {
+async function getOneUserByEmail(req, res) {
   // Params
-  const username = req.params.username;
+  const email = req.params.email;
 
   const query = {
     name: "get-post",
     text: "SELECT * FROM users WHERE username = $1",
-    values: [username],
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -72,11 +72,12 @@ async function getOneUserByUsername(req, res) {
   return res.status(200).json(data);
 }
 async function getEmail(req, res) {
-  const username = req.params.username;
+  const email = req.params.email;
+  console.log("email",email);
   const query = {
     name: "get-post",
-    text: "SELECT email FROM users WHERE username = $1",
-    values: [username],
+    text: "SELECT email FROM users WHERE email = $1",
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -89,11 +90,11 @@ async function getEmail(req, res) {
 }
 async function getUsername(req, res) {} // TODO: Undefined yet
 async function getName(req, res) {
-  const username = req.params.username;
+  const email = req.params.email;
   const query = {
     name: "get-post",
-    text: "SELECT name FROM users WHERE username = $1",
-    values: [username],
+    text: "SELECT name FROM users WHERE email = $1",
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -103,11 +104,11 @@ async function getName(req, res) {
   // Send data back
   return res.status(200).json(data);
 }
-async function getPassword(username) {
+async function getPassword(email) {
   const query = {
     name: "get-password",
-    text: "SELECT password FROM Users WHERE username = $1",
-    values: [username],
+    text: "SELECT password FROM Users WHERE email = $1",
+    values: [email],
   };
 
   console.log("query", query);
@@ -118,11 +119,11 @@ async function getPassword(username) {
   return rows[0].password;
 } // TODO: Undefined yet
 async function getGender(req, res) {
-  const username = req.params.username;
+  const email = req.params.email;
   const query = {
     name: "get-post",
-    text: "SELECT gender FROM users WHERE username = $1",
-    values: [username],
+    text: "SELECT gender FROM users WHERE email = $1",
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -133,11 +134,11 @@ async function getGender(req, res) {
   return res.status(200).json(data);
 }
 async function getDateOfBirth(req, res) {
-  const username = req.params.username;
+  const email = req.params.email;
   const query = {
     name: "get-post",
-    text: "SELECT date_of_birth FROM users WHERE username = $1",
-    values: [username],
+    text: "SELECT date_of_birth FROM users WHERE email = $1",
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -148,11 +149,11 @@ async function getDateOfBirth(req, res) {
   return res.status(200).json(data);
 }
 async function getEducation(req, res) {
-  const username = req.params.username;
+  const email = req.params.email;
   const query = {
     name: "get-post",
-    text: "SELECT education FROM users WHERE username = $1",
-    values: [username],
+    text: "SELECT education FROM users WHERE email = $1",
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -163,11 +164,11 @@ async function getEducation(req, res) {
   return res.status(200).json(data);
 }
 async function getAboutMe(req, res) {
-  const username = req.params.username;
+  const email = req.params.email;
   const query = {
     name: "get-post",
     text: "SELECT about_me FROM users WHERE username = $1",
-    values: [username],
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -178,11 +179,11 @@ async function getAboutMe(req, res) {
   return res.status(200).json(data);
 }
 async function getPhoto(req, res) {
-  const username = req.params.username;
+  const email = req.params.email;
   const query = {
     name: "get-post",
     text: "SELECT profile_photo FROM users WHERE username = $1",
-    values: [username],
+    values: [email],
   };
 
   const result = await db.query(query);
@@ -193,12 +194,12 @@ async function getPhoto(req, res) {
   return res.status(200).json(data);
 }
 async function getFollowing(req, res) {
-  let username = req.params.username;
-  console.log("username", username);
+  let email = req.params.email;
+  console.log("email", email);
   const query = {
     name: "get-following",
     text: "select following from users where username = $1",
-    values: [username],
+    values: [email],
     //rowMode: "array",
   };
 
@@ -217,17 +218,17 @@ async function getFollowing(req, res) {
       console.log("error", error);
       const msg = {
         "success": false,
-        "payload": `ERROR ${error.code}: ${error.detail} - User ${username} was NOT created!`,
+        "payload": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
       };
     });
 } // TODO: Undefined yet
 async function getFollowed(req, res) {
-  let username = req.params.username;
-  console.log("username", username);
+  let email = req.params.email;
+  console.log("email", email);
   const query = {
     name: "get-followed",
-    text: "select followed from users where username = $1",
-    values: [username],
+    text: "select followed from users where email = $1",
+    values: [email],
     //rowMode: "array",
   };
 
@@ -267,7 +268,7 @@ async function setUsername(req, res) {}
 async function setName(req, res) {}
 async function setPassword(req, res) {
   const { password } = req.body;
-  const username = req.params.username;
+  const email = req.params.email;
   console.log("password", password);
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
@@ -278,7 +279,7 @@ async function setPassword(req, res) {
     const query = {
       name: "update-password",
       text: "UPDATE Users SET password = $2 WHERE username = $1",
-      values: [username, hashPw],
+      values: [email, hashPw],
     };
 
     console.log("query", query);
@@ -286,7 +287,7 @@ async function setPassword(req, res) {
     db.query(query).then((data) => {
       const msg = {
         "success": true,
-        "payload": `User ${username}'s password updated`,
+        "payload": `User ${email}'s password updated`,
       };
       res.status(200).send(msg);
     });
@@ -300,7 +301,7 @@ async function addFollowing(req, res) {}
 async function addBlocked(req, res) {}
 
 async function signUp(req, res) {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
     // Now we can store the password hash in db.
@@ -309,7 +310,7 @@ async function signUp(req, res) {
     const query = {
       name: "create-user",
       text: "INSERT INTO Users (username, password) VALUES ($1,$2)",
-      values: [username, hashPw],
+      values: [email, hashPw],
     };
 
     console.log("query", query);
@@ -318,7 +319,7 @@ async function signUp(req, res) {
       .then((data) => {
         const msg = {
           "success": true,
-          "payload": `User ${username} created!`,
+          "payload": `User ${email} created!`,
         };
         res.status(200).send(msg);
       })
@@ -326,7 +327,7 @@ async function signUp(req, res) {
         console.log("error", error);
         const msg = {
           "success": false,
-          "payload": `ERROR ${error.code}: ${error.detail} - User ${username} was NOT created!`,
+          "payload": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
         };
         res.status(500).send(msg);
       });
@@ -335,11 +336,11 @@ async function signUp(req, res) {
 
 async function signIn(req, res) {
   console.log("req.body", req.body);
-  let username = req.body.username;
+  let email = req.body.email;
   let password = req.body.password;
-  const hashedPw = await getPassword(username);
+  const hashedPw = await getPassword(email);
   bcrypt.compare(password, hashedPw, (err, result) =>{
-    let payload = {username: username};
+    let payload = {email: email};
     console.log("password", result);
     if (!result){
       console.log("Password doest not match!");
@@ -351,8 +352,8 @@ async function signIn(req, res) {
     })
     console.log("acess Token", accessToken);
     req.accessToken = accessToken;
-    req.username = username;
-    authenticate.storeToken(username,accessToken);
+    req.email = email;
+    //authenticate.storeToken(email,accessToken);
     res.status(200).send(accessToken);
       //req.accessToken = accessToken;
   });
