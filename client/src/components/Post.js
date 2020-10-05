@@ -84,8 +84,8 @@ class Post extends React.Component {
         <p>{this.props.post} 
         </p>
         <div >
-        <Upvote></Upvote>
-        <Downvote></Downvote>
+        <Upvote upvotes={this.props.upvotes} />
+        <Downvote downvotes={this.props.downvotes} />
         {this.props.commentButton == 'false' ?  null : <button onClick={this.addCommentHandler} className="interaction">Comments </button>}
         <button onClick={this.saveHandler} className="interaction">Save </button>
         </div>
