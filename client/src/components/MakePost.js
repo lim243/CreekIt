@@ -1,11 +1,7 @@
-import React from "react";
-import { Form, Button } from "react-bootstrap";
-import styled from "styled-components";
-import ReactHashtag from "react-hashtag";
-import { render } from "react-dom";
-import { nominalTypeHack } from "prop-types";
+import React from 'react';
+import {Form, Button } from 'react-bootstrap';
+import styled from 'styled-components';
 import axios from "axios";
-
 const Styles = styled.div`
   .form-center {
     position: absolute !important;
@@ -14,21 +10,23 @@ const Styles = styled.div`
   }
 
   .checkbox {
-    position: absolute !important;
-    left: 67%;
-    top: 18%;
+    position: relative !important;
+    left: 4%;
   }
 
   .box {
-    width: 82%;
+    width: 75%;
     float: left;
-    margin-right: 20px;
+    margin-right: 3%;
   }
 
   textarea {
-    resize: none;
+      resize: none;
   }
+
 `;
+
+
 
 class MakePost extends React.Component {
   constructor(props) {
@@ -41,21 +39,24 @@ class MakePost extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckBox = this.handleCheckBox.bind(this);
   }
-
+  
   submitPost(data) {
-    axios
-      .post("http://localhost:5000/api/v1/posts/new", data)
-      .then((res) => {
-        console.log("res.data", res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
+   axios
+    .post("http://localhost:5000/api/v1/posts/new", data)
+    .then((res) => {
+      console.log("res.data", res.data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+    }
+ 
+  
 
-  handleChange(event) {
-    this.setState({ post: event.target.value });
-  }
+
+    handleChange(event) {
+      this.setState({ post: event.target.value });
+    }
 
   handleCheckBox = (event) => {
     //Anonymous Handling
@@ -69,7 +70,7 @@ class MakePost extends React.Component {
     const URL = this.state.post.match(
       /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
     );
-
+    
     const data = {
       body: this.state.post,
       username: "kotori",
@@ -83,21 +84,26 @@ class MakePost extends React.Component {
     // and also anonymous mode
   }
 
+  
+
+
+
   render() {
+
     const LimitedTextarea = ({ rows, cols, value, limit }) => {
       const [content, setContent] = React.useState(value);
-
+    
       const setFormattedContent = (text) => {
         text.length > limit ? setContent(text.slice(0, limit)) : setContent(text);
         this.state.post = text;
       };
-
+    
       React.useEffect(() => {
         setFormattedContent(content);
       }, []);
-
+    
       return (
-        <div>
+        <div> 
           <textarea
             rows={rows}
             cols={43}
@@ -115,28 +121,28 @@ class MakePost extends React.Component {
 
     return (
       <Styles>
-        <Form onSubmit={this.handleSubmit}>
-          <div className='box'>
-            <Form.Group controlId='formPost'>
-              <LimitedTextarea limit={500} value='' rows='3' />
-            </Form.Group>
+          <Form onSubmit={this.handleSubmit}>
+              <div className='box'>
+          <Form.Group controlId='formPost'>
+            <LimitedTextarea limit={500} value='' rows='3' />
+          </Form.Group>
           </div>
           <div>
-            <Button variant='primary' type='submit'>
+          <Button variant='primary' type='submit'>
               Post
-            </Button>
+          </Button>
           </div>
           <Form.Check
-            type='checkbox'
-            value='true'
-            label='Anonymous'
-            className='checkbox'
-            onClick={this.handleCheckBox}
-          />
-        </Form>
+              type='checkbox'
+              value='true'
+              label='Anonymous'
+              className='checkbox'
+              onClick={this.handleCheckBox}
+            />
+          </Form>
       </Styles>
-    );
+      );
   }
 }
 
-export default MakePost;
+  export default MakePost;
