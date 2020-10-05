@@ -3,7 +3,6 @@ import { Formik } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import NavigationBar from "./Navigation";
 
 const Styles = styled.div`
     text-align: center;
@@ -90,7 +89,7 @@ const Login = () => (
                 handleBlur,
                 handleSubmit
             } = props;
-            return (
+            return (    
                 <form onSubmit={handleSubmit}>
                     <input
                         name="email"

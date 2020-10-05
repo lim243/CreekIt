@@ -10,7 +10,7 @@ import { Feed } from './Feed';
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <HomePage />
+      <HomePage></HomePage>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

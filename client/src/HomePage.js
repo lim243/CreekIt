@@ -3,19 +3,24 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 //import './HomePage.css';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-import Login from "./Components/Login";
-import Signup from "./Components/Signup";
-import NavigationBar from "./Components/Navigation";
-import Help from "./Components/FAQ";
-import Forgot from "./Components/ForgotPassword";
-import Restore from "./Components/RestorePassword";
-import Reset from "./Components/ResetPassword";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Navigation from "./components/Navigation";
+import Help from "./components/FAQ";
+import Forgot from "./components/ForgotPassword";
+import Restore from "./components/RestorePassword";
+import Reset from "./components/ResetPassword";
 import { LoggedIn } from "./LoggedIn";
+import { Feed } from "./Feed";
+import PostView from './components/PostView';
+
 
 function HomePage() {
     return (
     <Router>
-        <NavigationBar />
+        <div id="initNavi">
+        <Navigation></Navigation>
+        </div>
         <br></br>
         <br></br>
         <div className="HomePage">
@@ -31,6 +36,8 @@ function HomePage() {
                             <Route path="/restore" component={Restore} />
                             <Route path="/account" component={LoggedIn} />
                             <Route path="/reset" component={Reset} />
+                            <Route path="/feed" component={Feed}>
+                            </Route> 
                         </Switch>
                     </div>
                 </div>

@@ -28,7 +28,7 @@ const Styles = styled.div`
 
 
 
-class MakePost extends React.Component {
+class AddComment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +56,7 @@ class MakePost extends React.Component {
   handleSubmit(event) {
     const hashtag = this.state.post.match(/(?:\s|^)?#[A-Za-z0-9\-\.\_]+(?:\s|$)/g);
     const URL = this.state.post.match(/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi);
-    alert('A name was submitted: ' + this.state.post + this.state.checked);
+    alert('A comment was submitted: ' + this.state.post + this.state.checked);
     
 
     // After POST, we have to make hashtag and URL be hyperlinks
@@ -88,7 +88,7 @@ class MakePost extends React.Component {
             cols={43}
             onChange={event => setFormattedContent(event.target.value)}
             value={content}
-            placeholder="Make a post"
+            placeholder="Add a comment"
             className="textarea"
           />
           <p>
@@ -103,12 +103,12 @@ class MakePost extends React.Component {
           <Form onSubmit={this.handleSubmit}>
               <div className="box">
           <Form.Group controlId="formPost">
-          <LimitedTextarea limit={500} value= "" rows="3" />
+          <LimitedTextarea limit={250} value= "" rows="3" />
           </Form.Group>
           </div>
           <div>
           <Button variant="primary" type="submit">
-              Post
+              Comment
           </Button>
           </div>
           <Form.Check
@@ -124,5 +124,5 @@ class MakePost extends React.Component {
   }
 }
 
-  export default  MakePost;
+  export default  AddComment;
 

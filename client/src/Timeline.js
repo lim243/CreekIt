@@ -1,14 +1,17 @@
 import React from 'react';
-import Post from './Components/Post';
+import Post from './components/Post';
 import styled from 'styled-components';
-import MakePost from './Components/MakePost';
+import MakePost from './components/MakePost';
 
 const GridWrapper = styled.div`
+
   display: block;
   margin-top: 1em;
-  margin-left: 35em;
+  margin-left: 35%;
   margin-right: 25em;
   padding-top: 75px;
+  width: 500px;
+  
 
 `;
 
