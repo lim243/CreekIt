@@ -27,7 +27,7 @@ const Styles = styled.div`
   }
 `;
 
-export const NavigationBar = () => (
+export const Navigation = () => (
   <Styles>
       <div className="sticky">
     <Navbar expand="lg">
@@ -47,4 +47,4 @@ export const NavigationBar = () => (
   </Styles>
 )
 
-export default NavigationBar;
+export default Navigation;

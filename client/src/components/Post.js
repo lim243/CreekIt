@@ -3,6 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Upvote from './Upvote'
 import Downvote from './Downvote';
+import { Redirect } from 'react-router-dom';
+import PostView from './PostView';
 
 const Styles = styled.div`
   
@@ -37,12 +39,16 @@ class Post extends React.Component {
       username: '',
       time: '',
       date: '',
-      post: ''
+      post: '',
+      commentButton: ''
     }
   }
 
   addCommentHandler = () => {
     // redirect to comments page
+    // Somehow how to pass post id to comment component for it to fetch the data
+    console.log("CLICKED");  
+    this.setState({redirect: true});
 
   };
 
@@ -56,7 +62,14 @@ class Post extends React.Component {
     //Get Name
     //Get Time
     //Get Date
-    //Get post
+    //Get post to="/feed/post" 
+    if (this.state.redirect) {
+      // Fetch the postId and set the post id to that number
+      return <Redirect to={{
+        pathname: '/feed/post',
+        state: { postId: '123' }
+    }} />;
+    }
     return(
     <Styles>
         <div>
@@ -71,9 +84,9 @@ class Post extends React.Component {
         <p>{this.props.post} 
         </p>
         <div >
-        <Upvote></Upvote>
-        <Downvote></Downvote>
-        <button onClick={this.addCommentHandler} className="interaction">Comments </button>
+        <Upvote upvotes={this.props.upvotes} />
+        <Downvote downvotes={this.props.downvotes} />
+        {this.props.commentButton == 'false' ?  null : <button onClick={this.addCommentHandler} className="interaction">Comments </button>}
         <button onClick={this.saveHandler} className="interaction">Save </button>
         </div>
     </Styles>

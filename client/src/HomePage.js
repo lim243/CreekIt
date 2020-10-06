@@ -5,18 +5,21 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import NavigationBar from "./components/Navigation";
+import Navigation from "./components/Navigation";
 import Help from "./components/FAQ";
 import Forgot from "./components/ForgotPassword";
 import Restore from "./components/RestorePassword";
 import Reset from "./components/ResetPassword";
 import { LoggedIn } from "./LoggedIn";
 import { Feed } from "./Feed";
+import PostView from './components/PostView';
 
 function HomePage() {
     return (
     <Router>
-        <NavigationBar />
+        <div id="initNavi">
+        <Navigation></Navigation>
+        </div>
         <br></br>
         <br></br>
         <div className="HomePage">
