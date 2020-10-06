@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Formik } from "formik"
+import { Formik, Field, ErrorMessage } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
+import { mockComponent } from "react-dom/test-utils";
 
 const Styles = styled.div`
     text-align: center;
@@ -66,7 +67,7 @@ const Signup = () => (
             setTimeout(() => {
                 console.log("Logging in", values);
                 setSubmitting(false);
-                document.location.href = 'http://localhost:3000/account'
+                window.location.href = 'http://localhost:3000/feed'
             }, 500);
         }} 
 
@@ -87,6 +88,13 @@ const Signup = () => (
             date: Yup.string()
                 .required("Required")
                 .matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
+            birthdate: Yup.date()
+                .required()
+                .test("age", "You must be 18 or older", function(birthdate) {
+                    const cutoff = new Date();
+                    cutoff.setFullYear(cutoff.getFullYear() - 18);      
+                    return birthdate <= cutoff;
+                  })
         })}
     >
         {props => {
@@ -165,6 +173,14 @@ const Signup = () => (
                     {errors.date && touched.date && (
                         <div className="input-feedback">{errors.date}</div>
                     )}
+                    <Field
+                type="date"
+                name="birthdate"
+                label="Birthdate"
+                onBlur={handleBlur}
+                onChange={handleChange}
+              />
+              <ErrorMessage name="birthdate" />
                     <br></br>
                     <button 
                         type="submit"

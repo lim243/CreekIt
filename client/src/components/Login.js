@@ -68,7 +68,7 @@ const Login = () => (
             setTimeout(() => {
                 console.log("Logging in", values);
                 setSubmitting(false);
-                document.location.href = 'http://localhost:3000/account'
+                window.location.href = 'http://localhost:3000/feed'
             }, 500);
         }}
 

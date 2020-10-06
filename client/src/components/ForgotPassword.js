@@ -58,15 +58,15 @@ const Styles = styled.div`
     }
     `;
 
-const Login = () => (
+const ForgotPassword = () => (
     <Styles>
     <Formik
         initialValues={{ email: ""}}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
-                console.log("Logging in", values);
+                console.log("Sending email for verification code", values);
                 setSubmitting(false);
-                document.location.href = 'http://localhost:3000/restore'
+                window.location.href = '/restore'
             }, 500);
         }} 
 
@@ -118,4 +118,4 @@ const Login = () => (
     </Styles>
 );
 
-export default Login;
+export default ForgotPassword;

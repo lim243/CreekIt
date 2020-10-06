@@ -67,9 +67,8 @@ const RestorePassword = () => (
         initialValues={{ password: ""}}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
-                console.log("Correct Code...", values);
                 setSubmitting(false);
-                document.location.href = 'http://localhost:3000/reset'
+                window.location.href = 'http://localhost:3000/reset'
             }, 500);
         }} 
 

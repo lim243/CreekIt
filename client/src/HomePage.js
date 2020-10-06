@@ -11,6 +11,7 @@ import Forgot from "./components/ForgotPassword";
 import Restore from "./components/RestorePassword";
 import Reset from "./components/ResetPassword";
 import { LoggedIn } from "./LoggedIn";
+import { Feed } from "./Feed";
 
 function HomePage() {
     return (
@@ -31,6 +32,7 @@ function HomePage() {
                             <Route path="/restore" component={Restore} />
                             <Route path="/account" component={LoggedIn} />
                             <Route path="/reset" component={Reset} />
+                            <Route path="/feed" component={Feed} />
                         </Switch>
                     </div>
                 </div>
