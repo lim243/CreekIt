@@ -41,7 +41,7 @@ export const NavigationBar = () => (
         </Form>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
-            <Nav.Item><Nav.Link href="/profile">My Profile</Nav.Link></Nav.Item> 
+            <Nav.Item><Nav.Link href="/feed/myprofile">My Profile</Nav.Link></Nav.Item> 
             <Nav.Item><Nav.Link href="/help">FAQ</Nav.Link></Nav.Item> 
             <Nav.Item><Nav.Link href="/logout">Logout</Nav.Link></Nav.Item>
           </Nav>

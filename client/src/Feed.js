@@ -4,6 +4,7 @@ import { BrowserRouter as BrowserRouter, Route, Switch } from "react-router-dom"
 import Sidebar from './components/SideBar';
 import Timeline from './Timeline';
 import PostView from "./components/PostView";
+import MyProfile from './components/MyProfile';
 
 export const Feed = (props) => (   
   <BrowserRouter>
@@ -12,6 +13,7 @@ export const Feed = (props) => (
     <Switch>
       <Route exact path="/feed" component={Timeline} />
       <Route exact path="/feed/post" component={PostView} />
+      <Route exact path="/feed/myprofile" component={MyProfile} />
     </Switch>
   </BrowserRouter>
 )
