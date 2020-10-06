@@ -1,6 +1,7 @@
 import Avatar from 'react-avatar';
 import React from 'react';
 import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
 
 
 const Styles = styled.div`
@@ -51,17 +52,46 @@ class ProfileInfo extends React.Component {
           postNum: '',
           following: '',
           followers: '',
-          topics: ''
+          topics: '',
+          unfollow: 'Follow'
         }
       }
+
+      editHandler = () => {
+        // redirect to edit profile page
+        // Somehow how to pass post id to comment component for it to fetch the data
+        console.log("CLICKED");  
+         this.setState({redirect: true});
+    
+      };
+    
+    followHandler = () => {
+        // handled following and set the button to followed
+        console.log("CLICKED");  
+        if (this.state.unfollow == 'Follow') {
+            this.setState({unfollow: 'Unfollow'});
+            // Handle follow in backend
+        } else {
+            this.setState({unfollow: 'Follow'});
+            // Handle unfollow in backend
+        }
+      };
+
     render() {
+        if (this.state.redirect) {
+            // Fetch the userId and set the userId to that number
+            return <Redirect to={{
+              pathname: '/feed/editprofile',
+              state: { userId: '123' }
+          }} />;
+          }
         return(
             <Styles>
             <div>
                 <Avatar name={this.props.name} size="80" round="100px" className="avatar"/>
                 <h5 style={{fontWeight: "bold"}} className="">{this.props.name}</h5>
                 <p className="username">@{this.props.username}</p>   
-                {this.props.followButton == 'false' ?  <button onClick={this.addCommentHandler} className="interaction">Edit Profile </button> : <button onClick={this.addCommentHandler} className="interaction">Follow </button>}      
+                {this.props.followButton == 'false' ?  <button onClick={this.editHandler} className="interaction">Edit Profile </button> : <button onClick={this.followHandler} className="interaction">{this.state.unfollow} </button>}      
                  <p className="bio">{this.props.bio} </p>
                  <p className="stats">Followers: {this.props.followers} </p>
                  <p className="stats">Following: {this.props.following} </p>
