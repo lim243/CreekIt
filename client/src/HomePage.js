@@ -14,7 +14,6 @@ import { LoggedIn } from "./LoggedIn";
 import { Feed } from "./Feed";
 import PostView from './components/PostView';
 
-
 function HomePage() {
     return (
     <Router>
@@ -36,8 +35,7 @@ function HomePage() {
                             <Route path="/restore" component={Restore} />
                             <Route path="/account" component={LoggedIn} />
                             <Route path="/reset" component={Reset} />
-                            <Route path="/feed" component={Feed}>
-                            </Route> 
+                            <Route path="/feed" component={Feed} />
                         </Switch>
                     </div>
                 </div>
