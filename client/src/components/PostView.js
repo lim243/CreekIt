@@ -5,6 +5,7 @@ import Comment from "./Comment";
 import AddComment from "./AddComment";
 import axios from "axios"
 
+
 const GridWrapper = styled.div`
   display: block;
   margin-top: 1em;
@@ -15,14 +16,25 @@ const GridWrapper = styled.div`
 `;
 
 class PostView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      postId: "",
-      post: {},
-      comments: [],
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+          postId: '',
+          post: {},
+          comments: []
+        }
+      }
+  render() {
+      // this.state.postId = this.props.history.state.postId;
+      const url = this.props.history.location.pathname;
+      console.log(this.props.history.location.pathname);
+      const regex = '[^\/feed\/post\/].+';
+      const postId = url.match(regex);
+      console.log("This is postId:" + postId);
+          //These are just hard-coded example. We would need to fetch the database to get the feed
+    //Fetch the post clicked from the feed
+    //let post = {name:"emily", username:"emily", post:"I am the sixth post", date:"9/30/2020", time:"11:55"};
+
 
   componentDidMount() {
     this.fetchPost();
