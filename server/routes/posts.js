@@ -10,10 +10,12 @@ router.get("/:pid", getPost);
 router.get("/topic", getTopic);
 router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
+router.get("/:pid/comments", getComments);
 
 router.post("/new", createPost);
 router.post("/:pid/upvote", setUpvote);
 router.post("/:pid/downvote", setDownvote);
+router.post("/:pid/newcomment", addPostComments);
 
 router.post("/:pid/topic", setTopic);
 
@@ -36,6 +38,7 @@ async function getAllPosts(req, res) {
   };
   return res.status(200).json(msg);
 }
+
 async function getPost(req, res) {
   const pid = req.params.pid;
 
@@ -55,6 +58,7 @@ async function getPost(req, res) {
   };
   return res.status(200).json(msg);
 }
+
 async function getTopic(req, res) {
   const { topic } = req.body;
 
@@ -111,7 +115,28 @@ async function getDownvoteUsers(req, res) {
   };
   return res.status(200).json(msg);
 }
-async function getComments(req, res) {}
+async function getComments(req, res) {
+  const pid = req.params.pid;
+
+  const query = {
+    name: "get-all-post-comments",
+    text: `SELECT c.usename username, c.date , c.body , c.upvotes , c.upvotes_user , c.downvotes  , 
+    c.downvote_users  , c.parent_id  
+    FROM public.posts as p, public.comments as c
+    where p.id = $1 and p.id = c.parent_id
+    order by c.date DESC;`,
+    values: [pid],
+  };
+
+  const { rows } = await db.query(query);
+
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
 
 /**
  * POST FUNCTIONS
@@ -207,4 +232,28 @@ async function setDownvote(req, res) {
 async function setPostComments(req, res) {}
 async function setSaved(req, res) {}
 // async function setId(req, res) {}
-async function addPostComments(req, res) {}
+async function addPostComments(req, res) {
+  const pid = req.params.pid;
+  const { username, body } = req.body;
+  console.log("req.body", req.body);
+  // Date
+  date = Date.now();
+
+  const query = {
+    name: "create-post",
+    text: `INSERT INTO public.comments
+        (username, date, body, parent_id) 
+        VALUES ($1, to_timestamp($2/1000.0), $3, $4) RETURNING id`,
+    values: [username, date, body, pid],
+  };
+
+  const { rows } = await db.query(query);
+
+  // console.log("rows", result);
+  // Send data back
+  const msg = {
+    success: true,
+    commentId: rows[0].id,
+  };
+  return res.status(200).json(msg);
+}
