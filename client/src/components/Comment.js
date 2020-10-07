@@ -3,8 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Upvote from './Upvote'
 import Downvote from './Downvote';
-import { Redirect } from 'react-router-dom';
-import PostView from './PostView';
 
 const Styles = styled.div`
   
@@ -25,13 +23,12 @@ const Styles = styled.div`
     margin-left: 10px;
   }
   .interaction {
-    margin-left: 50px !important;
+    margin-left: 10px !important;
     margin-bottom: 20px;
   }
-
 `;
 
-class Post extends React.Component {
+class Comment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,37 +36,16 @@ class Post extends React.Component {
       username: '',
       time: '',
       date: '',
-      post: '',
-      commentButton: ''
+      comment: ''
     }
   }
-
-  addCommentHandler = () => {
-    // redirect to comments page
-    // Somehow how to pass post id to comment component for it to fetch the data
-    console.log("CLICKED");  
-    this.setState({redirect: true});
-
-  };
-
-  saveHandler = () => {
-    // mark the post as saved
-
-  };
 
   render() {
     // Use src for image
     //Get Name
     //Get Time
     //Get Date
-    //Get post to="/feed/post" 
-    if (this.state.redirect) {
-      // Fetch the postId and set the post id to that number
-      return <Redirect to={{
-        pathname: '/feed/post',
-        state: { postId: this.props.postId }
-    }} />;
-    }
+    //Get comment
     return(
     <Styles>
         <div>
@@ -81,17 +57,15 @@ class Post extends React.Component {
             </div>
             <p className="username">@{this.props.username}</p>         
         </div>
-        <p>{this.props.post} 
+        <p>{this.props.comment} 
         </p>
-        <div >
-        <Upvote upvotes={this.props.upvotes} />
-        <Downvote downvotes={this.props.downvotes} />
-        {this.props.commentButton == 'false' ?  null : <button onClick={this.addCommentHandler} className="interaction">Comments </button>}
-        <button onClick={this.saveHandler} className="interaction">Save </button>
+        <div className="interaction">
+        <Upvote upvotes={this.props.upvotes}></Upvote>
+        <Downvote downvotes={this.props.downvotes}></Downvote>
         </div>
     </Styles>
     )
   }
 }
 
-export default Post;
+export default Comment;

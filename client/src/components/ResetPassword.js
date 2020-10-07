@@ -66,9 +66,9 @@ const ResetPassword = () => (
         initialValues={{ password: "", confirm: "" }}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
-                console.log("Correct Code...", values);
+                console.log("New password", values);
                 setSubmitting(false);
-                document.location.href = 'http://localhost:3000/account'
+                window.location.href = 'http://localhost:3000/feed'
             }, 500);
         }} 
 

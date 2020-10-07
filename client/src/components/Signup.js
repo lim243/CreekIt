@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Formik } from "formik"
+import { Formik, Field, ErrorMessage } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
+import DatePicker from './DatePicker';
 
 const Styles = styled.div`
     text-align: center;
@@ -61,12 +62,12 @@ const Styles = styled.div`
 const Signup = () => (
     <Styles>
     <Formik
-        initialValues={{ email: "", password: "", confirm: "", username: "", date: "", }}
+        initialValues={{ email: "", password: "", confirm: "", username: "", date: "" ,}}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
                 console.log("Logging in", values);
                 setSubmitting(false);
-                document.location.href = 'http://localhost:3000/account'
+                window.location.href = 'http://localhost:3000/feed'
             }, 500);
         }} 
 
@@ -86,7 +87,7 @@ const Signup = () => (
                 .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
             date: Yup.string()
                 .required("Required")
-                .matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
+                //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
         })}
     >
         {props => {
@@ -153,7 +154,7 @@ const Signup = () => (
                     {errors.username && touched.username && (
                         <div className="input-feedback">{errors.username}</div>
                     )}
-                    <input
+                    {/*<input
                         name="date"
                         type="text"
                         placeholder="MM/DD/YYYY"
@@ -164,7 +165,12 @@ const Signup = () => (
                     />
                     {errors.date && touched.date && (
                         <div className="input-feedback">{errors.date}</div>
+                    )} */}
+                    <DatePicker name="date"/>
+                    {errors.date && touched.date && (
+                        <div className="input-feedback">{errors.date}</div>
                     )}
+                    <br></br>
                     <br></br>
                     <button 
                         type="submit"
