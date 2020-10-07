@@ -24,40 +24,32 @@ class PostView extends React.Component {
           comments: []
         }
       }
-  render() {
-      // this.state.postId = this.props.history.state.postId;
-      const url = this.props.history.location.pathname;
-      console.log(this.props.history.location.pathname);
-      const regex = '[^\/feed\/post\/].+';
-      const postId = url.match(regex);
-      console.log("This is postId:" + postId);
-          //These are just hard-coded example. We would need to fetch the database to get the feed
-    //Fetch the post clicked from the feed
-    //let post = {name:"emily", username:"emily", post:"I am the sixth post", date:"9/30/2020", time:"11:55"};
-
 
   componentDidMount() {
-    this.fetchPost();
-    this.fetchComments();
+    const url = this.props.history.location.pathname;
+    const postId = url.split('/').pop(-1)
+    console.log("This is postId:" + postId);
+    this.setState({postId})
+    this.fetchPost(postId);
+    this.fetchComments(postId);
   }
 
-  fetchPost = () =>{
-    axios.get(`http://localhost:5000/api/v1/posts/${this.state.postId}`).then((res) => {
+  fetchPost = (postId) =>{
+    axios.get(`http://localhost:5000/api/v1/posts/${postId}`).then((res) => {
       console.log("res", res.data.payload);
       this.setState({ post: res.data.payload[0] });
     });
   }
-  fetchComments = () => {
-    axios.get(`http://localhost:5000/api/v1/posts/${this.state.postId}/comments`).then((res) => {
+  fetchComments = (postId) => {
+    axios.get(`http://localhost:5000/api/v1/posts/${postId}/comments`).then((res) => {
       console.log("comments", res.data.payload);
       this.setState({ comments: res.data.payload });
     });
   };
-
   render() {
-    // console.log('this.props.location.state', this.props.location.state);
-    this.state.postId = this.props.location.state.postId;
-    console.log('this.state.postId', this.state.postId);
+    console.log('this.props', this.state);
+    // this.state.postId = this.props.location.state.postId;
+    // console.log('this.state.postId', this.state.postId);
 
     return (
       // <div>Hi</div>

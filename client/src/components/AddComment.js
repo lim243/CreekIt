@@ -1,6 +1,7 @@
 import React from 'react';
 import {Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import axios from 'axios'
 
 const Styles = styled.div`
   .form-center {
@@ -40,8 +41,16 @@ class AddComment extends React.Component {
     this.handleCheckBox = this.handleCheckBox.bind(this);
   }
 
-  
-
+  submitComment(data) {
+    axios
+      .post(`http://localhost:5000/api/v1/posts/${this.props.postId}/newcomment`, data)
+      .then((res) => {
+        console.log("res.data", res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   handleChange(event) {    
     this.setState({post: event.target.value});  
@@ -53,15 +62,28 @@ class AddComment extends React.Component {
     this.setState({checked: check})
   }
 
+  // handleSubmit(event) {
+  //   const hashtag = this.state.post.match(/(?:\s|^)?#[A-Za-z0-9\-\.\_]+(?:\s|$)/g);
+  //   const URL = this.state.post.match(/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi);
+  //   alert('A comment was submitted: ' + this.state.post + this.state.checked);
+  // }
   handleSubmit(event) {
-    const hashtag = this.state.post.match(/(?:\s|^)?#[A-Za-z0-9\-\.\_]+(?:\s|$)/g);
-    const URL = this.state.post.match(/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi);
-    alert('A comment was submitted: ' + this.state.post + this.state.checked);
-    
+      const hashtag = this.state.post.match(/(?:|^)?#[A-Za-z0-9\-\.\_]+(?:|$)/g);
+      const URL = this.state.post.match(/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi);
+      
 
-    // After POST, we have to make hashtag and URL be hyperlinks
-    // and also anonymous mode
-  }
+      const data = {
+        body: this.state.post,
+        username: localStorage.getItem('username'),
+        topic: hashtag,
+        anonymous: this.state.checked,
+      };
+      
+      console.log('this.props', this.props);
+      alert("HI")
+      this.submitComment(data);
+      // TODO: After POST, we have to make hashtag and URL be hyperlinks and also anonymous mode
+    }
 
   
 
