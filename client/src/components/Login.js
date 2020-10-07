@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import NavigationBar from "./Navigation";
+import axios from 'axios'
 
 const Styles = styled.div`
   text-align: center;
@@ -61,7 +62,21 @@ const Login = () => (
         setTimeout(() => {
           console.log("Logging in", values);
           setSubmitting(false);
-          document.location.href = "http://localhost:3000/feed";
+          localStorage.setItem("email",values.email);
+          axios.post("http://localhost:5000/api/v1/users/signIn",{
+            email:values.email,
+            password:values.password
+          }).then((response)=>{
+            console.log(response);
+            if (response.data){
+              localStorage.setItem("token",response.data);
+              document.location.href = "http://localhost:3000/feed";
+            }
+          },(error)=>{
+            console.log(error);
+          });
+          //document.location.href = "http://localhost:3000/feed";
+          //axios.post()
         }, 500);
       }}
       validationSchema={Yup.object().shape({
