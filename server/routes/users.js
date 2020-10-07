@@ -307,7 +307,7 @@ async function signUp(req, res) {
 
     const query = {
       name: "create-user",
-      text: "INSERT INTO Users (username, password) VALUES ($1,$2)",
+      text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
       values: [email, hashPw],
     };
 
@@ -334,8 +334,9 @@ async function signUp(req, res) {
 
 async function signIn(req, res) {
   console.log("req.body", req.body);
-  let email = req.body.email;
-  let password = req.body.password;
+  
+  const {email, password} = req.body
+
   const hashedPw = await getPassword(email);
   bcrypt.compare(password, hashedPw, (err, result) =>{
     let payload = {email: email};
@@ -351,8 +352,12 @@ async function signIn(req, res) {
     console.log("acess Token", accessToken);
     req.accessToken = accessToken;
     req.email = email;
+    const data = {
+      success: true,
+      accessToken: accessToken
+    }
     //authenticate.storeToken(username,accessToken);
-    res.status(200).send(accessToken);
+    res.status(200).send(data);
       //req.accessToken = accessToken;
   });
 }

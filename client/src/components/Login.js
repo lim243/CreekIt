@@ -63,13 +63,14 @@ const Login = () => (
           console.log("Logging in", values);
           setSubmitting(false);
           localStorage.setItem("email",values.email);
+          localStorage.setItem("username",values.email); // TODO: DANGEROUS Right now is the same thing
           axios.post("http://localhost:5000/api/v1/users/signIn",{
             email:values.email,
             password:values.password
           }).then((response)=>{
             console.log(response);
             if (response.data){
-              localStorage.setItem("token",response.data);
+              localStorage.setItem("token",response.data.accessToken);
               document.location.href = "http://localhost:3000/feed";
             }
           },(error)=>{
