@@ -65,9 +65,9 @@ class Post extends React.Component {
     //Get post to="/feed/post" 
     if (this.state.redirect) {
       // Fetch the postId and set the post id to that number
+      var postId = '123';
       return <Redirect to={{
-        pathname: '/feed/post',
-        state: { postId: '123' }
+        pathname: '/feed/post/' + postId,
     }} />;
     }
     return(
