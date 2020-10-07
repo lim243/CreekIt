@@ -80,7 +80,7 @@ const Login = () => (
               document.location.href = "http://localhost:3000/feed";
             }
           },(error)=>{
-            console.log(error);
+            alert(error);
           });
           //document.location.href = "http://localhost:3000/feed";
           //axios.post()

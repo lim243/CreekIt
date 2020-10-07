@@ -67,12 +67,17 @@ const Login = () => (
             setTimeout(() => {
                 console.log("Logging in", values);
                 setSubmitting(false);
-                const request = {
-                    method:'get',
-                    headers:{'ContentType':'application/json'},
-                    body:{}
-                }
-                let response = axios.get('http://localhost:5000/api/v1/users/kotori/email',request);
+                axios.post("http://localhost:5000/api/v1/validemail",{
+                    email:values.email,
+                }).then((response)=>{
+                    console.log(response);
+                    if (response.data){
+                    localStorage.setItem("code",response.data);
+                    document.location.href = "http://localhost:3000/feed";
+                    }
+                },(error)=>{
+                    console.log(error);
+                });
                 document.location.href = 'http://localhost:3000/restore'
             }, 500);
         }} 

@@ -24,6 +24,7 @@ exports.login = function(req, res){
 exports.isauth = async function(req,res,next){
     console.log("req.body", req.body);
     let token = req.body.accessToken;
+    token = localStorage.getItem("token");
     console.log(token);
     try{
         var decoded = jwt.verify(token, 'Creekit Secret');
