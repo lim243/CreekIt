@@ -2,7 +2,6 @@ import React from "react";
 import Post from './Post';
 import styled from "styled-components";
 import axios from "axios";
-import moment from "moment";
 import ProfileInfo from "./ProfileInfo";
 import CoolTabs from 'react-cool-tabs';
 
@@ -19,14 +18,38 @@ const GridWrapper = styled.div`
 
 class Posts extends React.Component {
     constructor(props) {
-        super(props);
-        this.state = {
-          posts: [{name:"emily", username:"emily", post:"I am the sixth post", date:"9/30/2020", time:"12:15"},
-          {name:"bob", username:"bobby", post:"I am the fifth post", date:"9/30/2020", time:"12:13"}, 
-          {name:"joe", username:"joey", post:"I am the fourth post", date:"9/30/2020", time:"12:10"},
-          {name:"jess", username:"jessica", post:"I am the third post", date:"9/30/2020", time:"12:08"}],
-        };
-      }
+      super(props);
+      this.state = {
+        posts: []
+        // posts: [{name:"emily", username:"emily", post:"I am the sixth post", date:"9/30/2020", time:"12:15"},
+        // {name:"bob", username:"bobby", post:"I am the fifth post", date:"9/30/2020", time:"12:13"}, 
+        // {name:"joe", username:"joey", post:"I am the fourth post", date:"9/30/2020", time:"12:10"},
+        // {name:"jess", username:"jessica", post:"I am the third post", date:"9/30/2020", time:"12:08"}],
+      };
+    }
+
+    componentDidMount() {
+      console.log('fetchPosts');
+      this.fetchPosts()
+    }
+
+    fetchPosts = () =>{
+      const username = localStorage.getItem('username')
+      const accessToken = localStorage.getItem('token')
+
+      const authString = "Bearer ".concat(accessToken)
+      const header = {Authorization: authString};
+      console.log('accessToken', {accessToken});
+      axios.get(`http://localhost:5000/api/v1/users/${username}/posts`, {headers:header})
+        .then((res) => {
+          console.log('res', res.data);
+          this.setState({posts: res.data.payload})
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
+
     render() {
       return (<div style={{marginTop: '10px'}}>
         {this.state.posts.map((item, index) => (
@@ -57,6 +80,10 @@ class InteractedPosts extends React.Component {
           {name:"Bill", username:"william", post:"I am the first post.", date:"9/30/2020", time:"12:00"}],
         };
       }
+
+
+
+
     render() {
       return (
       <div style={{marginTop: '10px'}}>
@@ -78,15 +105,44 @@ class InteractedPosts extends React.Component {
 }
 
 class MyProfile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      personal: {}
+    }
+  }
+
+  componentDidMount() {
+    this.fetchUser()
+  }
+
+  fetchUser = () =>{
+    const username = localStorage.getItem('username')
+    const accessToken = localStorage.getItem('token')
+
+    const authString = "Bearer ".concat(accessToken)
+    const header = {Authorization: authString};
+    console.log('accessToken', {accessToken});
+    axios.get(`http://localhost:5000/api/v1/users/${username}`, {headers:header})
+      .then((res) => {
+        console.log('res', res.data.rows[0]);
+        this.setState({personal: res.data.rows[0]})
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  }
+
   render() {
+    const user = this.state.personal
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
     return (
       <GridWrapper>
-        <ProfileInfo name={"henry"} username={"Hen123"} bio={"Developer of CreekIt"} followButton={"false"} postNum={'0'}
-            following={"1"}
-            followers={"100"}
-            topics={"2"} className="sticky"/>
+        <ProfileInfo name={user.name} username={user.username} bio={user.about_me} followButton={"false"} postNum={user.posts && user.posts.length || 0}
+            following={user.following && user.following.length || 0}
+            followers={user.follwed && user.followed.length || 0}
+            topics={user.topics && user.topics.length || 0} className="sticky"/>
         <br></br>
         <br></br>
         <br></br>

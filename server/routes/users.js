@@ -14,6 +14,7 @@ module.exports = router;
 // Router Functions
 router.get("/", authenticate.isauth, getUsers);
 router.get("/:username", getOneUserByUsername);
+router.get("/:username/posts", getPostsByUsername);
 router.get("/:username/email", getEmail);
 router.get("/:username/name", getName);
 router.get("/:username/username", getUsername); //TODO: Undefined
@@ -50,8 +51,9 @@ async function getUsers(req, res) {
   const data = { rowCount, rows };
 
   // Send data back
-  return res.status(200).json(result);
+  return res.status(200).json(data);
 }
+
 async function getOneUserByUsername(req, res) {
   // Params
   const username = req.params.username;
@@ -71,6 +73,29 @@ async function getOneUserByUsername(req, res) {
   // Send data back
   return res.status(200).json(data);
 }
+
+async function getPostsByUsername(req, res) {
+  const username = req.params.username
+  
+  const query = {
+    name: "get-all-posts-by-username",
+    text: 
+    `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') as date,
+    to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, 
+    p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = $1 AND p.username = u.username;`,
+    values: [username]
+  };
+
+  const { rows } = await db.query(query);
+
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+
 async function getEmail(req, res) {
   const username = req.params.username;
   const query = {
@@ -307,7 +332,7 @@ async function signUp(req, res) {
 
     const query = {
       name: "create-user",
-      text: "INSERT INTO Users (username, password) VALUES ($1,$2)",
+      text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
       values: [email, hashPw],
     };
 
@@ -334,8 +359,9 @@ async function signUp(req, res) {
 
 async function signIn(req, res) {
   console.log("req.body", req.body);
-  let email = req.body.email;
-  let password = req.body.password;
+  
+  const {email, password} = req.body
+
   const hashedPw = await getPassword(email);
   bcrypt.compare(password, hashedPw, (err, result) =>{
     let payload = {email: email};
@@ -351,8 +377,12 @@ async function signIn(req, res) {
     console.log("acess Token", accessToken);
     req.accessToken = accessToken;
     req.email = email;
+    const data = {
+      success: true,
+      accessToken: accessToken
+    }
     //authenticate.storeToken(username,accessToken);
-    res.status(200).send(accessToken);
+    res.status(200).send(data);
       //req.accessToken = accessToken;
   });
 }
