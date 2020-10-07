@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Formik } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
+import axios from 'axios'
 
 const Styles = styled.div`
     text-align: center;
@@ -66,6 +67,13 @@ const ForgotPassword = () => (
             setTimeout(() => {
                 console.log("Sending email for verification code", values);
                 setSubmitting(false);
+                const request = {
+                    method:'get',
+                    headers:{'ContentType':'application/json'},
+                    body:{}
+                }
+                let response = axios.get('http://localhost:5000/api/v1/users/kotori/email',request);
+//                 document.location.href = 'http://localhost:3000/restore'
                 window.location.href = '/restore'
             }, 500);
         }} 

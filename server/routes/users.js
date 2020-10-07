@@ -103,11 +103,11 @@ async function getName(req, res) {
   // Send data back
   return res.status(200).json(data);
 }
-async function getPassword(username) {
+async function getPassword(email) {
   const query = {
     name: "get-password",
-    text: "SELECT password FROM Users WHERE username = $1",
-    values: [username],
+    text: "SELECT password FROM Users WHERE email = $1",
+    values: [email],
   };
 
   console.log("query", query);
@@ -298,9 +298,8 @@ async function setEducation(req, res) {}
 async function setPhoto(req, res) {}
 async function addFollowing(req, res) {}
 async function addBlocked(req, res) {}
-
 async function signUp(req, res) {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
     // Now we can store the password hash in db.
@@ -309,7 +308,7 @@ async function signUp(req, res) {
     const query = {
       name: "create-user",
       text: "INSERT INTO Users (username, password) VALUES ($1,$2)",
-      values: [username, hashPw],
+      values: [email, hashPw],
     };
 
     console.log("query", query);
@@ -318,7 +317,7 @@ async function signUp(req, res) {
       .then((data) => {
         const msg = {
           "success": true,
-          "payload": `User ${username} created!`,
+          "payload": `User ${email} created!`,
         };
         res.status(200).send(msg);
       })
@@ -326,7 +325,7 @@ async function signUp(req, res) {
         console.log("error", error);
         const msg = {
           "success": false,
-          "payload": `ERROR ${error.code}: ${error.detail} - User ${username} was NOT created!`,
+          "payload": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
         };
         res.status(500).send(msg);
       });
@@ -335,11 +334,11 @@ async function signUp(req, res) {
 
 async function signIn(req, res) {
   console.log("req.body", req.body);
-  let username = req.body.username;
+  let email = req.body.email;
   let password = req.body.password;
-  const hashedPw = await getPassword(username);
+  const hashedPw = await getPassword(email);
   bcrypt.compare(password, hashedPw, (err, result) =>{
-    let payload = {username: username};
+    let payload = {email: email};
     console.log("password", result);
     if (!result){
       console.log("Password doest not match!");
@@ -351,8 +350,8 @@ async function signIn(req, res) {
     })
     console.log("acess Token", accessToken);
     req.accessToken = accessToken;
-    req.username = username;
-    authenticate.storeToken(username,accessToken);
+    req.email = email;
+    //authenticate.storeToken(username,accessToken);
     res.status(200).send(accessToken);
       //req.accessToken = accessToken;
   });

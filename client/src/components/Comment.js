@@ -26,7 +26,6 @@ const Styles = styled.div`
     margin-left: 10px !important;
     margin-bottom: 20px;
   }
-
 `;
 
 class Comment extends React.Component {
@@ -61,8 +60,8 @@ class Comment extends React.Component {
         <p>{this.props.comment} 
         </p>
         <div className="interaction">
-        <Upvote></Upvote>
-        <Downvote></Downvote>
+        <Upvote upvotes={this.props.upvotes}></Upvote>
+        <Downvote downvotes={this.props.downvotes}></Downvote>
         </div>
     </Styles>
     )

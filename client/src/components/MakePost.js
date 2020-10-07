@@ -41,22 +41,19 @@ class MakePost extends React.Component {
   }
   
   submitPost(data) {
-   axios
-    .post("http://localhost:5000/api/v1/posts/new", data)
-    .then((res) => {
-      console.log("res.data", res.data);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-    }
+    axios
+      .post("http://localhost:5000/api/v1/posts/new", data)
+      .then((res) => {
+        console.log("res.data", res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
  
-  
-
-
-    handleChange(event) {
-      this.setState({ post: event.target.value });
-    }
+  handleChange(event) {
+    this.setState({ post: event.target.value });
+  }
 
   handleCheckBox = (event) => {
     //Anonymous Handling
@@ -79,14 +76,8 @@ class MakePost extends React.Component {
     };
 
     this.submitPost(data);
-
-    // After POST, we have to make hashtag and URL be hyperlinks
-    // and also anonymous mode
+    // TODO: After POST, we have to make hashtag and URL be hyperlinks and also anonymous mode
   }
-
-  
-
-
 
   render() {
 
