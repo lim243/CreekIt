@@ -26,7 +26,10 @@ async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
     text:
-      "SELECT p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC",
+      `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
+      to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, 
+      p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  
+      FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC`,
   };
 
   const { rows } = await db.query(query);
@@ -45,7 +48,7 @@ async function getPost(req, res) {
   const query = {
     name: "get-post",
     text:
-      "SELECT p.username, u.name, u.profile_photo, p.date, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.id = $1 AND p.username = u.username;",
+      "SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') as date,to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.id = $1 AND p.username = u.username;",
     values: [pid],
   };
 
@@ -120,10 +123,12 @@ async function getComments(req, res) {
 
   const query = {
     name: "get-all-post-comments",
-    text: `SELECT c.usename username, c.date , c.body , c.upvotes , c.upvotes_user , c.downvotes  , 
+    text: `SELECT u.name, c.username as username, to_char(c.date, 'YYYY-MM-DD') as date, to_char(c.date, 'HH24:MI') as time, 
+    c.body , c.upvotes , c.upvotes_user , c.downvotes  , 
     c.downvote_users  , c.parent_id  
-    FROM public.posts as p, public.comments as c
-    where p.id = $1 and p.id = c.parent_id
+    FROM public.posts as p, public.comments as c, public.users as u
+    where p.id = $1 and p.id = c.parent_id 
+	  and u.username = c.username
     order by c.date DESC;`,
     values: [pid],
   };
@@ -234,7 +239,7 @@ async function setSaved(req, res) {}
 // async function setId(req, res) {}
 async function addPostComments(req, res) {
   const pid = req.params.pid;
-  const { username, body } = req.body;
+  const { username, body, anonymous } = req.body;
   console.log("req.body", req.body);
   // Date
   date = Date.now();
@@ -242,9 +247,9 @@ async function addPostComments(req, res) {
   const query = {
     name: "create-post",
     text: `INSERT INTO public.comments
-        (username, date, body, parent_id) 
-        VALUES ($1, to_timestamp($2/1000.0), $3, $4) RETURNING id`,
-    values: [username, date, body, pid],
+        (username, date, body, parent_id, anonymous) 
+        VALUES ($1, to_timestamp($2/1000.0), $3, $4, $5) RETURNING id`,
+    values: [username, date, body, pid, anonymous],
   };
 
   const { rows } = await db.query(query);
