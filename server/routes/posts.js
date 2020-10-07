@@ -6,11 +6,13 @@ module.exports = router;
 
 // Router Functions
 router.get("/", getAllPosts);
-router.get("/:pid", getPost);
 router.get("/topic", getTopic);
+
+router.get("/:pid", getPost);
 router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
 router.get("/:pid/comments", getComments);
+
 
 router.post("/new", createPost);
 router.post("/:pid/upvote", setUpvote);
@@ -61,6 +63,8 @@ async function getPost(req, res) {
   };
   return res.status(200).json(msg);
 }
+
+
 
 async function getTopic(req, res) {
   const { topic } = req.body;
