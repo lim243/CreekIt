@@ -3,6 +3,7 @@ import Post from './Post';
 import styled from 'styled-components';
 import Comment from './Comment';
 import AddComment from './AddComment';
+import {useHistory } from 'react-router';
 
 const GridWrapper = styled.div`
 
@@ -24,10 +25,13 @@ class PostView extends React.Component {
         }
       }
   render() {
-      this.state.postId = this.props.location.state.postId;
-    //  console.log(this.state.postId);
-    
-    //These are just hard-coded example. We would need to fetch the database to get the feed
+      // this.state.postId = this.props.history.state.postId;
+      const url = this.props.history.location.pathname;
+      console.log(this.props.history.location.pathname);
+      const regex = '[^\/feed\/post\/].+';
+      const postId = url.match(regex);
+      console.log("This is postId:" + postId);
+          //These are just hard-coded example. We would need to fetch the database to get the feed
     //Fetch the post clicked from the feed
     let post = {name:"emily", username:"emily", post:"I am the sixth post", date:"9/30/2020", time:"11:55"};
 

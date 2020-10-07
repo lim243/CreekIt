@@ -12,7 +12,7 @@ export const Feed = (props) => (
     <Sidebar />
     <Switch>
       <Route exact path="/feed" component={Timeline} />
-      <Route exact path="/feed/post" component={PostView} />
+      <Route exact path="/feed/post/:postId" component={PostView} />
       <Route exact path="/feed/myprofile" component={MyProfile} />
     </Switch>
   </BrowserRouter>
