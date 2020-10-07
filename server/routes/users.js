@@ -50,7 +50,7 @@ async function getUsers(req, res) {
   const data = { rowCount, rows };
 
   // Send data back
-  return res.status(200).json(result);
+  return res.status(200).json(data);
 }
 async function getOneUserByUsername(req, res) {
   // Params
