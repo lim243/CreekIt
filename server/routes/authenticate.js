@@ -2,7 +2,7 @@ const Router = require("express-promise-router");
 const db = require("../db");
 const router = new Router();
 const jwt = require('jsonwebtoken');
-let user_token = new Map();
+const url = require('url');
 
 // Router Functions
 // router.get("/", getUsers);
@@ -23,14 +23,19 @@ exports.login = function(req, res){
 
 
 exports.isauth = async function(req,res,next){
-    console.log("req.body", req.body);
-    let token = req.body.accessToken;
-    console.log(token);
+    bearer = req.headers.authorization
+    const token = bearer.split(" ")[1]
+    // const search_params = current_url.searchParams;
+
+    // const accessToken = search_params.get('accessToken');
+    console.log('accessToken', token);
+    // let token = req.body.accessToken;
+    // console.log(token);
     try{
         var decoded = jwt.verify(token, 'Creekit Secret');
     } catch(err){
         console.log(err);
-        res.status(401).send("No Valid token found.");
+        res.status(401).send(err);
         return;
     }
     next();

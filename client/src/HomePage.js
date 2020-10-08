@@ -12,7 +12,6 @@ import Restore from "./components/RestorePassword";
 import Reset from "./components/ResetPassword";
 import { LoggedIn } from "./LoggedIn";
 import { Feed } from "./Feed";
-import PostView from './components/PostView';
 
 function HomePage() {
     return (
