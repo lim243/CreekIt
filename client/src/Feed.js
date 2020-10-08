@@ -14,6 +14,7 @@ export const Feed = (props) => (
     <Switch>
       <Route exact path='/feed' component={Timeline} />
       <Route exact path='/feed/post/:postId' component={PostView} />
+      <Route exact path='/feed/myprofile/' component={MyProfile} />
       <Route exact path='/feed/myprofile/:username' component={MyProfile} />
       <Route exact path='/feed/topic/:topicName' component={TopicView} />
     </Switch>

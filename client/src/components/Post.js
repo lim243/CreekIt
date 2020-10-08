@@ -39,6 +39,10 @@ class Post extends React.Component {
       date: "",
       post: "",
       commentButton: "",
+      anonymous: {
+        name: "Anonymous Panda",
+        username: "anonymous",
+      },
     };
   }
 
@@ -54,7 +58,6 @@ class Post extends React.Component {
   };
 
   render() {
-    console.log("this.props", this.props);
     // Use src for image
     //Get Name
     //Get Time
@@ -62,7 +65,6 @@ class Post extends React.Component {
     //Get post to="/feed/post"
     if (this.state.redirect) {
       // Fetch the postId and set the post id to that number
-      // var postId = '123';
       return (
         <Redirect
           to={{
@@ -71,35 +73,75 @@ class Post extends React.Component {
         />
       );
     }
-    return (
-      <Styles>
-        <div>
-          <Avatar name={this.props.name} size='50' round='100px' className='right' />
-          <h5 style={{ fontWeight: "bold" }} className='right'>
-            {this.props.name}
-          </h5>
-          <div className='dateTime'>
-            <p className='left'>{this.props.time}</p>
-            <p>{this.props.date}</p>
+    {
+      console.log("this.props", this.props);
+    }
+    if (this.props.anonymous === true) {
+      return (
+        <Styles>
+          <div>
+            <Avatar
+              name={this.state.anonymous.name}
+              size='50'
+              round='100px'
+              className='right'
+            />
+            <h5 style={{ fontWeight: "bold" }} className='right'>
+              {this.state.anonymous.name}
+            </h5>
+            <div className='dateTime'>
+              <p className='left'>{this.props.time}</p>
+              <p>{this.props.date}</p>
+            </div>
+            <p className='username'>@{this.state.anonymous.username}</p>
           </div>
-          <p className='username'>@{this.props.username}</p>
-        </div>
-        <p>{this.props.post}</p>
-        {this.props.topic ? <p>#{this.props.topic}</p> : null}
-        <div>
-          <Upvote upvotes={this.props.upvotes} />
-          <Downvote downvotes={this.props.downvotes} />
-          {this.props.commentButton == "false" ? null : (
-            <button onClick={this.addCommentHandler} className='interaction'>
-              Comments{" "}
+          <p>{this.props.post}</p>
+          {this.props.topic ? <p>#{this.props.topic}</p> : null}
+          <div>
+            <Upvote upvotes={this.props.upvotes} />
+            <Downvote downvotes={this.props.downvotes} />
+            {this.props.commentButton == "false" ? null : (
+              <button onClick={this.addCommentHandler} className='interaction'>
+                Comments{" "}
+              </button>
+            )}
+            <button onClick={this.saveHandler} className='interaction'>
+              Save{" "}
             </button>
-          )}
-          <button onClick={this.saveHandler} className='interaction'>
-            Save{" "}
-          </button>
-        </div>
-      </Styles>
-    );
+          </div>
+        </Styles>
+      );
+    } else {
+      return (
+        <Styles>
+          <div>
+            <Avatar name={this.props.name} size='50' round='100px' className='right' />
+            <h5 style={{ fontWeight: "bold" }} className='right'>
+              {this.props.name}
+            </h5>
+            <div className='dateTime'>
+              <p className='left'>{this.props.time}</p>
+              <p>{this.props.date}</p>
+            </div>
+            <p className='username'>@{this.props.username}</p>
+          </div>
+          <p>{this.props.post}</p>
+          {this.props.topic ? <p>#{this.props.topic}</p> : null}
+          <div>
+            <Upvote upvotes={this.props.upvotes} />
+            <Downvote downvotes={this.props.downvotes} />
+            {this.props.commentButton == "false" ? null : (
+              <button onClick={this.addCommentHandler} className='interaction'>
+                Comments{" "}
+              </button>
+            )}
+            <button onClick={this.saveHandler} className='interaction'>
+              Save{" "}
+            </button>
+          </div>
+        </Styles>
+      );
+    }
   }
 }
 

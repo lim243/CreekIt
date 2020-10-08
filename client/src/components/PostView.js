@@ -46,10 +46,6 @@ class PostView extends React.Component {
     });
   };
   render() {
-    console.log("this.props", this.state);
-    // this.state.postId = this.props.location.state.postId;
-    // console.log('this.state.postId', this.state.postId);
-
     return (
       // <div>Hi</div>
       <GridWrapper>
@@ -60,6 +56,7 @@ class PostView extends React.Component {
         <h1>Post</h1>
         {/* {console.log('this.state.post', this.state.post)} */}
         <Post
+          anonymous={this.state.post.anonymous}
           name={this.state.post.name}
           username={this.state.post.username}
           post={this.state.post.body}
@@ -74,6 +71,7 @@ class PostView extends React.Component {
         {this.state.comments.map((item, index) => (
           <Comment
             key={index}
+            anonymous={item.anonymous}
             name={item.name}
             username={item.username}
             comment={item.body}
