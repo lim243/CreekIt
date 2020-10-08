@@ -6,6 +6,7 @@ import Timeline from "./Timeline";
 import PostView from "./components/PostView";
 import MyProfile from "./components/MyProfile";
 import TopicView from "./components/TopicView";
+import EditProfile from "./components/EditProfile";
 
 export const Feed = (props) => (
   <BrowserRouter>
@@ -17,6 +18,7 @@ export const Feed = (props) => (
       <Route exact path='/feed/myprofile/' component={MyProfile} />
       <Route exact path='/feed/myprofile/:username' component={MyProfile} />
       <Route exact path='/feed/topic/:topicName' component={TopicView} />
+      <Route exact path = "/feed/edit" component={EditProfile} />
     </Switch>
   </BrowserRouter>
 );
