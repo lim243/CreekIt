@@ -74,6 +74,7 @@ const Login = () => (
                 localStorage.setItem("token", response.data.accessToken);
                 localStorage.setItem("email", values.email);
                 localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
+                setStatus("Welcome!");
                 document.location.href = "http://localhost:3000/feed";
               }
             },
