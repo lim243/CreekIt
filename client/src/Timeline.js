@@ -51,6 +51,7 @@ class Timeline extends React.Component {
             time={item.time}
             upvotes={item.upvotes}
             downvotes={item.downvotes}
+            topic={item.topic}
           />
         ))}
       </GridWrapper>
