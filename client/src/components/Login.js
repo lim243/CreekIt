@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Formik } from "formik";
+import { Formik, setStatus } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import NavigationBar from "./Navigation";
-import axios from 'axios'
+import axios from "axios";
 
 const Styles = styled.div`
   text-align: center;
@@ -58,27 +58,37 @@ const Login = () => (
   <Styles>
     <Formik
       initialValues={{ email: "", password: "" }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          console.log("Logging in", values);
-          setSubmitting(false);
-          localStorage.setItem("email",values.email);
-          localStorage.setItem("username",values.email); // TODO: DANGEROUS Right now is the same thing
-          axios.post("http://localhost:5000/api/v1/users/signIn",{
-            email:values.email,
-            password:values.password
-          }).then((response)=>{
-            console.log(response);
-            if (response.data){
-              localStorage.setItem("token",response.data.accessToken);
-              document.location.href = "http://localhost:3000/feed";
+      onSubmit={(values, { setStatus, setSubmitting }) => {
+        // setTimeout(() => {
+        console.log("Logging in hihi", values);
+        setSubmitting(false);
+        axios
+          .post("http://localhost:5000/api/v1/users/signIn", {
+            email: values.email,
+            password: values.password,
+          })
+          .then(
+            (response) => {
+              console.log("res", response);
+              if (response.data) {
+                localStorage.setItem("token", response.data.accessToken);
+                localStorage.setItem("email", values.email);
+                localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
+                document.location.href = "http://localhost:3000/feed";
+              }
+            },
+            (error) => {
+              console.log(error.response);
+              // if {error.respons.data.head === 'email'} {
+              setStatus(error.response.data.message);
+              // } else {
+              //   setStatus(error.response.data.message);
+              // }
             }
-          },(error)=>{
-            console.log(error);
-          });
-          //document.location.href = "http://localhost:3000/feed";
-          //axios.post()
-        }, 500);
+          );
+        //document.location.href = "http://localhost:3000/feed";
+        //axios.post()
+        // }, 100);
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string().email().required("Required"),
@@ -94,9 +104,11 @@ const Login = () => (
           handleChange,
           handleBlur,
           handleSubmit,
+          status,
         } = props;
         return (
           <form onSubmit={handleSubmit}>
+            {console.log("errors", errors)}
             <input
               name='email'
               types='text'
@@ -122,6 +134,7 @@ const Login = () => (
               <div className='input-feedback'>{errors.password}</div>
             )}
             <br></br>
+            {status && <div className='text-danger'>{status}</div>}
             <button
               type='submit'
               className='btn btn-primary btn-block'
