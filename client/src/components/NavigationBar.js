@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav, Navbar, Form, FormControl, Button, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
-import { Redirect } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 
 const Styles = styled.div`
   .navbar {
@@ -67,6 +67,10 @@ class NavigationBar extends React.Component {
     event.preventDefault();
   };
 
+  handleClick = () => {
+    this.setState({ redirectUser: true });
+  };
+
   render() {
     if (this.state.redirectTopic) {
       console.log("this.state", this.state);
@@ -78,10 +82,16 @@ class NavigationBar extends React.Component {
         />
       );
     } else if (this.state.redirectUser) {
+      let profile = "";
+      if (this.state.search.length > 0) {
+        profile = this.state.search;
+      } else {
+        profile = "";
+      }
       return (
         <Redirect
           to={{
-            pathname: "/feed/myprofile/" + this.state.search,
+            pathname: "/feed/myprofile/" + profile,
           }}
         />
       );
@@ -105,7 +115,9 @@ class NavigationBar extends React.Component {
             <Navbar.Collapse id='basic-navbar-nav'>
               <Nav className='ml-auto'>
                 <Nav.Item>
-                  <Nav.Link href='/feed/myprofile'>My Profile</Nav.Link>
+                  <Nav.Link onClick={this.handleClick} href='/feed/myprofile/'>
+                    My Profile
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link href='/help'>FAQ</Nav.Link>

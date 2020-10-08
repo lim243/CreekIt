@@ -54,7 +54,6 @@ class Post extends React.Component {
   };
 
   render() {
-    console.log("this.props", this.props);
     // Use src for image
     //Get Name
     //Get Time
