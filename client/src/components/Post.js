@@ -83,6 +83,7 @@ class Post extends React.Component {
         </div>
         <p>{this.props.post} 
         </p>
+    <p>#{this.props.topic}</p>
         <div >
         <Upvote upvotes={this.props.upvotes} />
         <Downvote downvotes={this.props.downvotes} />
