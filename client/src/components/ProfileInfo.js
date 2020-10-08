@@ -1,6 +1,7 @@
 import Avatar from "react-avatar";
 import React from "react";
 import styled from "styled-components";
+import axios from "axios";
 import { Redirect } from "react-router-dom";
 
 const Styles = styled.div`
@@ -63,11 +64,36 @@ class ProfileInfo extends React.Component {
 
   followHandler = () => {
     // handled following and set the button to followed
+    const global_username = window.location.href.split("/").pop(-1);
     console.log("CLICKED");
+    let uname = "";
+    
+    uname = global_username;
+    console.log(uname);
+    console.log(localStorage.getItem('username'));
+    const body = { user1: uname,user2: localStorage.getItem('username') };
     if (this.state.unfollow == "Follow") {
+      axios
+      .post(`http://localhost:5000/api/v1/users/addfollow`,  body )
+      .then((res) => {
+        console.log("res", res);
+        //this.setState({ posts: res.data.payload });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
       this.setState({ unfollow: "Unfollow" });
       // Handle follow in backend
     } else {
+      axios
+      .post(`http://localhost:5000/api/v1/users/removefollow`,  body )
+      .then((res) => {
+        console.log("res", res);
+        //this.setState({ posts: res.data.payload });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
       this.setState({ unfollow: "Follow" });
       // Handle unfollow in backend
     }

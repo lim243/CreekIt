@@ -163,14 +163,23 @@ async function createPost(req, res) {
   // Date
   date = Date.now();
 
-  const query = {
+  const query1 = {
     name: "create-post",
     text:
       "INSERT INTO posts (username, date, body, topic, anonymous) VALUES ($1, to_timestamp($2/1000.0), $3, $4, $5) RETURNING id",
     values: [username, date, body, topic, anonymous],
   };
+  const { rows } = await db.query(query1);
+  console.log(rows);
+  let id = rows[0].id;
+  const query2 = {
+    name: "append-post",
+    text:
+      "update users set posts = array_append(posts,$1) where username  = $2;",
+    values: [id, username],
+  };
 
-  const { rows } = await db.query(query);
+  const { rows2 } = await db.query(query2);
 
   // console.log("rows", result);
   // Send data back

@@ -4,6 +4,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/Login";
+import Logout from "./Logout";
 import Signup from "./components/Signup";
 import Navigation from "./components/Navigation";
 import Help from "./components/FAQ";
@@ -35,6 +36,7 @@ function HomePage() {
                             <Route path="/account" component={LoggedIn} />
                             <Route path="/reset" component={Reset} />
                             <Route path="/feed" component={Feed} />
+                            <Route path= '/logout' component={Logout} />
                         </Switch>
                     </div>
                 </div>

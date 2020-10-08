@@ -199,7 +199,7 @@ class MyProfile extends React.Component {
     const user = this.state.personal;
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
-
+    console.log("user",user);
     return (
       <GridWrapper>
         {console.log("this.state", this.state)}
@@ -210,7 +210,7 @@ class MyProfile extends React.Component {
           followButton={this.state.currentUser}
           postNum={(user.posts && user.posts.length) || 0}
           following={(user.following && user.following.length) || 0}
-          followers={(user.follwed && user.followed.length) || 0}
+          followers={(user.followed && user.followed.length) || 0}
           topics={(user.topics && user.topics.length) || 0}
           className='sticky'
         />

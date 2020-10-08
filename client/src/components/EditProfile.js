@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Formik, setStatus } from "formik";
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
-import { withRouter } from "react-router-dom";
-import NavigationBar from "./Navigation";
+import DatePicker from "./DatePicker";
 import axios from "axios";
 
 const Styles = styled.div`
@@ -16,30 +15,36 @@ const Styles = styled.div`
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+
   form {
     max-width: 500px;
     width: 100%;
     margin: 0 auto;
   }
+
   input {
     display: block;
     width: 100%;
   }
+
   input {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 3px;
     border: 1px solid #777;
   }
+
   input.error {
     border-color: red;
   }
+
   .input-feedback {
     color: rgb(235, 54, 54);
     margin-top: -15px;
     font-size: 14px;
     margin-bottom: 20px;
   }
+
   button {
     padding: 10px 15px;
     background-color: rgb(70, 153, 179);
@@ -47,6 +52,7 @@ const Styles = styled.div`
     border: 1px solid rgb(70, 153, 179);
     background-color: 250ms;
   }
+
   button:hover {
     cursor: pointer;
     background-color: white;
@@ -54,19 +60,20 @@ const Styles = styled.div`
   }
 `;
 
-
-const Login = () => (
+const EditProfile= () => (
   <Styles>
     <Formik
-      initialValues={{ email: "", password: "" }}
-      onSubmit={(values, { setStatus, setSubmitting }) => {
-        // setTimeout(() => {
-        console.log("Logging in hihi", values);
+      initialValues={{ name: "", password: "", confirm: "", bio: ""}}
+      onSubmit={(values, { setSubmitting, setStatus }) => {
+        console.log("Logging in", values);
         setSubmitting(false);
+
         axios
-          .post("http://localhost:5000/api/v1/users/signIn", {
+          .post("http://localhost:5000/api/v1/users/signUp", {
             email: values.email,
             password: values.password,
+            username: values.username,
+            dob: values.date,
           })
           .then(
             (response) => {
@@ -84,12 +91,23 @@ const Login = () => (
               setStatus(error.response.data.message);
             }
           );
+        // window.location.href = "http://localhost:3000/feed";
       }}
       validationSchema={Yup.object().shape({
-        email: Yup.string().email().required("Required"),
-        password: Yup.string().required("Required"),
+        name: Yup.string()
+          .required("Required"),
+        password: Yup.string()
+          .required("Required")
+          .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
+          .min(8, "Password is too short - should be 8 chars minimum."),
+        confirm: Yup.string()
+          .oneOf([Yup.ref("password"), null], "Password does not match")
+          .required("Password confirmation is required"),
+        bio: Yup.string()
+        .max(75, "Bio must be less than 75 characters")
       })}
     >
+      
       {(props) => {
         const {
           values,
@@ -103,23 +121,22 @@ const Login = () => (
         } = props;
         return (
           <form onSubmit={handleSubmit}>
-            {console.log("errors", errors)}
+            <p style={{ color: "#9FFFCB" }}>Name</p>
             <input
-              name='email'
+              name='name'
               types='text'
-              placeholder='Email or username'
-              value={values.email}
+              value={values.name}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.email && touched.email && "error"}
+              className={errors.name && touched.name && "error"}
             />
-            {errors.email && touched.email && (
-              <div className='input-feedback'>{errors.email}</div>
+            {errors.name && touched.name && (
+              <div className='input-feedback'>{errors.name}</div>
             )}
+            <p style={{ color: "#9FFFCB" }}>Password</p>
             <input
               name='password'
               type='password'
-              placeholder='Password'
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -128,24 +145,52 @@ const Login = () => (
             {errors.password && touched.password && (
               <div className='input-feedback'>{errors.password}</div>
             )}
-            <br></br>
+            <p style={{ color: "#9FFFCB" }}>Confirm Password (Must Match Above)</p>
+            <input
+              name='confirm'
+              type='password'
+              value={values.confirm}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.bio && touched.bio && "error"}
+            />
+            {errors.confirm && touched.confirm && (
+              <div className='input-feedback'>{errors.confirm}</div>
+            )}
+            <p style={{ color: "#9FFFCB" }}>Bio: Tell us about yourself</p>
+            <input
+              name='bio'
+              types='text'
+              value={values.bio}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.bio && touched.bio && "error"}
+            />
+            {errors.bio && touched.bio && (
+              <div className='input-feedback'>{errors.bio}</div>
+            )}
             {status && <div className='text-danger'>{status}</div>}
             <button
               type='submit'
               className='btn btn-primary btn-block'
               disabled={isSubmitting}
             >
-              Login
+              Confirm Changes
             </button>
             <br></br>
-            <p className='forgot-password text-center' style={{ fontSize: "16px" }}>
-              <a href='/forgot'>Forgot password?</a>
-            </p>
+            <br></br>
           </form>
         );
       }}
     </Formik>
+    <button
+              type='submit'
+              //className='btn btn-primary btn-block'
+              backgroundColor="red"
+            >
+              Delete Account
+            </button>
   </Styles>
 );
 
-export default withRouter(Login);
+export default EditProfile;
