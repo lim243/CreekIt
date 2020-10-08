@@ -341,6 +341,7 @@ async function signUp(req, res) {
 
     db.query(query)
       .then((data) => {
+        let payload = { email: email };
         let accessToken = jwt.sign(payload, "Creekit Secret", {
           algorithm: "HS256",
           expiresIn: 30,
