@@ -14,6 +14,7 @@ const GridWrapper = styled.div`
   height: auto;
 `;
 
+// TODO: Change this hacky way of redirecting / fetching posts
 const global_username = window.location.href.split("/").pop(-1);
 
 class Posts extends React.Component {
@@ -28,7 +29,12 @@ class Posts extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchPosts(global_username);
+    // TODO: Change this hacky way of redirecting / fetching posts
+    if (global_username.length > 0) {
+      this.fetchPosts(global_username);
+    } else {
+      this.fetchPosts(localStorage.getItem("username"));
+    }
   }
 
   fetchPosts = (username) => {
@@ -148,16 +154,22 @@ class MyProfile extends React.Component {
   }
 
   componentDidMount() {
-    let username = localStorage.getItem("username");
+    // let username = localStorage.getItem("username");
 
-    if (this.props.history) {
-      const url = this.props.history.location.pathname;
-      username = url.split("/").pop(-1);
+    // if (this.props.history) {
+    //   const url = this.props.history.location.pathname;
+    //   username = url.split("/").pop(-1);
 
-      console.log("This is postId:", username);
+    //   console.log("This is postId:", username);
+    // }
+
+    // this.fetchUser(username);
+    // TODO: Change this hacky way of redirecting / fetching posts
+    if (global_username.length > 0) {
+      this.fetchUser(global_username);
+    } else {
+      this.fetchUser(localStorage.getItem("username"));
     }
-
-    this.fetchUser(username);
   }
 
   fetchUser = (username) => {

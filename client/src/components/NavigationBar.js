@@ -63,12 +63,12 @@ class NavigationBar extends React.Component {
       // Search User
       this.setState({ redirectUser: true, redirectTopic: false });
     }
-
-    event.preventDefault();
+    // event.preventDefault();
   };
 
   handleClick = () => {
     this.setState({ redirectUser: true });
+    this.forceUpdate();
   };
 
   render() {
