@@ -60,6 +60,7 @@ class PostView extends React.Component {
         <h1>Post</h1>
         {/* {console.log('this.state.post', this.state.post)} */}
         <Post
+          anonymous={this.state.post.anonymous}
           name={this.state.post.name}
           username={this.state.post.username}
           post={this.state.post.body}
@@ -74,6 +75,7 @@ class PostView extends React.Component {
         {this.state.comments.map((item, index) => (
           <Comment
             key={index}
+            anonymous={item.anonymous}
             name={item.name}
             username={item.username}
             comment={item.body}

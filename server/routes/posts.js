@@ -13,7 +13,6 @@ router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
 router.get("/:pid/comments", getComments);
 
-
 router.post("/new", createPost);
 router.post("/:pid/upvote", setUpvote);
 router.post("/:pid/downvote", setDownvote);
@@ -27,9 +26,8 @@ router.post("/:pid/topic", setTopic);
 async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
-    text:
-      `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
-      to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, 
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
+      to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, p.anonymous,
       p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  
       FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC`,
   };
@@ -49,8 +47,7 @@ async function getPost(req, res) {
 
   const query = {
     name: "get-post",
-    text:
-      `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') 
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') 
       as date,to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, 
       p.upvote_users, p.downvote_users, p.comment_ids  
       FROM posts as p, users as u 
@@ -68,11 +65,9 @@ async function getPost(req, res) {
   return res.status(200).json(msg);
 }
 
-
-
 async function getTopics(req, res) {
   const { topic } = req.body;
-  console.log('topic', topic);
+  console.log("topic", topic);
 
   const query = {
     name: "get-topics",
