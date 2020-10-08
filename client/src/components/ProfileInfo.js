@@ -105,8 +105,8 @@ class ProfileInfo extends React.Component {
       return (
         <Redirect
           to={{
-            pathname: "/feed/editprofile",
-            state: { userId: "123" },
+            pathname: "/feed/edit",
+            state: { userId: localStorage.getItem('username') },
           }}
         />
       );
