@@ -1,14 +1,13 @@
-import Avatar from 'react-avatar';
-import React from 'react';
-import styled from 'styled-components';
-import Upvote from './Upvote'
-import Downvote from './Downvote';
+import Avatar from "react-avatar";
+import React from "react";
+import styled from "styled-components";
+import Upvote from "./Upvote";
+import Downvote from "./Downvote";
 
 const Styles = styled.div`
-  
   .right {
-      float: left;
-      margin-right: 10px;
+    float: left;
+    margin-right: 10px;
   }
   .username {
     position: relative;
@@ -32,12 +31,16 @@ class Comment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      username: '',
-      time: '',
-      date: '',
-      comment: ''
-    }
+      name: "",
+      username: "",
+      time: "",
+      date: "",
+      comment: "",
+      anonymous: {
+        name: "Anonymous Panda",
+        username: "anonymous",
+      },
+    };
   }
 
   render() {
@@ -46,25 +49,54 @@ class Comment extends React.Component {
     //Get Time
     //Get Date
     //Get comment
-    return(
-    <Styles>
-        <div>
-            <Avatar name={this.props.name} size="50" round="100px" className="right"/>
-            <h5 style={{fontWeight: "bold"}} className="right">{this.props.name}</h5>
-            <div className="dateTime" >
-                <p className="left">{this.props.time}</p>
-                <p >{this.props.date}</p>
+    if (this.props.anonymous === true) {
+      return (
+        <Styles>
+          <div>
+            <Avatar
+              name={this.state.anonymous.name}
+              size='50'
+              round='100px'
+              className='right'
+            />
+            <h5 style={{ fontWeight: "bold" }} className='right'>
+              {this.state.anonymous.name}
+            </h5>
+            <div className='dateTime'>
+              <p className='left'>{this.props.time}</p>
+              <p>{this.props.date}</p>
             </div>
-            <p className="username">@{this.props.username}</p>         
-        </div>
-        <p>{this.props.comment} 
-        </p>
-        <div className="interaction">
-        <Upvote upvotes={this.props.upvotes}></Upvote>
-        <Downvote downvotes={this.props.downvotes}></Downvote>
-        </div>
-    </Styles>
-    )
+            <p className='username'>@{this.state.anonymous.username}</p>
+          </div>
+          <p>{this.props.comment}</p>
+          <div className='interaction'>
+            <Upvote upvotes={this.props.upvotes}></Upvote>
+            <Downvote downvotes={this.props.downvotes}></Downvote>
+          </div>
+        </Styles>
+      );
+    } else {
+      return (
+        <Styles>
+          <div>
+            <Avatar name={this.props.name} size='50' round='100px' className='right' />
+            <h5 style={{ fontWeight: "bold" }} className='right'>
+              {this.props.name}
+            </h5>
+            <div className='dateTime'>
+              <p className='left'>{this.props.time}</p>
+              <p>{this.props.date}</p>
+            </div>
+            <p className='username'>@{this.props.username}</p>
+          </div>
+          <p>{this.props.comment}</p>
+          <div className='interaction'>
+            <Upvote upvotes={this.props.upvotes}></Upvote>
+            <Downvote downvotes={this.props.downvotes}></Downvote>
+          </div>
+        </Styles>
+      );
+    }
   }
 }
 

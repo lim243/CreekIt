@@ -46,10 +46,6 @@ class PostView extends React.Component {
     });
   };
   render() {
-    console.log("this.props", this.state);
-    // this.state.postId = this.props.location.state.postId;
-    // console.log('this.state.postId', this.state.postId);
-
     return (
       // <div>Hi</div>
       <GridWrapper>

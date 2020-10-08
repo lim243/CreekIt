@@ -6,7 +6,6 @@ module.exports = router;
 
 // Router Functions
 router.get("/", getAllPosts);
-router.get("/:topic", getTopics);
 
 router.get("/:pid", getPost);
 router.get("/:pid/upvotes", getUpvotesUsers);
@@ -49,13 +48,14 @@ async function getPost(req, res) {
     name: "get-post",
     text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') 
       as date,to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, 
-      p.upvote_users, p.downvote_users, p.comment_ids  
+      p.upvote_users, p.downvote_users, p.comment_ids , p.anonymous
       FROM posts as p, users as u 
       WHERE p.id = $1 AND p.username = u.username;`,
     values: [pid],
   };
 
   const { rows } = await db.query(query);
+  console.log("rows", rows);
 
   // Send data back
   const msg = {
@@ -134,7 +134,7 @@ async function getComments(req, res) {
     name: "get-all-post-comments",
     text: `SELECT u.name, c.username as username, to_char(c.date, 'YYYY-MM-DD') as date, to_char(c.date, 'HH24:MI') as time, 
     c.body , c.upvotes , c.upvotes_user , c.downvotes  , 
-    c.downvote_users  , c.parent_id  
+    c.downvote_users  , c.parent_id , c.anonymous
     FROM public.posts as p, public.comments as c, public.users as u
     where p.id = $1 and p.id = c.parent_id 
 	  and u.username = c.username
