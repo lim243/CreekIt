@@ -150,6 +150,7 @@ class MyProfile extends React.Component {
     super(props);
     this.state = {
       personal: {},
+      currentUser: false,
     };
   }
 
@@ -166,8 +167,12 @@ class MyProfile extends React.Component {
     // this.fetchUser(username);
     // TODO: Change this hacky way of redirecting / fetching posts
     if (global_username.length > 0) {
+      console.log("gloab", global_username);
+      this.setState({ currentUser: false });
       this.fetchUser(global_username);
     } else {
+      console.log("gloab", global_username.length);
+      this.setState({ currentUser: true });
       this.fetchUser(localStorage.getItem("username"));
     }
   }
@@ -194,13 +199,15 @@ class MyProfile extends React.Component {
     const user = this.state.personal;
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
+
     return (
       <GridWrapper>
+        {console.log("this.state", this.state)}
         <ProfileInfo
           name={user.name}
           username={user.username}
           bio={user.about_me}
-          followButton={"false"}
+          followButton={this.state.currentUser}
           postNum={(user.posts && user.posts.length) || 0}
           following={(user.following && user.following.length) || 0}
           followers={(user.follwed && user.followed.length) || 0}
