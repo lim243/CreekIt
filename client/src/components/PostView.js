@@ -3,8 +3,7 @@ import Post from "./Post";
 import styled from "styled-components";
 import Comment from "./Comment";
 import AddComment from "./AddComment";
-import axios from "axios"
-
+import axios from "axios";
 
 const GridWrapper = styled.div`
   display: block;
@@ -16,30 +15,30 @@ const GridWrapper = styled.div`
 `;
 
 class PostView extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          postId: '',
-          post: {},
-          comments: []
-        }
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      postId: "",
+      post: {},
+      comments: [],
+    };
+  }
 
   componentDidMount() {
     const url = this.props.history.location.pathname;
-    const postId = url.split('/').pop(-1)
+    const postId = url.split("/").pop(-1);
     console.log("This is postId:" + postId);
-    this.setState({postId})
+    this.setState({ postId });
     this.fetchPost(postId);
     this.fetchComments(postId);
   }
 
-  fetchPost = (postId) =>{
+  fetchPost = (postId) => {
     axios.get(`http://localhost:5000/api/v1/posts/${postId}`).then((res) => {
       console.log("res", res.data.payload);
       this.setState({ post: res.data.payload[0] });
     });
-  }
+  };
   fetchComments = (postId) => {
     axios.get(`http://localhost:5000/api/v1/posts/${postId}/comments`).then((res) => {
       console.log("comments", res.data.payload);
@@ -47,14 +46,14 @@ class PostView extends React.Component {
     });
   };
   render() {
-    console.log('this.props', this.state);
+    console.log("this.props", this.state);
     // this.state.postId = this.props.location.state.postId;
     // console.log('this.state.postId', this.state.postId);
 
     return (
       // <div>Hi</div>
       <GridWrapper>
-        <AddComment postId={this.state.postId}/>
+        <AddComment postId={this.state.postId} />
         <br></br>
         <br></br>
         <br></br>
@@ -67,6 +66,7 @@ class PostView extends React.Component {
           date={this.state.post.date}
           time={this.state.post.time}
           commentButton={"false"}
+          topic={this.state.post.topic}
         />
         <strong>
           <h3>Comments</h3>

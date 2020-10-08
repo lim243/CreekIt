@@ -1,6 +1,6 @@
-import React from 'react';
-import {Form, Button } from 'react-bootstrap';
-import styled from 'styled-components';
+import React from "react";
+import { Form, Button } from "react-bootstrap";
+import styled from "styled-components";
 import axios from "axios";
 const Styles = styled.div`
   .form-center {
@@ -21,12 +21,9 @@ const Styles = styled.div`
   }
 
   textarea {
-      resize: none;
+    resize: none;
   }
-
 `;
-
-
 
 class MakePost extends React.Component {
   constructor(props) {
@@ -39,7 +36,7 @@ class MakePost extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckBox = this.handleCheckBox.bind(this);
   }
-  
+
   submitPost(data) {
     axios
       .post("http://localhost:5000/api/v1/posts/new", data)
@@ -50,7 +47,7 @@ class MakePost extends React.Component {
         console.error(err);
       });
   }
- 
+
   handleChange(event) {
     this.setState({ post: event.target.value });
   }
@@ -67,11 +64,11 @@ class MakePost extends React.Component {
     const URL = this.state.post.match(
       /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
     );
-    
+
     const data = {
       body: this.state.post,
-      username: "kotori",
-      topic: hashtag,
+      username: localStorage.getItem("username"),
+      topic: hashtag[0].substring(1).trim(),
       anonymous: this.state.checked,
     };
 
@@ -80,21 +77,20 @@ class MakePost extends React.Component {
   }
 
   render() {
-
     const LimitedTextarea = ({ rows, cols, value, limit }) => {
       const [content, setContent] = React.useState(value);
-    
+
       const setFormattedContent = (text) => {
         text.length > limit ? setContent(text.slice(0, limit)) : setContent(text);
         this.state.post = text;
       };
-    
+
       React.useEffect(() => {
         setFormattedContent(content);
       }, []);
-    
+
       return (
-        <div> 
+        <div>
           <textarea
             rows={rows}
             cols={43}
@@ -112,28 +108,28 @@ class MakePost extends React.Component {
 
     return (
       <Styles>
-          <Form onSubmit={this.handleSubmit}>
-              <div className='box'>
-          <Form.Group controlId='formPost'>
-            <LimitedTextarea limit={500} value='' rows='3' />
-          </Form.Group>
+        <Form onSubmit={this.handleSubmit}>
+          <div className='box'>
+            <Form.Group controlId='formPost'>
+              <LimitedTextarea limit={500} value='' rows='3' />
+            </Form.Group>
           </div>
           <div>
-          <Button variant='primary' type='submit'>
+            <Button variant='primary' type='submit'>
               Post
-          </Button>
+            </Button>
           </div>
           <Form.Check
-              type='checkbox'
-              value='true'
-              label='Anonymous'
-              className='checkbox'
-              onClick={this.handleCheckBox}
-            />
-          </Form>
+            type='checkbox'
+            value='true'
+            label='Anonymous'
+            className='checkbox'
+            onClick={this.handleCheckBox}
+          />
+        </Form>
       </Styles>
-      );
+    );
   }
 }
 
-  export default MakePost;
+export default MakePost;

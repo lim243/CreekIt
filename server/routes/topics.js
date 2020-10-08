@@ -5,14 +5,14 @@ const router = express.Router();
 module.exports = router;
 
 // Router Functions
-router.get("/:topic", getTopics)
+router.get("/:topic", getTopics);
 
 /**
  * GET FUNCTIONS
  */
 async function getTopics(req, res) {
   const topic = req.params.topic;
-  console.log('topic', topic);
+  console.log("topic", topic);
 
   const query = {
     name: "get-topics",
@@ -21,7 +21,8 @@ async function getTopics(req, res) {
     p.body, p.topic, p.upvotes, p.downvotes, 
     p.upvote_users, p.downvote_users, p.comment_ids  
     FROM posts as p, users as u 
-    WHERE p.topic = $1 AND p.username = u.username;`,
+    WHERE p.topic = $1 AND p.username = u.username
+    ORDER BY p.date DESC`,
     values: [topic],
   };
 
