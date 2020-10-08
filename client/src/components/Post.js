@@ -74,7 +74,7 @@ class Post extends React.Component {
       );
     }
     {
-      console.log("this.props", this.props);
+      // console.log("this.props", this.props);
     }
     if (this.props.anonymous === true) {
       return (

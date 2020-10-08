@@ -77,6 +77,7 @@ class MakePost extends React.Component {
     };
 
     this.submitPost(data);
+    this.forceUpdate();
     // TODO: After POST, we have to make hashtag and URL be hyperlinks and also anonymous mode
   }
 
