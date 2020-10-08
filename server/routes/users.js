@@ -341,17 +341,26 @@ async function signUp(req, res) {
 
     db.query(query)
       .then((data) => {
+        let accessToken = jwt.sign(payload, "Creekit Secret", {
+          algorithm: "HS256",
+          expiresIn: 30,
+        });
+        console.log("acess Token", accessToken);
+        req.accessToken = accessToken;
+        req.email = email;
         const msg = {
-          "success": true,
-          "payload": `User ${email} created!`,
+          success: true,
+          accessToken: accessToken,
+          message: `User ${email} created!`,
         };
+        //authenticate.storeToken(username,accessToken);
         res.status(200).send(msg);
       })
       .catch((error) => {
         console.log("error", error);
         const msg = {
           "success": false,
-          "payload": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+          "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
         };
         res.status(500).send(msg);
       });
@@ -373,7 +382,7 @@ async function signIn(req, res) {
     };
     return res.status(500).send(msg);
   }
-  console.log("passed getPW", hashedPw);
+  // console.log("passed getPW", hashedPw);
   bcrypt.compare(password, hashedPw, (err, result) => {
     let payload = { email: email };
     console.log("password", result);

@@ -80,16 +80,9 @@ const Login = () => (
             },
             (error) => {
               console.log(error.response);
-              // if {error.respons.data.head === 'email'} {
               setStatus(error.response.data.message);
-              // } else {
-              //   setStatus(error.response.data.message);
-              // }
             }
           );
-        //document.location.href = "http://localhost:3000/feed";
-        //axios.post()
-        // }, 100);
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string().email().required("Required"),
