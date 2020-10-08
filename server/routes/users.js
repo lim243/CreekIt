@@ -29,12 +29,16 @@ router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
 
+
 // SET ROUTER
-router.post("/addfollow",addfollow);
-router.post("/removefollow", removefollow);
-router.post("/:username/password", setPassword);
+
 router.post("/signIn", signIn);
 router.post("/signUp", signUp);
+router.post("/addfollow",addfollow);
+router.post("/removefollow", removefollow);
+router.post("/:username/deleteAccount", deleteAccount);
+router.post("/:username/updateProfile", updateProfile);
+router.post("/:username/password", setPassword);
 
 /**
  * GET FUNCTIONS
@@ -326,6 +330,56 @@ async function setEducation(req, res) {}
 async function setPhoto(req, res) {}
 async function addFollowing(req, res) {}
 async function addBlocked(req, res) {}
+async function deleteAccount(req, res) {
+  let username = req.params.username;
+  //following
+  const query = {
+    name: "delete-accouunt",
+    text: "delete from users where username = $1;",
+    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+    values: [username],
+  };
+  console.log("query",query);
+  db.query(query)
+  .then((data) => {
+    console.log("data", data);
+    res.status(200).send("success");
+  })
+  .catch((error) => {
+    console.log("error", error);
+    const msg = {
+      "success": false,
+      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+    };
+    res.status(500).send(msg);
+  });
+}
+async function updateProfile(req, res) {
+  let username = req.params.username;
+  let aboutme = req.body.aboutme;
+  let name = req.body.name;
+  //following
+  const query = {
+    name: "update-about",
+    text: "update users set about_me = $1, name = $2 where username  = $3;",
+    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+    values: [aboutme, name, username],
+  };
+  console.log("query",query);
+  db.query(query)
+  .then((data) => {
+    console.log("data", data);
+    res.status(200).send("success");
+  })
+  .catch((error) => {
+    console.log("error", error);
+    const msg = {
+      "success": false,
+      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+    };
+    res.status(500).send(msg);
+  });
+}
 async function addfollow(req, res) {
   let user1 = req.body.user1;
   let user2 = req.body.user2;
