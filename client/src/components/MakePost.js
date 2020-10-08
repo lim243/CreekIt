@@ -64,11 +64,15 @@ class MakePost extends React.Component {
     const URL = this.state.post.match(
       /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
     );
+    let tag = "";
+    if (hashtag && hashtag.length > 0) {
+      tag = hashtag[0].substring(1).trim();
+    }
 
     const data = {
       body: this.state.post,
       username: localStorage.getItem("username"),
-      topic: hashtag[0].substring(1).trim(),
+      topic: tag,
       anonymous: this.state.checked,
     };
 
@@ -115,7 +119,7 @@ class MakePost extends React.Component {
             </Form.Group>
           </div>
           <div>
-            <Button variant='primary' type='submit'>
+            <Button variant='primary' onClick={this.handleSubmit}>
               Post
             </Button>
           </div>
