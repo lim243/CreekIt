@@ -6,8 +6,8 @@ module.exports = router;
 
 // Router Functions
 router.get("/", getAllPosts);
+
 router.get("/:pid", getPost);
-router.get("/topic", getTopic);
 router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
 router.get("/:pid/comments", getComments);
@@ -25,9 +25,8 @@ router.post("/:pid/topic", setTopic);
 async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
-    text:
-      `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
-      to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, 
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
+      to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, p.anonymous,
       p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  
       FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC`,
   };
@@ -47,12 +46,16 @@ async function getPost(req, res) {
 
   const query = {
     name: "get-post",
-    text:
-      "SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') as date,to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.id = $1 AND p.username = u.username;",
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') 
+      as date,to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, 
+      p.upvote_users, p.downvote_users, p.comment_ids , p.anonymous
+      FROM posts as p, users as u 
+      WHERE p.id = $1 AND p.username = u.username;`,
     values: [pid],
   };
 
   const { rows } = await db.query(query);
+  console.log("rows", rows);
 
   // Send data back
   const msg = {
@@ -62,12 +65,18 @@ async function getPost(req, res) {
   return res.status(200).json(msg);
 }
 
-async function getTopic(req, res) {
+async function getTopics(req, res) {
   const { topic } = req.body;
+  console.log("topic", topic);
 
   const query = {
-    name: "get-topic",
-    text: "SELECT * FROM posts WHERE topic = $1;",
+    name: "get-topics",
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
+    to_char(p.date, 'YYYY-MM-DD') as date,to_char(p.date, 'HH24:MI') as time, 
+    p.body, p.topic, p.upvotes, p.downvotes, 
+    p.upvote_users, p.downvote_users, p.comment_ids  
+    FROM posts as p, users as u 
+    WHERE p.topic = $1 AND p.username = u.username;`,
     values: [topic],
   };
 
@@ -125,7 +134,7 @@ async function getComments(req, res) {
     name: "get-all-post-comments",
     text: `SELECT u.name, c.username as username, to_char(c.date, 'YYYY-MM-DD') as date, to_char(c.date, 'HH24:MI') as time, 
     c.body , c.upvotes , c.upvotes_user , c.downvotes  , 
-    c.downvote_users  , c.parent_id  
+    c.downvote_users  , c.parent_id , c.anonymous
     FROM public.posts as p, public.comments as c, public.users as u
     where p.id = $1 and p.id = c.parent_id 
 	  and u.username = c.username

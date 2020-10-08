@@ -1,9 +1,9 @@
 import React from "react";
-import Post from "./components/Post";
+import Post from "./Post";
 import styled from "styled-components";
-import MakePost from "./components/MakePost";
+import Comment from "./Comment";
+// import AddComment from "./AddComment";
 import axios from "axios";
-import moment from "moment";
 
 const GridWrapper = styled.div`
   display: block;
@@ -11,35 +11,47 @@ const GridWrapper = styled.div`
   margin-left: 35%;
   margin-right: 25em;
   padding-top: 75px;
+  width: 500px;
 `;
 
-class Timeline extends React.Component {
+class TopicView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       posts: [],
     };
   }
+
   componentDidMount() {
-    this.fetchPosts();
+    const url = this.props.history.location.pathname;
+    const topic = url.split("/").pop(-1);
+    console.log("url", url);
+    console.log("This is topic:" + topic);
+    this.fetchTopics(topic);
   }
 
-  fetchPosts = () => {
-    axios.get("http://localhost:5000/api/v1/posts/").then((res) => {
-      console.log("res", res.data.payload);
-      this.setState({ posts: res.data.payload });
-    });
+  fetchTopics = (topic) => {
+    axios
+      .get(`http://localhost:5000/api/v1/topics/${topic}`)
+      .then((res) => {
+        console.log("res", res.data.payload);
+        this.setState({ posts: res.data.payload });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
+
   render() {
-    // Add posts to this array on the top as a stack (most recent should be at index 0)
-    //These are just hard-coded example. We would need to fetch the database to get the feed
+    console.log("this.state", this.state);
+
     return (
       <GridWrapper>
-        <MakePost />
         <br></br>
         <br></br>
         <br></br>
-        <br></br>
+        <h1>Topic</h1>
+
         {this.state.posts.map((item, index) => (
           <Post
             key={index}
@@ -60,4 +72,4 @@ class Timeline extends React.Component {
   }
 }
 
-export default Timeline;
+export default TopicView;
