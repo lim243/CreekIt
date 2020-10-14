@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Formik } from "formik";
+import { Formik, setStatus } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import NavigationBar from "./Navigation";
-import axios from 'axios'
+import axios from "axios";
 
 const Styles = styled.div`
   text-align: center;
@@ -16,36 +16,30 @@ const Styles = styled.div`
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-
   form {
     max-width: 500px;
     width: 100%;
     margin: 0 auto;
   }
-
   input {
     display: block;
     width: 100%;
   }
-
   input {
     margin-bottom: 20px;
     padding: 10px;
     border-radius: 3px;
     border: 1px solid #777;
   }
-
   input.error {
     border-color: red;
   }
-
   .input-feedback {
     color: rgb(235, 54, 54);
     margin-top: -15px;
     font-size: 14px;
     margin-bottom: 20px;
   }
-
   button {
     padding: 10px 15px;
     background-color: rgb(70, 153, 179);
@@ -53,7 +47,6 @@ const Styles = styled.div`
     border: 1px solid rgb(70, 153, 179);
     background-color: 250ms;
   }
-
   button:hover {
     cursor: pointer;
     background-color: white;
@@ -61,23 +54,34 @@ const Styles = styled.div`
   }
 `;
 
+
 const Login = () => (
   <Styles>
     <Formik
       initialValues={{ email: "", password: "" }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          console.log("Logging in", values);
-          setSubmitting(false);
-          localStorage.setItem("email",values.email);
-          axios.post("http://localhost:5000/api/v1/users/signIn",{
-            email:values.email,
-            password:values.password
-          }).then((response)=>{
-            console.log(response);
-            if (response.data){
-              localStorage.setItem("token",response.data);
-              document.location.href = "http://localhost:3000/feed";
+      onSubmit={(values, { setStatus, setSubmitting }) => {
+        // setTimeout(() => {
+        console.log("Logging in hihi", values);
+        setSubmitting(false);
+        axios
+          .post("http://localhost:5000/api/v1/users/signIn", {
+            email: values.email,
+            password: values.password,
+          })
+          .then(
+            (response) => {
+              console.log("res", response);
+              if (response.data) {
+                localStorage.setItem("token", response.data.accessToken);
+                localStorage.setItem("email", values.email);
+                localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
+                setStatus("Welcome!");
+                document.location.href = "http://localhost:3000/feed";
+              }
+            },
+            (error) => {
+              console.log(error.response);
+              setStatus(error.response.data.message);
             }
           },(error)=>{
             alert(error);
@@ -100,9 +104,11 @@ const Login = () => (
           handleChange,
           handleBlur,
           handleSubmit,
+          status,
         } = props;
         return (
           <form onSubmit={handleSubmit}>
+            {console.log("errors", errors)}
             <input
               name='email'
               types='text'
@@ -128,6 +134,7 @@ const Login = () => (
               <div className='input-feedback'>{errors.password}</div>
             )}
             <br></br>
+            {status && <div className='text-danger'>{status}</div>}
             <button
               type='submit'
               className='btn btn-primary btn-block'

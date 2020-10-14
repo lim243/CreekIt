@@ -59,13 +59,13 @@ const Styles = styled.div`
     }
     `;
 
-const Login = () => (
+const ForgotPassword = () => (
     <Styles>
     <Formik
         initialValues={{ email: ""}}
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
-                console.log("Logging in", values);
+                console.log("Sending email for verification code", values);
                 setSubmitting(false);
                 axios.post("http://localhost:5000/api/v1/validemail",{
                     email:values.email,
@@ -130,4 +130,4 @@ const Login = () => (
     </Styles>
 );
 
-export default Login;
+export default ForgotPassword;

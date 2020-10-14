@@ -1,18 +1,24 @@
-import React from 'react';
-import NavigationBar from './components/NavigationBar';
-import { BrowserRouter as BrowserRouter, Route, Switch } from "react-router-dom";
-import Sidebar from './components/SideBar';
-import Timeline from './Timeline';
+import React from "react";
+import NavigationBar from "./components/NavigationBar";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Sidebar from "./components/SideBar";
+import Timeline from "./Timeline";
+import PostView from "./components/PostView";
+import MyProfile from "./components/MyProfile";
+import TopicView from "./components/TopicView";
+import EditProfile from "./components/EditProfile";
 
 export const Feed = (props) => (
-  <div>
-  
   <BrowserRouter>
-    {/*<NavigationBar />*/}
+    <NavigationBar></NavigationBar> {/*/>*/}
     <Sidebar />
     <Switch>
-      <Route exact path="/feed" component={Timeline} />
+      <Route exact path='/feed' component={Timeline} />
+      <Route exact path='/feed/post/:postId' component={PostView} />
+      <Route exact path='/feed/myprofile/' component={MyProfile} />
+      <Route exact path='/feed/myprofile/:username' component={MyProfile} />
+      <Route exact path='/feed/topic/:topicName' component={TopicView} />
+      <Route exact path = "/feed/edit" component={EditProfile} />
     </Switch>
   </BrowserRouter>
-  </div>
-)
+);
