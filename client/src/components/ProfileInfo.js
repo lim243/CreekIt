@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
+import Modal from "react-modal";
 
 const Styles = styled.div`
   .right {
@@ -38,6 +39,17 @@ const Styles = styled.div`
   }
 `;
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
+
 class ProfileInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -52,8 +64,43 @@ class ProfileInfo extends React.Component {
       followers: "",
       topics: "",
       unfollow: "Follow",
+      modal: '',
+      modal2: '',
+      modal3: ''
     };
+    this.modalOpen = this.modalOpen.bind(this);
+    this.modalClose = this.modalClose.bind(this);
+    this.modalOpen2 = this.modalOpen2.bind(this);
+    this.modalClose2 = this.modalClose2.bind(this);
+    this.modalOpen3 = this.modalOpen3.bind(this);
+    this.modalClose3 = this.modalClose3.bind(this);
   }
+
+  modalOpen = () =>{
+    this.setState({ modal: true });
+  };
+
+  modalClose = () => {
+    this.setState({
+      modal: false
+    });
+  };
+
+  modalOpen2 = () => {
+    this.setState({ modal2: true });
+  };
+
+  modalClose2 = () => {
+    this.setState({ modal2: false });
+  };
+
+  modalOpen3 = () => {
+    this.setState({ modal3: true });
+  };
+
+  modalClose3 = () => {
+    this.setState({ modal3: false });
+  };
 
   editHandler = () => {
     // redirect to edit profile page
@@ -130,9 +177,37 @@ class ProfileInfo extends React.Component {
             </button>
           )}
           <p className='bio'>{this.props.bio} </p>
-          <p className='stats'>Followers: {this.props.followers} </p>
+
+          <a href="javascript:;" onClick={e => this.modalOpen(e)}>
+            <p className='stats'>Followers: {this.props.followers} </p>
+          </a>
+
+        <Modal style={customStyles} isOpen={this.state.modal} onRequestClose={this.modalClose}>
+          <button onClick={this.modalClose}>close</button>
+          <div>List of Followers</div> {/* Map thru a list of followers here :::::: use a href */ }
+        </Modal>
+
+        <a href="javascript:;" onClick={e => this.modalOpen2(e)}>
           <p className='stats'>Following: {this.props.following} </p>
+        </a>
+
+        <Modal style={customStyles} isOpen={this.state.modal2} onRequestClose={this.modalClose2}>
+          <button onClick={this.modalClose2}>close</button>
+          <div>List of Following</div> {/* Map thru a list of following here :::::: use a href */ }
+        </Modal>
+
+        <a href="javascript:;" onClick={e => this.modalOpen3(e)}>
           <p className='stats'>Topics: {this.props.topics} </p>
+        </a>
+
+        <Modal style={customStyles} isOpen={this.state.modal3} onRequestClose={this.modalClose3}>
+          <button onClick={this.modalClose3}>close</button>
+          <div>List of Topics</div> {/* Map thru a list of topics here :::::: use a href */ }
+        </Modal>
+
+          {/* <p className='stats'>Followers: {this.props.followers} </p>
+          <p className='stats'>Following: {this.props.following} </p> */}
+          
           <p className='stats'>Posts: {this.props.postNum} </p>
         </div>
       </Styles>
