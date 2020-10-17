@@ -35,6 +35,11 @@ const Styles = styled.div`
     width: 100%;
     z-index: 8;
   }
+
+  .searchButton {
+    margin-left: 5%;
+
+  }
 `;
 
 class NavigationBar extends React.Component {
@@ -110,7 +115,7 @@ class NavigationBar extends React.Component {
                 className=''
                 onChange={this.handleChange}
               />
-              <Button onClick={this.handleSubmit}>Search</Button>
+              <Button className='searchButton' onClick={this.handleSubmit}>Search</Button>
             </Form>
             <Navbar.Collapse id='basic-navbar-nav'>
               <Nav className='ml-auto'>
@@ -118,9 +123,6 @@ class NavigationBar extends React.Component {
                   <Nav.Link onClick={this.handleClick} href='/feed/myprofile/'>
                     My Profile
                   </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link href='/help'>FAQ</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link href='/logout'>Logout</Nav.Link>

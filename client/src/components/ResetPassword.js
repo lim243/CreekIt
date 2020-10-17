@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Formik } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
+import Navigation from "./Navigation";
 
 const Styles = styled.div`
     text-align: center;
@@ -61,6 +62,8 @@ const Styles = styled.div`
 let code = 'abcdefgh';
 
 const ResetPassword = () => (
+    <div>
+        <Navigation />
     <Styles>
     <Formik
         initialValues={{ password: "", confirm: "" }}
@@ -135,6 +138,7 @@ const ResetPassword = () => (
         }}
     </Formik>
     </Styles>
+    </div>
 );
 
 export default ResetPassword;

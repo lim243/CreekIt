@@ -3,6 +3,7 @@ import { Formik } from "formik"
 import * as Yup from "yup";
 import styled from 'styled-components';
 import axios from 'axios'
+import Navigation from "./Navigation";
 
 const Styles = styled.div`
     text-align: center;
@@ -60,6 +61,8 @@ const Styles = styled.div`
     `;
 
 const ForgotPassword = () => (
+    <div>
+    <Navigation></Navigation>
     <Styles>
     <Formik
         initialValues={{ email: ""}}
@@ -124,6 +127,7 @@ const ForgotPassword = () => (
         }}
     </Formik>
     </Styles>
+    </div>
 );
 
 export default ForgotPassword;

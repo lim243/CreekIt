@@ -33,13 +33,11 @@ export const Navigation = () => (
     <Navbar expand="lg">
       <Navbar.Brand href="/sign-in">CreekIt</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-      <Form className="form-center">
-        <FormControl type="text" placeholder="Search" className="" />
-      </Form>
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <Nav.Item><Nav.Link href="/help">FAQ</Nav.Link></Nav.Item> 
           <Nav.Item><Nav.Link href="/sign-up">Create Account</Nav.Link></Nav.Item>
+          <Nav.Item><Nav.Link href="/sign-in">Sign In</Nav.Link></Nav.Item>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

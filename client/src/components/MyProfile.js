@@ -4,6 +4,8 @@ import styled from "styled-components";
 import axios from "axios";
 import ProfileInfo from "./ProfileInfo";
 import CoolTabs from "react-cool-tabs";
+import Navigation from "./Navigation";
+import NavigationBar from "./NavigationBar";
 
 const GridWrapper = styled.div`
   display: block;
@@ -201,6 +203,8 @@ class MyProfile extends React.Component {
     //These are just hard-coded example. We would need to fetch the database to get the feed
     console.log("user",user);
     return (
+      <div>
+      <NavigationBar /> {/* Added again to compensate for reloading */}
       <GridWrapper>
         {console.log("this.state", this.state)}
         <ProfileInfo
@@ -239,6 +243,7 @@ class MyProfile extends React.Component {
           />
         </div>
       </GridWrapper>
+      </div>
     );
   }
 }

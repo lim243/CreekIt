@@ -18,7 +18,7 @@ function HomePage() {
     return (
     <Router>
         <div id="initNavi">
-        <Navigation></Navigation>
+        {/* <Navigation></Navigation> */}
         </div>
         <br></br>
         <br></br>
