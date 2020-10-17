@@ -2,8 +2,9 @@ import Avatar from "react-avatar";
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+import { NavLink, Redirect } from "react-router-dom";
 import Modal from "react-modal";
+import Links from './Links';
 
 const Styles = styled.div`
   .right {
@@ -66,7 +67,10 @@ class ProfileInfo extends React.Component {
       unfollow: "Follow",
       modal: '',
       modal2: '',
-      modal3: ''
+      modal3: '',
+      listFollow: [],  // TODO: Populate this
+      listFollowing: [],  // TODO: Populate this
+      listTopics: [],  // TODO: Populate this
     };
     this.modalOpen = this.modalOpen.bind(this);
     this.modalClose = this.modalClose.bind(this);
@@ -185,6 +189,14 @@ class ProfileInfo extends React.Component {
         <Modal style={customStyles} isOpen={this.state.modal} onRequestClose={this.modalClose}>
           <button onClick={this.modalClose}>close</button>
           <div>List of Followers</div> {/* Map thru a list of followers here :::::: use a href */ }
+          {this.state.listFollow.map((item, index) => (
+          <Links
+            name={item.name}
+            username={item.username}
+            path={item.path}
+            key={index}
+          />
+          ))}
         </Modal>
 
         <a href="javascript:;" onClick={e => this.modalOpen2(e)}>
@@ -194,6 +206,14 @@ class ProfileInfo extends React.Component {
         <Modal style={customStyles} isOpen={this.state.modal2} onRequestClose={this.modalClose2}>
           <button onClick={this.modalClose2}>close</button>
           <div>List of Following</div> {/* Map thru a list of following here :::::: use a href */ }
+          {this.state.listFollowing.map((item, index) => (
+          <Links
+            name={item.name}
+            username={item.username}
+            path={item.path}
+            key={index}
+          />
+          ))}
         </Modal>
 
         <a href="javascript:;" onClick={e => this.modalOpen3(e)}>
