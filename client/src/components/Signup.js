@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import styled from "styled-components";
 import DatePicker from "./DatePicker";
 import axios from "axios";
+import Navigation from "./Navigation";
 
 const Styles = styled.div`
   text-align: center;
@@ -61,6 +62,8 @@ const Styles = styled.div`
 `;
 
 const Signup = () => (
+  <div>
+  <Navigation></Navigation>
   <Styles>
     <Formik
       initialValues={{ email: "", password: "", confirm: "", username: "", date: "" }}
@@ -204,6 +207,7 @@ const Signup = () => (
       }}
     </Formik>
   </Styles>
+  </div>
 );
 
 export default Signup;

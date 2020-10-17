@@ -3,8 +3,8 @@ import { Formik, setStatus } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
-import NavigationBar from "./Navigation";
 import axios from "axios";
+import Navigation from "./Navigation";
 
 const Styles = styled.div`
   text-align: center;
@@ -52,10 +52,15 @@ const Styles = styled.div`
     background-color: white;
     color: rgb(70, 153, 179);
   }
+  none {
+
+  }
 `;
 
 
 const Login = () => (
+  <div>
+  <Navigation></Navigation>
   <Styles>
     <Formik
       initialValues={{ email: "", password: "" }}
@@ -146,6 +151,7 @@ const Login = () => (
       }}
     </Formik>
   </Styles>
+  </div>
 );
 
 export default withRouter(Login);

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Button, Accordion, Card } from "react-bootstrap";
 import styled from 'styled-components';
+import Navigation from './Navigation';
 
 const Styles = styled.div`
     text-align: center;
@@ -17,6 +18,8 @@ const Styles = styled.div`
 export default class FAQ extends Component {
     render() {
         return (
+            <div>
+                <Navigation />
             <Styles>
             <form>
             <h3>Have Questions?</h3>
@@ -109,6 +112,7 @@ export default class FAQ extends Component {
             </Accordion>
             </form>
             </Styles>
+            </div>
         );
     }
     
