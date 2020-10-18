@@ -38,7 +38,6 @@ const Styles = styled.div`
 
   .searchButton {
     margin-left: 5%;
-
   }
 `;
 
@@ -74,6 +73,12 @@ class NavigationBar extends React.Component {
   handleClick = () => {
     this.setState({ redirectUser: true });
     this.forceUpdate();
+  };
+
+  handleLogout = () => {
+    localStorage.clear();
+    // TODO: make sure to change this path if we are on production mode
+    document.location.href = "http://localhost:3000/";
   };
 
   render() {
@@ -115,7 +120,9 @@ class NavigationBar extends React.Component {
                 className=''
                 onChange={this.handleChange}
               />
-              <Button className='searchButton' onClick={this.handleSubmit}>Search</Button>
+              <Button className='searchButton' onClick={this.handleSubmit}>
+                Search
+              </Button>
             </Form>
             <Navbar.Collapse id='basic-navbar-nav'>
               <Nav className='ml-auto'>
@@ -125,7 +132,7 @@ class NavigationBar extends React.Component {
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link href='/logout'>Logout</Nav.Link>
+                  <Nav.Link onClick={this.handleLogout}>Logout</Nav.Link>
                 </Nav.Item>
               </Nav>
             </Navbar.Collapse>
