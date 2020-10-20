@@ -13,7 +13,7 @@ class Links extends React.Component {
 
   render() {
       return (
-        <a href={this.state.path}>{this.state.name} {this.state.username}</a>
+        <a href={this.props.path}>{this.props.name} {this.props.username}</a>
       );
   }
 }

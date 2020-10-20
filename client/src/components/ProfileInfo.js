@@ -70,7 +70,7 @@ class ProfileInfo extends React.Component {
       modal3: '',
       listFollow: [],  // TODO: Populate this
       listFollowing: [],  // TODO: Populate this
-      listTopics: [],  // TODO: Populate this
+      listTopics: [],  // TODO: Populate this (not implemented yet)
     };
     this.modalOpen = this.modalOpen.bind(this);
     this.modalClose = this.modalClose.bind(this);
@@ -189,13 +189,16 @@ class ProfileInfo extends React.Component {
         <Modal style={customStyles} isOpen={this.state.modal} onRequestClose={this.modalClose}>
           <button onClick={this.modalClose}>close</button>
           <div>List of Followers</div> {/* Map thru a list of followers here :::::: use a href */ }
-          {this.state.listFollow.map((item, index) => (
+          {this.state.listFollow.map((item, index) => (      
+            <div>    
           <Links
             name={item.name}
             username={item.username}
             path={item.path}
             key={index}
           />
+          <br></br>
+          </div>   
           ))}
         </Modal>
 
@@ -207,12 +210,15 @@ class ProfileInfo extends React.Component {
           <button onClick={this.modalClose2}>close</button>
           <div>List of Following</div> {/* Map thru a list of following here :::::: use a href */ }
           {this.state.listFollowing.map((item, index) => (
+            <div>
           <Links
             name={item.name}
             username={item.username}
             path={item.path}
             key={index}
           />
+          <br></br>
+          </div>
           ))}
         </Modal>
 
