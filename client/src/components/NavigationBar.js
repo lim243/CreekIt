@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav, Navbar, Form, FormControl, Button, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
-import { Redirect, Route, Link, withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import Navigation from "./Navigation";
 
 const Styles = styled.div`
@@ -63,23 +63,27 @@ class NavigationBar extends React.Component {
     const searchString = this.state.search;
     if (searchString.startsWith("#")) {
       // Search Topic
-      // this.setState({ redirectTopic: true, redirectUser: false });
       this.props.history.push(`/feed/topic/${searchString.substring(1)}`);
     } else {
       // Search User
-      // this.setState({ redirectUser: true, redirectTopic: false });
       this.props.history.push(`/feed/myprofile/${searchString}`);
     }
-    // event.preventDefault();
+
+    window.location.reload();
+  };
+
+  handleProfile = () => {
+    this.props.history.push("/feed/myprofile/");
+    window.location.reload();
   };
 
   handleLogout = () => {
     localStorage.clear();
     this.props.logout();
+    this.props.history.push("/");
   };
 
   render() {
-    console.log("this.props", this.props);
     if (this.props.isAuthenticated) {
       return (
         <Styles>
@@ -101,7 +105,11 @@ class NavigationBar extends React.Component {
               <Navbar.Collapse id='basic-navbar-nav'>
                 <Nav className='ml-auto'>
                   <Nav.Item>
-                    <Nav.Link as={Link} to='/feed/myprofile'>
+                    <Nav.Link
+                      as={Link}
+                      to='/feed/myprofile/'
+                      onClick={this.handleProfile}
+                    >
                       My Profile
                     </Nav.Link>
                   </Nav.Item>
