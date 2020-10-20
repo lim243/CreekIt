@@ -83,6 +83,12 @@ class NavigationBar extends React.Component {
     this.props.history.push("/");
   };
 
+  handleLogout = () => {
+    localStorage.clear();
+    // TODO: make sure to change this path if we are on production mode
+    document.location.href = "http://localhost:3000/";
+  };
+
   render() {
     if (this.props.isAuthenticated) {
       return (
