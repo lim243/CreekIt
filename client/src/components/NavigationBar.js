@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav, Navbar, Form, FormControl, Button, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
-import { Redirect, Route, Link } from "react-router-dom";
+import { Redirect, Route, Link, withRouter } from "react-router-dom";
 import Navigation from "./Navigation";
 
 const Styles = styled.div`
@@ -58,7 +58,7 @@ class NavigationBar extends React.Component {
   };
 
   handleSubmit = (event) => {
-    console.log("Hi");
+    console.log("Hi", this.props);
 
     const searchString = this.state.search;
     if (searchString.startsWith("#")) {
@@ -71,13 +71,6 @@ class NavigationBar extends React.Component {
       this.props.history.push(`/feed/myprofile/${searchString}`);
     }
     // event.preventDefault();
-  };
-
-  handleClick = () => {
-    // this.setState({ redirectUser: true });
-    console.log("this.click", this.props);
-    // const redirectString = `/myprofile/${this.state.search}`
-    this.props.history.push("/myprofile");
   };
 
   handleLogout = () => {
@@ -129,4 +122,4 @@ class NavigationBar extends React.Component {
   }
 }
 
-export default NavigationBar;
+export default withRouter(NavigationBar);
