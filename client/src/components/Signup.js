@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import styled from "styled-components";
 import DatePicker from "./DatePicker";
 import axios from "axios";
-import Navigation from "./Navigation";
 
 const Styles = styled.div`
   text-align: center;
@@ -61,122 +60,122 @@ const Styles = styled.div`
   }
 `;
 
-const Signup = () => (
+const Signup = (props) => (
   <div>
-  <Navigation></Navigation>
-  <Styles>
-    <Formik
-      initialValues={{ email: "", password: "", confirm: "", username: "", date: "" }}
-      onSubmit={(values, { setSubmitting, setStatus }) => {
-        console.log("Logging in", values);
-        setSubmitting(false);
+    <Styles>
+      <Formik
+        initialValues={{ email: "", password: "", confirm: "", username: "", date: "" }}
+        onSubmit={(values, { setSubmitting, setStatus }) => {
+          console.log("Logging in", values);
+          setSubmitting(false);
 
-        axios
-          .post("http://localhost:5000/api/v1/users/signUp", {
-            email: values.email,
-            password: values.password,
-            username: values.username,
-            dob: values.date,
-          })
-          .then(
-            (response) => {
-              console.log("res", response);
-              if (response.data) {
-                localStorage.setItem("token", response.data.accessToken);
-                localStorage.setItem("email", values.email);
-                localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
-                setStatus("Welcome!");
-                document.location.href = "http://localhost:3000/feed";
+          axios
+            .post("http://localhost:5000/api/v1/users/signUp", {
+              email: values.email,
+              password: values.password,
+              username: values.username,
+              dob: values.date,
+            })
+            .then(
+              (response) => {
+                console.log("res", response);
+                if (response.data) {
+                  localStorage.setItem("token", response.data.accessToken);
+                  localStorage.setItem("email", values.email);
+                  localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
+                  setStatus("Welcome!");
+                  props.login();
+                  props.history.push("/feed");
+                }
+              },
+              (error) => {
+                console.log(error.response);
+                setStatus(error.response.data.message);
               }
-            },
-            (error) => {
-              console.log(error.response);
-              setStatus(error.response.data.message);
-            }
-          );
-        // window.location.href = "http://localhost:3000/feed";
-      }}
-      validationSchema={Yup.object().shape({
-        email: Yup.string().email().required("Required"),
-        password: Yup.string()
-          .required("Required")
-          .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
-          .min(8, "Password is too short - should be 8 chars minimum."),
-        confirm: Yup.string()
-          .oneOf([Yup.ref("password"), null], "Password does not match")
-          .required("Password confirmation is required"),
-        username: Yup.string()
-          .required("Required")
-          //   .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
-          .matches(/(^[\w+@.]*$)/, "Username cannot contain spaces."), // TODO: Change this since i just hacked it for email and username being the same
-        date: Yup.string().required("Required"),
-        //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
-      })}
-    >
-      {(props) => {
-        const {
-          values,
-          touched,
-          errors,
-          isSubmitting,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          status,
-        } = props;
-        return (
-          <form onSubmit={handleSubmit}>
-            <h3>Want to create an account?</h3>
-            <p style={{ color: "#9FFFCB" }}>Its simple.</p>
-            <input
-              name='email'
-              types='text'
-              placeholder='Email'
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={errors.email && touched.email && "error"}
-            />
-            {errors.email && touched.email && (
-              <div className='input-feedback'>{errors.email}</div>
-            )}
-            <input
-              name='password'
-              type='password'
-              placeholder='Password'
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={errors.password && touched.password && "error"}
-            />
-            {errors.password && touched.password && (
-              <div className='input-feedback'>{errors.password}</div>
-            )}
-            <input
-              name='confirm'
-              type='password'
-              placeholder='Confirm Password'
-              value={values.confirm}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={errors.confirm && touched.confirm && "error"}
-            />
-            {errors.confirm && touched.confirm && (
-              <div className='input-feedback'>{errors.confirm}</div>
-            )}
-            <input
-              name='username'
-              type='text'
-              placeholder='Username'
-              value={values.username}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={errors.username && touched.username && "error"}
-            />
-            {errors.username && touched.username && (
-              <div className='input-feedback'>{errors.username}</div>
-            )}
-            {/*<input
+            );
+          // window.location.href = "http://localhost:3000/feed";
+        }}
+        validationSchema={Yup.object().shape({
+          email: Yup.string().email().required("Required"),
+          password: Yup.string()
+            .required("Required")
+            .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
+            .min(8, "Password is too short - should be 8 chars minimum."),
+          confirm: Yup.string()
+            .oneOf([Yup.ref("password"), null], "Password does not match")
+            .required("Password confirmation is required"),
+          username: Yup.string()
+            .required("Required")
+            //   .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
+            .matches(/(^[\w+@.]*$)/, "Username cannot contain spaces."), // TODO: Change this since i just hacked it for email and username being the same
+          date: Yup.string().required("Required"),
+          //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
+        })}
+      >
+        {(props) => {
+          const {
+            values,
+            touched,
+            errors,
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            status,
+          } = props;
+          return (
+            <form onSubmit={handleSubmit}>
+              <h3>Want to create an account?</h3>
+              <p style={{ color: "#9FFFCB" }}>Its simple.</p>
+              <input
+                name='email'
+                types='text'
+                placeholder='Email'
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={errors.email && touched.email && "error"}
+              />
+              {errors.email && touched.email && (
+                <div className='input-feedback'>{errors.email}</div>
+              )}
+              <input
+                name='password'
+                type='password'
+                placeholder='Password'
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={errors.password && touched.password && "error"}
+              />
+              {errors.password && touched.password && (
+                <div className='input-feedback'>{errors.password}</div>
+              )}
+              <input
+                name='confirm'
+                type='password'
+                placeholder='Confirm Password'
+                value={values.confirm}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={errors.confirm && touched.confirm && "error"}
+              />
+              {errors.confirm && touched.confirm && (
+                <div className='input-feedback'>{errors.confirm}</div>
+              )}
+              <input
+                name='username'
+                type='text'
+                placeholder='Username'
+                value={values.username}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={errors.username && touched.username && "error"}
+              />
+              {errors.username && touched.username && (
+                <div className='input-feedback'>{errors.username}</div>
+              )}
+              {/*<input
                         name="date"
                         type="text"
                         placeholder="MM/DD/YYYY"
@@ -188,25 +187,25 @@ const Signup = () => (
                     {errors.date && touched.date && (
                         <div className="input-feedback">{errors.date}</div>
                     )} */}
-            <DatePicker name='date' />
-            {errors.date && touched.date && (
-              <div className='input-feedback'>{errors.date}</div>
-            )}
-            <br></br>
-            <br></br>
-            {status && <div className='text-danger'>{status}</div>}
-            <button
-              type='submit'
-              className='btn btn-primary btn-block'
-              disabled={isSubmitting}
-            >
-              Login
-            </button>
-          </form>
-        );
-      }}
-    </Formik>
-  </Styles>
+              <DatePicker name='date' />
+              {errors.date && touched.date && (
+                <div className='input-feedback'>{errors.date}</div>
+              )}
+              <br></br>
+              <br></br>
+              {status && <div className='text-danger'>{status}</div>}
+              <button
+                type='submit'
+                className='btn btn-primary btn-block'
+                disabled={isSubmitting}
+              >
+                Login
+              </button>
+            </form>
+          );
+        }}
+      </Formik>
+    </Styles>
   </div>
 );
 
