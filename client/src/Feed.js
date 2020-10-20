@@ -10,7 +10,7 @@ import EditProfile from "./components/EditProfile";
 
 export const Feed = (props) => (
   <BrowserRouter>
-    <NavigationBar></NavigationBar> {/*/>*/}
+    <NavigationBar/>
     <Sidebar />
     <Switch>
       <Route exact path='/feed' component={Timeline} />
