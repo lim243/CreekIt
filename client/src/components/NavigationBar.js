@@ -1,7 +1,8 @@
 import React from "react";
 import { Nav, Navbar, Form, FormControl, Button, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Link } from "react-router-dom";
+import Navigation from "./Navigation";
 
 const Styles = styled.div`
   .navbar {
@@ -62,84 +63,69 @@ class NavigationBar extends React.Component {
     const searchString = this.state.search;
     if (searchString.startsWith("#")) {
       // Search Topic
-      this.setState({ redirectTopic: true, redirectUser: false });
+      // this.setState({ redirectTopic: true, redirectUser: false });
+      this.props.history.push(`/feed/topic/${searchString.substring(1)}`);
     } else {
       // Search User
-      this.setState({ redirectUser: true, redirectTopic: false });
+      // this.setState({ redirectUser: true, redirectTopic: false });
+      this.props.history.push(`/feed/myprofile/${searchString}`);
     }
     // event.preventDefault();
   };
 
   handleClick = () => {
-    this.setState({ redirectUser: true });
-    this.forceUpdate();
+    // this.setState({ redirectUser: true });
+    console.log("this.click", this.props);
+    // const redirectString = `/myprofile/${this.state.search}`
+    this.props.history.push("/myprofile");
   };
 
   handleLogout = () => {
     localStorage.clear();
-    // TODO: make sure to change this path if we are on production mode
-    document.location.href = "http://localhost:3000/";
+    this.props.logout();
   };
 
   render() {
-    if (this.state.redirectTopic) {
-      console.log("this.state", this.state);
+    console.log("this.props", this.props);
+    if (this.props.isAuthenticated) {
       return (
-        <Redirect
-          to={{
-            pathname: "/feed/topic/" + this.state.search.substring(1),
-          }}
-        />
+        <Styles>
+          <div className='sticky'>
+            <Navbar expand='lg'>
+              <Navbar.Brand href='/feed'>CreekIt</Navbar.Brand>
+              <Navbar.Toggle aria-controls='basic-navbar-nav' />
+              <Form inline className='form-center'>
+                <FormControl
+                  type='text'
+                  placeholder='Search'
+                  className=''
+                  onChange={this.handleChange}
+                />
+                <Button className='searchButton' onClick={this.handleSubmit}>
+                  Search
+                </Button>
+              </Form>
+              <Navbar.Collapse id='basic-navbar-nav'>
+                <Nav className='ml-auto'>
+                  <Nav.Item>
+                    <Nav.Link as={Link} to='/feed/myprofile'>
+                      My Profile
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link as={Link} to='/' onClick={this.handleLogout}>
+                      Logout
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Navbar.Collapse>
+            </Navbar>
+          </div>
+        </Styles>
       );
-    } else if (this.state.redirectUser) {
-      let profile = "";
-      if (this.state.search.length > 0) {
-        profile = this.state.search;
-      } else {
-        profile = "";
-      }
-      return (
-        <Redirect
-          to={{
-            pathname: "/feed/myprofile/" + profile,
-          }}
-        />
-      );
+    } else {
+      return <Navigation />;
     }
-
-    return (
-      <Styles>
-        <div className='sticky'>
-          <Navbar expand='lg'>
-            <Navbar.Brand href='/feed'>CreekIt</Navbar.Brand>
-            <Navbar.Toggle aria-controls='basic-navbar-nav' />
-            <Form inline className='form-center'>
-              <FormControl
-                type='text'
-                placeholder='Search'
-                className=''
-                onChange={this.handleChange}
-              />
-              <Button className='searchButton' onClick={this.handleSubmit}>
-                Search
-              </Button>
-            </Form>
-            <Navbar.Collapse id='basic-navbar-nav'>
-              <Nav className='ml-auto'>
-                <Nav.Item>
-                  <Nav.Link onClick={this.handleClick} href='/feed/myprofile/'>
-                    My Profile
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link onClick={this.handleLogout}>Logout</Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-        </div>
-      </Styles>
-    );
   }
 }
 
