@@ -74,6 +74,8 @@ function deleteAccount(){
   );
   document.location.href = "http://localhost:3000/";
 }
+
+
 const EditProfile= () => (
   <Styles>
     <Formik

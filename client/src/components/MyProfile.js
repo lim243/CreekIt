@@ -183,6 +183,7 @@ class MyProfile extends React.Component {
 
   render() {
     const user = this.state.personal;
+    console.log("user", user);
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
     return (

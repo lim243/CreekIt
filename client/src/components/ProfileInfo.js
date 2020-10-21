@@ -78,6 +78,8 @@ class ProfileInfo extends React.Component {
     this.modalClose2 = this.modalClose2.bind(this);
     this.modalOpen3 = this.modalOpen3.bind(this);
     this.modalClose3 = this.modalClose3.bind(this);
+
+
   }
 
   modalOpen = () =>{
@@ -148,6 +150,26 @@ class ProfileInfo extends React.Component {
       this.setState({ unfollow: "Follow" });
       // Handle unfollow in backend
     }
+  };
+
+  
+
+  componentDidMount(){
+    this.fetchfollower();
+    this.fetchfollowing();
+  }
+  fetchfollower = () =>{
+    axios.get("http://localhost:5000/api/v1/users/kotori/followed/").then((res) => {
+      console.log("res", res.followed);
+      this.setState({listFollow :res.followed});
+    });
+  };
+  
+  fetchfollowing= () =>{
+    axios.get("http://localhost:5000/api/v1/users/kotori/following/").then((res) => {
+      console.log("res", res.following);
+      this.setState({listFollow :res.following});
+    });
   };
 
   render() {

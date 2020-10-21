@@ -23,8 +23,8 @@ router.get("/:username/dob", getDateOfBirth);
 router.get("/:username/education", getEducation);
 router.get("/:username/aboutme", getAboutMe);
 router.get("/:username/photo", getPhoto);
-router.get("/:username/following", authenticate.isauth, getFollowing); //TODO: Undefined
-router.get("/:username/followed", authenticate.isauth, getFollowing); //TODO: Undefined
+router.get("/:username/following",  getFollowing); //TODO: Undefined
+router.get("/:username/followed",  getFollowed); //TODO: Undefined
 router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
