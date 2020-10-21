@@ -229,6 +229,16 @@ class ProfileInfo extends React.Component {
         <Modal style={customStyles} isOpen={this.state.modal3} onRequestClose={this.modalClose3}>
           <button onClick={this.modalClose3}>close</button>
           <div>List of Topics</div> {/* Map thru a list of topics here :::::: use a href */ }
+          {this.state.listTopics.map((item, index) => (
+            <div>
+          <Links
+            name={item.name}
+            path={item.path}
+            key={index}
+          />
+          <br></br>
+          </div>
+          ))}
         </Modal>
 
           {/* <p className='stats'>Followers: {this.props.followers} </p>
