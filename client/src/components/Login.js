@@ -54,7 +54,6 @@ const Styles = styled.div`
   none {
   }
 `;
-
 const Login = (props) => (
   <div>
     <Styles>
@@ -62,7 +61,6 @@ const Login = (props) => (
         initialValues={{ email: "", password: "" }}
         onSubmit={(values, { setStatus, setSubmitting }) => {
           // setTimeout(() => {
-
           axios
             .post("http://localhost:5000/api/v1/users/signIn", {
               email: values.email,
@@ -83,9 +81,19 @@ const Login = (props) => (
                 console.log(error.response);
                 setStatus(error.response.data.message);
               }
-            );
 
-          // setSubmitting(false);
+            },
+            (error) => {
+              console.log(error.response);
+              setStatus(error.response.data.message);
+            }
+          },(error)=>{
+            alert(error);
+          });
+          //document.location.href = "http://localhost:3000/feed";
+          //axios.post()
+        }, 500);
+      }}
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().email().required("Required"),
