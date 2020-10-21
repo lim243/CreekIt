@@ -24,7 +24,15 @@ exports.login = function(req, res){
 
 exports.isauth = async function(req,res,next){
     bearer = req.headers.authorization
-    const token = bearer.split(" ")[1]
+    try{
+        const token = bearer.split(" ")[1]
+    }
+    catch(err){
+        //altert("You do not have access to this page")
+        res.redirect(401, 'loalhost:3000')
+        console.log("here");
+        return;
+    }
     // const search_params = current_url.searchParams;
 
     // const accessToken = search_params.get('accessToken');
@@ -33,7 +41,9 @@ exports.isauth = async function(req,res,next){
     // console.log(token);
     try{
         var decoded = jwt.verify(token, 'Creekit Secret');
+        console.log('result', decoded);
     } catch(err){
+        altert("password does not match")
         console.log(err);
         res.status(401).send(err);
         return;

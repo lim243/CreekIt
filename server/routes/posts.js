@@ -1,13 +1,13 @@
 const db = require("../db");
 const express = require("express");
 const router = express.Router();
-
+const authenticate = require("./authenticate");
 module.exports = router;
 
 // Router Functions
-router.get("/", getAllPosts);
+router.get("/", authenticate.isauth,getAllPosts);
 
-router.get("/:pid", getPost);
+router.get("/:pid", authenticate.isauth,getPost);
 router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
 router.get("/:pid/comments", getComments);

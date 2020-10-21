@@ -26,9 +26,14 @@ class Timeline extends React.Component {
 
   fetchPosts = () => {
     axios.get("http://localhost:5000/api/v1/posts/").then((res) => {
+      console.log("result", res);
       console.log("res", res.data.payload);
       this.setState({ posts: res.data.payload });
-    });
+    })
+    .catch((err)=>{
+      console.log(err.response)
+      alert("Not authorized user")
+      document.location.href = "http://localhost:3000/"});
   };
   render() {
     // Add posts to this array on the top as a stack (most recent should be at index 0)
