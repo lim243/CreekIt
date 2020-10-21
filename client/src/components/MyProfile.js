@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Post from "./Post";
 import styled from "styled-components";
 import axios from "axios";
@@ -24,8 +24,6 @@ class Posts extends React.Component {
     this.state = {
       posts: [],
     };
-
-    console.log("window.loca");
   }
 
   componentDidMount() {
@@ -151,34 +149,22 @@ class MyProfile extends React.Component {
     this.state = {
       personal: {},
       currentUser: false,
+      test_username: "",
     };
   }
 
   componentDidMount() {
-    // let username = localStorage.getItem("username");
-
-    // if (this.props.history) {
-    //   const url = this.props.history.location.pathname;
-    //   username = url.split("/").pop(-1);
-
-    //   console.log("This is postId:", username);
-    // }
-
-    // this.fetchUser(username);
     // TODO: Change this hacky way of redirecting / fetching posts
     if (global_username.length > 0) {
-      console.log("gloab", global_username);
       this.setState({ currentUser: false });
       this.fetchUser(global_username);
     } else {
-      console.log("gloab", global_username.length);
       this.setState({ currentUser: true });
       this.fetchUser(localStorage.getItem("username"));
     }
   }
 
   fetchUser = (username) => {
-    // const username = localStorage.getItem("username");
     const accessToken = localStorage.getItem("token");
 
     const authString = "Bearer ".concat(accessToken);
@@ -199,46 +185,51 @@ class MyProfile extends React.Component {
     const user = this.state.personal;
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
-    console.log("user",user);
     return (
-      <GridWrapper>
-        {console.log("this.state", this.state)}
-        <ProfileInfo
-          name={user.name}
-          username={user.username}
-          bio={user.about_me}
-          followButton={this.state.currentUser}
-          postNum={(user.posts && user.posts.length) || 0}
-          following={(user.following && user.following.length) || 0}
-          followers={(user.followed && user.followed.length) || 0}
-          topics={(user.topics && user.topics.length) || 0}
-          className='sticky'
-        />
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-
-        <div>
-          <CoolTabs
-            tabKey={"1"}
-            style={{ width: 500, height: 835, background: "white", overflow: "visible" }} // it can only render few posts before it cuts off
-            activeTabStyle={{ background: "black", color: "white" }}
-            unActiveTabStyle={{ background: "grey", color: "black" }}
-            activeLeftTabBorderBottomStyle={{ background: "9FFFCB", height: 4 }}
-            activeRightTabBorderBottomStyle={{ background: "9FFFCB", height: 4 }}
-            tabsBorderBottomStyle={{ background: "#9FFFCB", height: 4 }}
-            leftContentStyle={{ background: "white" }}
-            rightContentStyle={{ background: "white" }}
-            leftTabTitle={"Posts"}
-            rightTabTitle={"Interacted Posts"}
-            leftContent={<Posts />}
-            rightContent={<InteractedPosts />}
-            contentTransitionStyle={"transform 0.2s ease-in"}
-            borderTransitionStyle={"all 0.2s ease-in"}
+      <Fragment>
+        <GridWrapper>
+          <ProfileInfo
+            name={user.name}
+            username={user.username}
+            bio={user.about_me}
+            followButton={this.state.currentUser}
+            postNum={(user.posts && user.posts.length) || 0}
+            following={(user.following && user.following.length) || 0}
+            followers={(user.followed && user.followed.length) || 0}
+            topics={(user.topics && user.topics.length) || 0}
+            className='sticky'
           />
-        </div>
-      </GridWrapper>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+
+          <div>
+            <CoolTabs
+              tabKey={"1"}
+              style={{
+                width: 500,
+                height: 835,
+                background: "white",
+                overflow: "visible",
+              }} // it can only render few posts before it cuts off
+              activeTabStyle={{ background: "black", color: "white" }}
+              unActiveTabStyle={{ background: "grey", color: "black" }}
+              activeLeftTabBorderBottomStyle={{ background: "9FFFCB", height: 4 }}
+              activeRightTabBorderBottomStyle={{ background: "9FFFCB", height: 4 }}
+              tabsBorderBottomStyle={{ background: "#9FFFCB", height: 4 }}
+              leftContentStyle={{ background: "white" }}
+              rightContentStyle={{ background: "white" }}
+              leftTabTitle={"Posts"}
+              rightTabTitle={"Interacted Posts"}
+              leftContent={<Posts />}
+              rightContent={<InteractedPosts />}
+              contentTransitionStyle={"transform 0.2s ease-in"}
+              borderTransitionStyle={"all 0.2s ease-in"}
+            />
+          </div>
+        </GridWrapper>
+      </Fragment>
     );
   }
 }
