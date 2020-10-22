@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import ProfileInfo from "./ProfileInfo";
 import CoolTabs from "react-cool-tabs";
+import {Tabs, Tab} from 'react-bootstrap-tabs';
 
 const GridWrapper = styled.div`
   display: block;
@@ -200,33 +201,24 @@ class MyProfile extends React.Component {
             topics={(user.topics && user.topics.length) || 0}
             className='sticky'
           />
-
           <div>
-            <CoolTabs
-              tabKey={"1"}
-              style={{
-                width: 500,
-                height: 835,
-                background: "white",
-                overflow: "visible",
-              }} // it can only render few posts before it cuts off
-              activeTabStyle={{ background: "black", color: "white" }}
-              unActiveTabStyle={{ background: "grey", color: "black" }}
-              activeLeftTabBorderBottomStyle={{ background: "9FFFCB", height: 4 }}
-              activeRightTabBorderBottomStyle={{ background: "9FFFCB", height: 4 }}
-              tabsBorderBottomStyle={{ background: "#9FFFCB", height: 4 }}
-              leftContentStyle={{ background: "white" }}
-              rightContentStyle={{ background: "white" }}
-              leftTabTitle={"Posts"}
-              rightTabTitle={"Interacted Posts"}
-              leftContent={<Posts />}
-              rightContent={<InteractedPosts />}
-              contentTransitionStyle={"transform 0.2s ease-in"}
-              borderTransitionStyle={"all 0.2s ease-in"}
-            />
+            <Tabs defaultActiveKey="posts" id="uncontrolled-tab-example">
+              <Tab eventKey="posts" title="Posts" label="Posts" >
+                <br></br>
+                <Posts />
+              </Tab>
+
+              <Tab eventKey="interactedPosts" title="Interacted Posts" label="Interacted Posts">
+                <br></br>
+                <InteractedPosts />
+              </Tab>
+            </Tabs>
           </div>
+          
         </GridWrapper>
       </Fragment>
+
+      
     );
   }
 }
