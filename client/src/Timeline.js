@@ -10,6 +10,7 @@ const GridWrapper = styled.div`
   margin-left: 35%;
   margin-right: 25em;
   padding-top: 75px;
+  width: 500px;
 `;
 
 class Timeline extends React.Component {
