@@ -54,7 +54,6 @@ const Styles = styled.div`
   none {
   }
 `;
-
 const Login = (props) => (
   <div>
   <Styles>
@@ -91,8 +90,6 @@ const Login = (props) => (
                 console.log(error.response);
                 setStatus(error.response.data.message);
               }
-            );
-
           // setSubmitting(false);
       }}
       validationSchema={Yup.object().shape({
