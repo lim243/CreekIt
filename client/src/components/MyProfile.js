@@ -12,6 +12,7 @@ const GridWrapper = styled.div`
   margin-right: 25em;
   padding-top: 75px;
   height: auto;
+  width: 500px;
 `;
 
 // TODO: Change this hacky way of redirecting / fetching posts

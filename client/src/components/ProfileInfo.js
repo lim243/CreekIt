@@ -15,6 +15,7 @@ const Styles = styled.div`
     position: relative;
     top: -10px;
     margin-bottom: 10px;
+    float: left;
   }
   .bio {
   }
@@ -23,9 +24,8 @@ const Styles = styled.div`
     margin-left: 10px;
   }
   .interaction {
-    position: absolute;
-    top: 250px;
-    right: 500px;
+    position: relative;
+    left: 200px;
   }
 
   .avatar {
@@ -180,6 +180,8 @@ class ProfileInfo extends React.Component {
               {this.state.unfollow}{" "}
             </button>
           )}
+          <br></br>
+          <br></br>
           <p className='bio'>{this.props.bio} </p>
 
           <a href="javascript:;" onClick={e => this.modalOpen(e)}>
