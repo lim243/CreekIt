@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import styled from "styled-components";
 import DatePicker from "./DatePicker";
 import axios from "axios";
-import Navigation from "./Navigation";
 
 const Styles = styled.div`
   text-align: center;
@@ -61,32 +60,37 @@ const Styles = styled.div`
   }
 `;
 
-const Signup = () => (
+const Signup = (props) => (
   <div>
-  <Navigation></Navigation>
-  <Styles>
-    <Formik
-      initialValues={{ email: "", password: "", confirm: "", username: "", date: "" }}
-      onSubmit={(values, { setSubmitting, setStatus }) => {
-        console.log("Logging in", values);
-        setSubmitting(false);
+    <Styles>
+      <Formik
+        initialValues={{ email: "", password: "", confirm: "", username: "", date: "" }}
+        onSubmit={(values, { setSubmitting, setStatus }) => {
+          console.log("Logging in", values);
+          setSubmitting(false);
 
-        axios
-          .post("http://localhost:5000/api/v1/users/signUp", {
-            email: values.email,
-            password: values.password,
-            username: values.username,
-            dob: values.date,
-          })
-          .then(
-            (response) => {
-              console.log("res", response);
-              if (response.data) {
-                localStorage.setItem("token", response.data.accessToken);
-                localStorage.setItem("email", values.email);
-                localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
-                setStatus("Welcome!");
-                document.location.href = "http://localhost:3000/feed";
+          axios
+            .post("http://localhost:5000/api/v1/users/signUp", {
+              email: values.email,
+              password: values.password,
+              username: values.username,
+              dob: values.date,
+            })
+            .then(
+              (response) => {
+                console.log("res", response);
+                if (response.data) {
+                  localStorage.setItem("token", response.data.accessToken);
+                  localStorage.setItem("email", values.email);
+                  localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
+                  setStatus("Welcome!");
+                  props.login();
+                  props.history.push("/feed");
+                }
+              },
+              (error) => {
+                console.log(error.response);
+                setStatus(error.response.data.message);
               }
             },
             (error) => {
@@ -176,37 +180,26 @@ const Signup = () => (
             {errors.username && touched.username && (
               <div className='input-feedback'>{errors.username}</div>
             )}
-            {/*<input
-                        name="date"
-                        type="text"
-                        placeholder="MM/DD/YYYY"
-                        value={values.date}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={errors.date && touched.date && "error"}
-                    />
-                    {errors.date && touched.date && (
-                        <div className="input-feedback">{errors.date}</div>
-                    )} */}
-            <DatePicker name='date' />
-            {errors.date && touched.date && (
-              <div className='input-feedback'>{errors.date}</div>
-            )}
-            <br></br>
-            <br></br>
-            {status && <div className='text-danger'>{status}</div>}
-            <button
-              type='submit'
-              className='btn btn-primary btn-block'
-              disabled={isSubmitting}
-            >
-              Login
-            </button>
-          </form>
-        );
-      }}
-    </Formik>
-  </Styles>
+
+              <DatePicker name='date' />
+              {errors.date && touched.date && (
+                <div className='input-feedback'>{errors.date}</div>
+              )}
+              <br></br>
+              <br></br>
+              {status && <div className='text-danger'>{status}</div>}
+              <button
+                type='submit'
+                className='btn btn-primary btn-block'
+                disabled={isSubmitting}
+              >
+                Login
+              </button>
+            </form>
+          );
+        }}
+      </Formik>
+    </Styles>
   </div>
 );
 

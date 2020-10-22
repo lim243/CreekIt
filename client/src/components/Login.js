@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { Formik, setStatus } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import Navigation from "./Navigation";
 
 const Styles = styled.div`
   text-align: center;
@@ -53,14 +52,11 @@ const Styles = styled.div`
     color: rgb(70, 153, 179);
   }
   none {
-
   }
 `;
 
-
-const Login = () => (
+const Login = (props) => (
   <div>
-  <Navigation></Navigation>
   <Styles>
     <Formik
       initialValues={{ val: "", username: "", email: "", password: "" }}
@@ -77,6 +73,7 @@ const Login = () => (
           .post("http://localhost:5000/api/v1/users/signIn", {
             email: values.email,
             password: values.password,
+            username: values.username
           })
           .then(
             (response) => {
@@ -86,14 +83,17 @@ const Login = () => (
                 localStorage.setItem("email", values.email);
                 localStorage.setItem("username", values.username); // TODO: DANGEROUS Right now is the same thing
                 setStatus("Welcome!");
-                document.location.href = "http://localhost:3000/feed";
+                props.login();
+                props.history.push("/feed");
               }
             },
             (error) => {
-              console.log(error.response);
-              setStatus(error.response.data.message);
-            }
-          );
+                console.log(error.response);
+                setStatus(error.response.data.message);
+              }
+            );
+
+          // setSubmitting(false);
       }}
       validationSchema={Yup.object().shape({
         val: Yup.string().required("Required"),
