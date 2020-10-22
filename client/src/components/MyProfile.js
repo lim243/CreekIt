@@ -200,10 +200,6 @@ class MyProfile extends React.Component {
             topics={(user.topics && user.topics.length) || 0}
             className='sticky'
           />
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
 
           <div>
             <CoolTabs
