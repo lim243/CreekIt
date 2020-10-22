@@ -92,101 +92,95 @@ const Signup = (props) => (
                 console.log(error.response);
                 setStatus(error.response.data.message);
               }
-            );
-          // window.location.href = "http://localhost:3000/feed";
-        }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email().required("Required"),
-          password: Yup.string()
-            .required("Required")
-            .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
-            .min(8, "Password is too short - should be 8 chars minimum."),
-          confirm: Yup.string()
-            .oneOf([Yup.ref("password"), null], "Password does not match")
-            .required("Password confirmation is required"),
-          username: Yup.string()
-            .required("Required")
-            //   .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
-            .matches(/(^[\w+@.]*$)/, "Username cannot contain spaces."), // TODO: Change this since i just hacked it for email and username being the same
-          date: Yup.string().required("Required"),
-          //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
-        })}
-      >
-        {(props) => {
-          const {
-            values,
-            touched,
-            errors,
-            isSubmitting,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            status,
-          } = props;
-          return (
-            <form onSubmit={handleSubmit}>
-              <h3>Want to create an account?</h3>
-              <p style={{ color: "#9FFFCB" }}>Its simple.</p>
-              <input
-                name='email'
-                types='text'
-                placeholder='Email'
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={errors.email && touched.email && "error"}
-              />
-              {errors.email && touched.email && (
-                <div className='input-feedback'>{errors.email}</div>
-              )}
-              <input
-                name='password'
-                type='password'
-                placeholder='Password'
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={errors.password && touched.password && "error"}
-              />
-              {errors.password && touched.password && (
-                <div className='input-feedback'>{errors.password}</div>
-              )}
-              <input
-                name='confirm'
-                type='password'
-                placeholder='Confirm Password'
-                value={values.confirm}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={errors.confirm && touched.confirm && "error"}
-              />
-              {errors.confirm && touched.confirm && (
-                <div className='input-feedback'>{errors.confirm}</div>
-              )}
-              <input
-                name='username'
-                type='text'
-                placeholder='Username'
-                value={values.username}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={errors.username && touched.username && "error"}
-              />
-              {errors.username && touched.username && (
-                <div className='input-feedback'>{errors.username}</div>
-              )}
-              {/*<input
-                        name="date"
-                        type="text"
-                        placeholder="MM/DD/YYYY"
-                        value={values.date}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={errors.date && touched.date && "error"}
-                    />
-                    {errors.date && touched.date && (
-                        <div className="input-feedback">{errors.date}</div>
-                    )} */}
+            },
+            (error) => {
+              console.log(error.response);
+              setStatus(error.response.data.message);
+            }
+          );
+        // window.location.href = "http://localhost:3000/feed";
+      }}
+      validationSchema={Yup.object().shape({
+        email: Yup.string().email().required("Required"),
+        password: Yup.string()
+          .required("Required")
+          .matches(/(^[\w+]*$)/, "Password cannot contain spaces.")
+          .min(8, "Password is too short - should be 8 chars minimum."),
+        confirm: Yup.string()
+          .oneOf([Yup.ref("password"), null], "Password does not match")
+          .required("Password confirmation is required"),
+        username: Yup.string()
+          .required("Required")
+          //   .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
+          .matches(/(^[\w+-.]*$)/, "Username cannot contain spaces and the following characters: @!?()#$%^&*"), // TODO: Change this since i just hacked it for email and username being the same
+        date: Yup.string().required("Required"),
+        //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
+      })}
+    >
+      {(props) => {
+        const {
+          values,
+          touched,
+          errors,
+          isSubmitting,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          status,
+        } = props;
+        return (
+          <form onSubmit={handleSubmit}>
+            <h3>Want to create an account?</h3>
+            <p style={{ color: "#9FFFCB" }}>Its simple.</p>
+            <input
+              name='email'
+              types='text'
+              placeholder='Email'
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.email && touched.email && "error"}
+            />
+            {errors.email && touched.email && (
+              <div className='input-feedback'>{errors.email}</div>
+            )}
+            <input
+              name='password'
+              type='password'
+              placeholder='Password'
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.password && touched.password && "error"}
+            />
+            {errors.password && touched.password && (
+              <div className='input-feedback'>{errors.password}</div>
+            )}
+            <input
+              name='confirm'
+              type='password'
+              placeholder='Confirm Password'
+              value={values.confirm}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.confirm && touched.confirm && "error"}
+            />
+            {errors.confirm && touched.confirm && (
+              <div className='input-feedback'>{errors.confirm}</div>
+            )}
+            <input
+              name='username'
+              type='text'
+              placeholder='Username'
+              value={values.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.username && touched.username && "error"}
+            />
+            {errors.username && touched.username && (
+              <div className='input-feedback'>{errors.username}</div>
+            )}
+
               <DatePicker name='date' />
               {errors.date && touched.date && (
                 <div className='input-feedback'>{errors.date}</div>
