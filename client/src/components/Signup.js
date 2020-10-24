@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import styled from "styled-components";
+import { withRouter } from "react-router-dom";
 import DatePicker from "./DatePicker";
 import axios from "axios";
 
@@ -82,7 +83,7 @@ const Signup = (props) => (
                 if (response.data) {
                   localStorage.setItem("token", response.data.accessToken);
                   localStorage.setItem("email", values.email);
-                  localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
+                  localStorage.setItem("username", values.username);
                   setStatus("Welcome!");
                   props.login();
                   props.history.push("/feed");
@@ -114,7 +115,7 @@ const Signup = (props) => (
           //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
         })}
       >
-        {(props) => {
+        {(properties) => {
           const {
             values,
             touched,
@@ -124,7 +125,7 @@ const Signup = (props) => (
             handleBlur,
             handleSubmit,
             status,
-          } = props;
+          } = properties;
           return (
             <form onSubmit={handleSubmit}>
               <h3>Want to create an account?</h3>
@@ -200,4 +201,4 @@ const Signup = (props) => (
   </div>
 );
 
-export default Signup;
+export default withRouter(Signup);
