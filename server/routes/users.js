@@ -29,12 +29,11 @@ router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
 
-
 // SET ROUTER
 
 router.post("/signIn", signIn);
 router.post("/signUp", signUp);
-router.post("/addfollow",addfollow);
+router.post("/addfollow", addfollow);
 router.post("/removefollow", removefollow);
 router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
@@ -339,20 +338,20 @@ async function deleteAccount(req, res) {
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [username],
   };
-  console.log("query",query);
+  console.log("query", query);
   db.query(query)
-  .then((data) => {
-    console.log("data", data);
-    res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
 }
 async function updateProfile(req, res) {
   let username = req.params.username;
@@ -365,20 +364,20 @@ async function updateProfile(req, res) {
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [aboutme, name, username],
   };
-  console.log("query",query);
+  console.log("query", query);
   db.query(query)
-  .then((data) => {
-    console.log("data", data);
-    res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
 }
 async function addfollow(req, res) {
   let user1 = req.body.user1;
@@ -395,18 +394,18 @@ async function addfollow(req, res) {
     values: [user1, user2],
   };
   db.query(query)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   //followereds
   const query2 = {
     name: "add-followed",
@@ -415,18 +414,18 @@ async function addfollow(req, res) {
     values: [user2, user1],
   };
   db.query(query2)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   res.status(200).send("success");
 }
 async function removefollow(req, res) {
@@ -444,18 +443,18 @@ async function removefollow(req, res) {
     values: [user1, user2],
   };
   db.query(query)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   //followereds
   const query2 = {
     name: "remove-followed",
@@ -464,22 +463,24 @@ async function removefollow(req, res) {
     values: [user2, user1],
   };
   db.query(query2)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   res.status(200).send("success");
 }
+
 async function signUp(req, res) {
-  const { email, password } = req.body;
+  const { email, password, username, dob } = req.body;
+  console.log("req.body", req.body, Date.now());
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
     // Now we can store the password hash in db.
@@ -487,8 +488,9 @@ async function signUp(req, res) {
 
     const query = {
       name: "create-user",
-      text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
-      values: [email, hashPw],
+      text:
+        "INSERT INTO Users (username, email, password, date_of_birth ) VALUES ($1, $2, $3, $4)",
+      values: [username, email, hashPw, dob],
     };
 
     console.log("query", query);
