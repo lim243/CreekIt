@@ -44,6 +44,7 @@ class Timeline extends React.Component {
           {this.state.posts.map((item, index) => (
             <Post
               key={index}
+              index={index}
               anonymous={item.anonymous}
               postId={item.post_id}
               name={item.name}
