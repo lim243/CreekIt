@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Upvote from "./Upvote";
 import Downvote from "./Downvote";
 import { Redirect } from "react-router-dom";
-import PostView from "./PostView";
+import moment from "moment-timezone";
 
 const Styles = styled.div`
   .right {
@@ -90,8 +90,11 @@ class Post extends React.Component {
               {this.state.anonymous.name}
             </h5>
             <div className='dateTime'>
-              <p className='left'>{this.props.time}</p>
-              <p>{this.props.date}</p>
+              <p>
+                {moment(this.props.date)
+                  .tz("America/New_York")
+                  .format("MMM Do YYYY, h:mm a")}
+              </p>
             </div>
             <p className='username'>@{this.state.anonymous.username}</p>
           </div>
@@ -120,8 +123,11 @@ class Post extends React.Component {
               {this.props.name}
             </h5>
             <div className='dateTime'>
-              <p className='left'>{this.props.time}</p>
-              <p>{this.props.date}</p>
+              <p>
+                {moment(this.props.date)
+                  .tz("America/New_York")
+                  .format("MMM Do YYYY, h:mm a")}
+              </p>
             </div>
             <p className='username'>@{this.props.username}</p>
           </div>

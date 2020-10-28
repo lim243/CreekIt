@@ -79,8 +79,8 @@ const Login = (props) => (
                 console.log("res", response);
                 if (response.data) {
                   localStorage.setItem("token", response.data.accessToken);
-                  localStorage.setItem("email", values.email);
-                  localStorage.setItem("username", values.username); // TODO: DANGEROUS Right now is the same thing
+                  localStorage.setItem("email", response.data.email);
+                  localStorage.setItem("username", response.data.username);
                   setStatus("Welcome!");
                   props.login();
                   props.history.push("/feed");
@@ -98,7 +98,7 @@ const Login = (props) => (
           password: Yup.string().required("Required"),
         })}
       >
-        {(props) => {
+        {(properties) => {
           const {
             values,
             touched,
@@ -108,7 +108,7 @@ const Login = (props) => (
             handleBlur,
             handleSubmit,
             status,
-          } = props;
+          } = properties;
           return (
             <form onSubmit={handleSubmit}>
               {console.log("errors", errors)}

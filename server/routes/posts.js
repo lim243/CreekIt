@@ -25,8 +25,7 @@ router.post("/:pid/topic", setTopic);
 async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
-    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
-      to_char(p.date, 'YYYY-MM-DD') as date, to_char(p.date, 'HH24:MI') as time, p.anonymous,
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, p.date as date, p.anonymous,
       p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, p.downvote_users, p.comment_ids  
       FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC`,
   };
@@ -46,8 +45,7 @@ async function getPost(req, res) {
 
   const query = {
     name: "get-post",
-    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') 
-      as date,to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, 
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, p.date as date p.body, p.topic, p.upvotes, p.downvotes, 
       p.upvote_users, p.downvote_users, p.comment_ids , p.anonymous
       FROM posts as p, users as u 
       WHERE p.id = $1 AND p.username = u.username;`,
@@ -72,7 +70,7 @@ async function getTopics(req, res) {
   const query = {
     name: "get-topics",
     text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, 
-    to_char(p.date, 'YYYY-MM-DD') as date,to_char(p.date, 'HH24:MI') as time, 
+    p.date as date,
     p.body, p.topic, p.upvotes, p.downvotes, 
     p.upvote_users, p.downvote_users, p.comment_ids  
     FROM posts as p, users as u 
@@ -132,7 +130,7 @@ async function getComments(req, res) {
 
   const query = {
     name: "get-all-post-comments",
-    text: `SELECT u.name, c.username as username, to_char(c.date, 'YYYY-MM-DD') as date, to_char(c.date, 'HH24:MI') as time, 
+    text: `SELECT u.name, c.username as username, c.date as date, 
     c.body , c.upvotes , c.upvotes_user , c.downvotes  , 
     c.downvote_users  , c.parent_id , c.anonymous
     FROM public.posts as p, public.comments as c, public.users as u
@@ -174,8 +172,7 @@ async function createPost(req, res) {
   let id = rows[0].id;
   const query2 = {
     name: "append-post",
-    text:
-      "update users set posts = array_append(posts,$1) where username  = $2;",
+    text: "update users set posts = array_append(posts,$1) where username  = $2;",
     values: [id, username],
   };
 
