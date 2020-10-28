@@ -65,7 +65,7 @@ const Signup = (props) => (
   <div>
     <Styles>
       <Formik
-        initialValues={{ email: "", password: "", confirm: "", username: "", date: "" }}
+        initialValues={{ email: "", password: "", confirm: "", name: "", username: "", date: "" }}
         onSubmit={(values, { setSubmitting, setStatus }) => {
           console.log("Logging in", values);
           setSubmitting(false);
@@ -103,7 +103,9 @@ const Signup = (props) => (
             .min(8, "Password is too short - should be 8 chars minimum."),
           confirm: Yup.string()
             .oneOf([Yup.ref("password"), null], "Password does not match")
-            .required("Password confirmation is required"),
+            .required("Password confirmation is Required"),
+          name: Yup.string()
+            .required("Required"),
           username: Yup.string()
             .required("Required")
             //   .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
@@ -167,6 +169,18 @@ const Signup = (props) => (
                 <div className='input-feedback'>{errors.confirm}</div>
               )}
               <input
+                name='name'
+                type='text'
+                placeholder='Name'
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={errors.name && touched.name && "error"}
+              />
+              {errors.name && touched.name && (
+                <div className='input-feedback'>{errors.name}</div>
+              )}
+              <input
                 name='username'
                 type='text'
                 placeholder='Username'
@@ -184,14 +198,13 @@ const Signup = (props) => (
                 <div className='input-feedback'>{errors.date}</div>
               )}
               <br></br>
-              <br></br>
               {status && <div className='text-danger'>{status}</div>}
               <button
                 type='submit'
                 className='btn btn-primary btn-block'
                 disabled={isSubmitting}
               >
-                Login
+                Create Account
               </button>
             </form>
           );
