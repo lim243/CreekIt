@@ -79,8 +79,8 @@ const Login = (props) => (
                 console.log("res", response);
                 if (response.data) {
                   localStorage.setItem("token", response.data.accessToken);
-                  localStorage.setItem("email", values.email);
-                  localStorage.setItem("username", values.username);
+                  localStorage.setItem("email", response.data.email);
+                  localStorage.setItem("username", response.data.username);
                   setStatus("Welcome!");
                   props.login();
                   props.history.push("/feed");

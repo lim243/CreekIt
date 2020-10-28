@@ -131,19 +131,28 @@ async function getName(req, res) {
   // Send data back
   return res.status(200).json(data);
 }
-async function getPassword(email) {
-  const query = {
-    name: "get-password",
-    text: "SELECT password FROM Users WHERE email = $1",
-    values: [email],
-  };
+async function getPassword(key, type) {
+  let query = "";
+  if (type === "username") {
+    query = {
+      name: "get-password",
+      text: "SELECT username, email, password FROM Users WHERE username = $1",
+      values: [key],
+    };
+  } else {
+    query = {
+      name: "get-password",
+      text: "SELECT username, email, password FROM Users WHERE email = $1",
+      values: [key],
+    };
+  }
 
   console.log("query", query);
 
   const { rows } = await db.query(query);
 
   if (rows.length > 0) {
-    return rows[0].password;
+    return rows[0];
   } else {
     return "error";
   }
@@ -489,7 +498,7 @@ async function signUp(req, res) {
     const query = {
       name: "create-user",
       text:
-        "INSERT INTO Users (username, email, password, date_of_birth ) VALUES ($1, $2, $3, $4)",
+        "INSERT INTO Users (username, email, password, date_of_birth ) VALUES ($1, $2, $3, $4) RETURNING *",
       values: [username, email, hashPw, dob],
     };
 
@@ -497,18 +506,19 @@ async function signUp(req, res) {
 
     db.query(query)
       .then((data) => {
+        console.log("data", data);
         let payload = { email: email };
         let accessToken = jwt.sign(payload, "Creekit Secret", {
           algorithm: "HS256",
           expiresIn: 30,
         });
-        console.log("acess Token", accessToken);
-        req.accessToken = accessToken;
-        req.email = email;
+
         const msg = {
           success: true,
           accessToken: accessToken,
-          message: `User ${email} created!`,
+          username: data.rows[0].username,
+          email: data.rows[0].email,
+          message: `User ${data.username} created!`,
         };
         //authenticate.storeToken(username,accessToken);
         res.status(200).send(msg);
@@ -525,11 +535,20 @@ async function signUp(req, res) {
 }
 
 async function signIn(req, res) {
-  console.log("req.body", req.body);
+  const { username, email, password } = req.body;
 
-  const { email, password } = req.body;
+  let user = "";
 
-  const hashedPw = await getPassword(email);
+  if (username.length > 0) {
+    user = await getPassword(username, "username");
+  } else {
+    user = await getPassword(email, "email");
+  }
+
+  const hashedPw = user.password;
+  const DBusername = user.username;
+  const DBemail = user.email;
+
   if (hashedPw === "error") {
     const msg = {
       head: "email",
@@ -539,10 +558,10 @@ async function signIn(req, res) {
     };
     return res.status(500).send(msg);
   }
-  // console.log("passed getPW", hashedPw);
+
   bcrypt.compare(password, hashedPw, (err, result) => {
     let payload = { email: email };
-    console.log("password", result);
+
     if (!result) {
       console.log("Password doest not match!");
       const msg = {
@@ -557,15 +576,14 @@ async function signIn(req, res) {
       algorithm: "HS256",
       expiresIn: 30,
     });
-    console.log("acess Token", accessToken);
-    req.accessToken = accessToken;
-    req.email = email;
+
     const data = {
       success: true,
+      username: DBusername,
+      email: DBemail,
       accessToken: accessToken,
     };
-    //authenticate.storeToken(username,accessToken);
+
     res.status(200).send(data);
-    //req.accessToken = accessToken;
   });
 }
