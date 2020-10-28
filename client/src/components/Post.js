@@ -3,8 +3,9 @@ import React from "react";
 import styled from "styled-components";
 import Upvote from "./Upvote";
 import Downvote from "./Downvote";
-import { Redirect } from "react-router-dom";
-import PostView from "./PostView";
+import { Redirect, withRouter } from "react-router-dom";
+import ReactHashtag from "react-hashtag";
+import moment from "moment-timezone";
 
 const Styles = styled.div`
   .right {
@@ -29,6 +30,10 @@ const Styles = styled.div`
   }
 `;
 
+const Hashtag = styled.a`
+  color: blue;
+`;
+
 class Post extends React.Component {
   constructor(props) {
     super(props);
@@ -45,6 +50,14 @@ class Post extends React.Component {
       },
     };
   }
+
+  handleHashtagClick = (ev) => {
+    console.log("val", ev.currentTarget);
+    console.log("ev.target.value", ev.target.value);
+    // const tag = ev.target.substring(1);
+    console.log("this.props", this.props);
+    // this.props.history.push(`/feed/topic/${tag}`);
+  };
 
   addCommentHandler = (ev) => {
     // redirect to comments page
@@ -95,8 +108,19 @@ class Post extends React.Component {
             </div>
             <p className='username'>@{this.state.anonymous.username}</p>
           </div>
-          <p>{this.props.post}</p>
-          {this.props.topic ? <p>#{this.props.topic}</p> : null}
+
+          <ReactHashtag
+            renderHashtag={(hashtagValue) => (
+              <Hashtag
+                key={this.props.index}
+                href={`/feed/topic/${hashtagValue.substring(1)}`}
+              >
+                {hashtagValue}
+              </Hashtag>
+            )}
+          >
+            {this.props.post}
+          </ReactHashtag>
           <div>
             <Upvote upvotes={this.props.upvotes} />
             <Downvote downvotes={this.props.downvotes} />
@@ -125,8 +149,18 @@ class Post extends React.Component {
             </div>
             <p className='username'>@{this.props.username}</p>
           </div>
-          <p>{this.props.post}</p>
-          {this.props.topic ? <p>#{this.props.topic}</p> : null}
+          <ReactHashtag
+            renderHashtag={(hashtagValue) => (
+              <Hashtag
+                key={this.props.index}
+                href={`/feed/topic/${hashtagValue.substring(1)}`}
+              >
+                {hashtagValue}
+              </Hashtag>
+            )}
+          >
+            {this.props.post}
+          </ReactHashtag>
           <div>
             <Upvote upvotes={this.props.upvotes} />
             <Downvote downvotes={this.props.downvotes} />
@@ -145,4 +179,4 @@ class Post extends React.Component {
   }
 }
 
-export default Post;
+export default withRouter(Post);
