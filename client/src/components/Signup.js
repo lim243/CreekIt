@@ -219,7 +219,7 @@ const Signup = (props) => (
                 value={values.gender}
                 onChange={handleChange}
                 style={{ display: 'block' }}>
-                <option value="" label="" />
+                <option value="" label="--Specify Gender--" />
                 <option value="Male" label="Male" />
                 <option value="Female" label="Female" />
               </select>
