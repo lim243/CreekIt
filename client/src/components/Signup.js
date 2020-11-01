@@ -46,6 +46,25 @@ const Styles = styled.div`
     margin-bottom: 20px;
   }
 
+  select {
+    display: block;
+    width: 100%;
+  }
+
+  select {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid #777;
+  }
+
+  .select-feedback {
+    color: rgb(235, 54, 54);
+    margin-top: -15px;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
   button {
     padding: 10px 15px;
     background-color: rgb(70, 153, 179);
@@ -65,7 +84,7 @@ const Signup = (props) => (
   <div>
     <Styles>
       <Formik
-        initialValues={{ email: "", password: "", confirm: "", name: "", username: "", date: "" }}
+        initialValues={{ email: "", password: "", confirm: "", name: "", username: "", gender: "", date: "" }}
         onSubmit={(values, { setSubmitting, setStatus }) => {
           console.log("Logging in", values);
           setSubmitting(false);
@@ -112,7 +131,10 @@ const Signup = (props) => (
             .matches(
               /(^[\w+-.]*$)/,
               "Username cannot contain spaces and the following characters: @!?()#$%^&*"
-            ), // TODO: Change this since i just hacked it for email and username being the same
+            ),
+          gender: Yup.string()
+              .required("Required")
+              .matches(""),
           date: Yup.string().required("Required"),
           //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
         })}
@@ -191,6 +213,18 @@ const Signup = (props) => (
               />
               {errors.username && touched.username && (
                 <div className='input-feedback'>{errors.username}</div>
+              )}
+              <select
+                name="gender" 
+                value={values.gender}
+                onChange={handleChange}
+                style={{ display: 'block' }}>
+                <option value="" label="" />
+                <option value="Male" label="Male" />
+                <option value="Female" label="Female" />
+              </select>
+              {errors.gender && touched.gender && (
+                <div className='input-feedback'>{errors.gender}</div>
               )}
 
               <DatePicker name='date' />
