@@ -212,10 +212,19 @@ async function setUpvote(req, res) {
 
   const query = {
     name: "set-upvote",
-    text:
-      "UPDATE posts SET upvotes = upvotes + 1, upvote_users = array_append(upvote_users, $2) where id = $1 RETURNING id",
+    text: `WITH src as (
+      UPDATE posts
+      SET upvotes = upvotes + 1, upvote_users = array_append(upvote_users, $2::character varying),  downvote_users = array_remove(downvote_users, $2::character varying)
+      WHERE id = $1::bigint AND NOT ($2 = any(upvote_users)) RETURNING id
+      )
+    UPDATE users as dst
+    SET interacted_post = array_append(dst.interacted_post, src.id::bigint)
+    FROM src
+    where dst.username = $2 returning src.id`,
     values: [pid, username],
   };
+
+  console.log("query", query);
 
   const { rows } = await db.query(query);
   console.log("rows", rows);
@@ -234,8 +243,15 @@ async function setDownvote(req, res) {
 
   const query = {
     name: "set-downvote",
-    text:
-      "UPDATE posts SET downvotes = downvotes + 1, downvote_users = array_append(downvote_users, $2) where id = $1 RETURNING id",
+    text: `WITH src as (
+      UPDATE posts 
+      SET downvotes = downvotes + 1, downvote_users = array_append(downvote_users, $2::character varying) , upvote_users = array_remove(upvote_users, $2::character varying)
+      WHERE id = $1::bigint AND NOT ($2 = any(downvote_users)) RETURNING id
+      )
+    UPDATE users as dst
+    SET interacted_post = array_append(dst.interacted_post, src.id::bigint)
+    FROM src
+    where dst.username = $2 returning src.id`,
     values: [pid, username],
   };
 
