@@ -150,6 +150,8 @@ class MyProfile extends React.Component {
       personal: {},
       currentUser: false,
       test_username: "",
+      following:{},
+      followed:{},
     };
   }
 
@@ -175,6 +177,8 @@ class MyProfile extends React.Component {
       .then((res) => {
         console.log("res", res.data.rows[0]);
         this.setState({ personal: res.data.rows[0] });
+        this.setState({following: res.data.following});
+        this.setState({followed: res.data.followed});
       })
       .catch((err) => {
         console.error(err);

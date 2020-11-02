@@ -154,21 +154,58 @@ class ProfileInfo extends React.Component {
 
   
 
+
+
   componentDidMount(){
     this.fetchfollower();
     this.fetchfollowing();
+    this.fetchtopics();
   }
+  fetchtopics = () =>{
+    axios.get("http://localhost:5000/api/v1/users/test@email.com/topics/").then((res) => {
+      console.log("res", res);
+      let resultarray = [];
+      let topics = res.data.topics;
+      console.log("topics", topics);
+      for (let idx in topics){
+        console.log("topics", topics[idx]); 
+        resultarray.push({ topic: topics[idx],path: ("http://localhost:3000/feed/topic/" + topics[idx])})
+      }
+      console.log("result",resultarray);
+      this.setState({listTopics :resultarray});
+      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
+    });
+  };
   fetchfollower = () =>{
-    axios.get("http://localhost:5000/api/v1/users/kotori/followed/").then((res) => {
-      console.log("res", res.followed);
-      this.setState({listFollow :res.followed});
+    axios.get("http://localhost:5000/api/v1/users/test@email.com/followed/").then((res) => {
+      console.log("res", res);
+      let resultarray = [];
+      let followed = res.data.followed;
+      console.log("followed", followed);
+      for (let idx in followed){
+        console.log("name", followed[idx]); 
+        resultarray.push({ username: followed[idx],path: ("http://localhost:3000/feed/myprofile/" + followed[idx])})
+      }
+      console.log("result",resultarray);
+      this.setState({listFollow :resultarray});
+      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
     });
   };
   
   fetchfollowing= () =>{
-    axios.get("http://localhost:5000/api/v1/users/kotori/following/").then((res) => {
-      console.log("res", res.following);
-      this.setState({listFollow :res.following});
+    axios.get("http://localhost:5000/api/v1/users/test@email.com/following/").then((res) => {
+      let resultarray = [];
+      let following = res.data.following;
+      following.forEach((element, id) => {
+        console.log("name", element);
+        //axios.get("http://localhost:5000/api/v1/users/"+following[idx]+"/name/").then((res) => {
+          resultarray.push({name: element, username :element,path: "http://localhost:3000/feed/myprofile/" + element})
+       // });
+      });
+      //console.log("following", following);
+      console.log("result", resultarray);
+      this.setState({listFollowing :resultarray});
+      //this.setState({listFollowing :[{name: 'aaaa', username:'bbb',path:"\\"}]});
     });
   };
 
@@ -214,7 +251,6 @@ class ProfileInfo extends React.Component {
           {this.state.listFollow.map((item, index) => (      
             <div>    
           <Links
-            name={item.name}
             username={item.username}
             path={item.path}
             key={index}
@@ -234,7 +270,6 @@ class ProfileInfo extends React.Component {
           {this.state.listFollowing.map((item, index) => (
             <div>
           <Links
-            name={item.name}
             username={item.username}
             path={item.path}
             key={index}
@@ -251,6 +286,16 @@ class ProfileInfo extends React.Component {
         <Modal style={customStyles} isOpen={this.state.modal3} onRequestClose={this.modalClose3}>
           <button onClick={this.modalClose3}>close</button>
           <div>List of Topics</div> {/* Map thru a list of topics here :::::: use a href */ }
+          {this.state.listTopics.map((item, index) => (
+            <div>
+          <Links
+            username={item.topic}
+            path={item.path}
+            key={index}
+          />
+          <br></br>
+          </div>
+          ))}
         </Modal>
 
           {/* <p className='stats'>Followers: {this.props.followers} </p>
