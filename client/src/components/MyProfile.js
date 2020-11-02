@@ -4,7 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import ProfileInfo from "./ProfileInfo";
 import CoolTabs from "react-cool-tabs";
-import {Tabs, Tab} from 'react-bootstrap-tabs';
+import { Tabs, Tab } from "react-bootstrap-tabs";
 
 const GridWrapper = styled.div`
   display: block;
@@ -60,10 +60,12 @@ class Posts extends React.Component {
       <div style={{ marginTop: "10px" }}>
         {this.state.posts.map((item, index) => (
           <Post
+            index={index}
             key={index}
             name={item.name}
             username={item.username}
             post={item.body}
+            postId={item.id}
             date={item.date}
             time={item.time}
             upvotes={item.upvotes}
@@ -78,51 +80,37 @@ class InteractedPosts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      interactedPosts: [
-        {
-          name: "emily",
-          username: "emily",
-          post: "I am the sixth post",
-          date: "9/30/2020",
-          time: "12:15",
-        },
-        {
-          name: "bob",
-          username: "bobby",
-          post: "I am the fifth post",
-          date: "9/30/2020",
-          time: "12:13",
-        },
-        {
-          name: "joe",
-          username: "joey",
-          post: "I am the fourth post",
-          date: "9/30/2020",
-          time: "12:10",
-        },
-        {
-          name: "jess",
-          username: "jessica",
-          post: "I am the third post",
-          date: "9/30/2020",
-          time: "12:08",
-        },
-        {
-          name: "mike",
-          username: "michael",
-          post: "I am the second post",
-          date: "9/30/2020",
-          time: "12:05",
-        },
-        {
-          name: "Bill",
-          username: "william",
-          post: "I am the first post.",
-          date: "9/30/2020",
-          time: "12:00",
-        },
-      ],
+      interactedPosts: [],
     };
+  }
+
+  fetchInteracted = (username) => {
+    // const username = localStorage.getItem("username");
+    const accessToken = localStorage.getItem("token");
+    console.log("username", username);
+    const authString = "Bearer ".concat(accessToken);
+    const header = { Authorization: authString };
+    console.log("accessToken", { accessToken });
+    axios
+      .get(`http://localhost:5000/api/v1/users/${username}/interacted`, {
+        headers: header,
+      })
+      .then((res) => {
+        // console.log("res", res.data);
+        this.setState({ interactedPosts: res.data.payload });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  componentDidMount() {
+    // TODO: Change this hacky way of redirecting / fetching posts
+    if (global_username.length > 0) {
+      this.fetchInteracted(global_username);
+    } else {
+      this.fetchInteracted(localStorage.getItem("username"));
+    }
   }
 
   render() {
@@ -130,10 +118,12 @@ class InteractedPosts extends React.Component {
       <div style={{ marginTop: "10px" }}>
         {this.state.interactedPosts.map((item, index) => (
           <Post
+            index={index}
             key={index}
             name={item.name}
             username={item.username}
             post={item.body}
+            postId={item.id}
             date={item.date}
             time={item.time}
             upvotes={item.upvotes}
@@ -202,23 +192,23 @@ class MyProfile extends React.Component {
             className='sticky'
           />
           <div>
-            <Tabs defaultActiveKey="posts" id="uncontrolled-tab-example">
-              <Tab eventKey="posts" title="Posts" label="Posts" >
+            <Tabs defaultActiveKey='posts' id='uncontrolled-tab-example'>
+              <Tab eventKey='posts' title='Posts' label='Posts'>
                 <br></br>
                 <Posts />
               </Tab>
-
-              <Tab eventKey="interactedPosts" title="Interacted Posts" label="Interacted Posts">
+              <Tab
+                eventKey='interactedPosts'
+                title='Interacted Posts'
+                label='Interacted Posts'
+              >
                 <br></br>
                 <InteractedPosts />
               </Tab>
             </Tabs>
           </div>
-          
         </GridWrapper>
       </Fragment>
-
-      
     );
   }
 }

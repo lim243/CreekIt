@@ -28,6 +28,7 @@ router.get("/:username/followed", authenticate.isauth, getFollowing); //TODO: Un
 router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
+router.get("/:username/interacted", getInteracted);
 
 // SET ROUTER
 
@@ -297,6 +298,35 @@ async function getFollowed(req, res) {
 async function getBlocked(req, res) {} // TODO: Undefined yet
 async function getTopics(req, res) {} // TODO: Undefined yet
 async function getPosts(req, res) {} // TODO: Undefined yet
+
+async function getInteracted(req, res) {
+  const username = req.params.username;
+
+  const query = {
+    name: "get-interacted-posts",
+    text: `SELECT t.*
+    FROM users, unnest(users.interacted_post) post_id
+    LEFT JOIN posts t on t.id=post_id
+    where users.username = $1`,
+    values: [username],
+  };
+
+  const { rows } = await db.query(query);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+
+// async function getPostsById(ids) {
+//   console.log("ids", ids);
+
+//   ids.forEach(id => {
+
+//   });
+// }
 
 /**
  * POST FUNCTIONS

@@ -45,12 +45,14 @@ async function getPost(req, res) {
 
   const query = {
     name: "get-post",
-    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, p.date as date p.body, p.topic, p.upvotes, p.downvotes, 
+    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, p.date as date, p.body, p.topic, p.upvotes, p.downvotes, 
       p.upvote_users, p.downvote_users, p.comment_ids , p.anonymous
       FROM posts as p, users as u 
       WHERE p.id = $1 AND p.username = u.username;`,
     values: [pid],
   };
+
+  console.log("query", query);
 
   const { rows } = await db.query(query);
   console.log("rows", rows);
@@ -206,16 +208,24 @@ async function setTopic(req, res) {
   return res.status(200).json(msg);
 }
 async function setUpvote(req, res) {
-  // TODO: Need to worry about "A user can only upvote or downvote"
   const pid = req.params.pid;
   const { username } = req.body;
 
   const query = {
     name: "set-upvote",
-    text:
-      "UPDATE posts SET upvotes = upvotes + 1, upvote_users = array_append(upvote_users, $2) where id = $1 RETURNING id",
+    text: `WITH src as (
+      UPDATE posts
+      SET upvotes = upvotes + 1, upvote_users = array_append(upvote_users, $2::character varying),  downvote_users = array_remove(downvote_users, $2::character varying)
+      WHERE id = $1::bigint AND NOT ($2 = any(upvote_users)) RETURNING id
+      )
+    UPDATE users dst
+    SET interacted_post = array_append(dst.interacted_post, src.id::bigint)
+    FROM src
+    where dst.username = $2 AND NOT (src.id = any(dst.interacted_post)) returning src.id`,
     values: [pid, username],
   };
+
+  console.log("query", query);
 
   const { rows } = await db.query(query);
   console.log("rows", rows);
@@ -228,14 +238,20 @@ async function setUpvote(req, res) {
 }
 // async function setUpvotesUsers(req, res) {}
 async function setDownvote(req, res) {
-  // TODO: Need to worry about "A user can only upvote or downvote"
   const pid = req.params.pid;
   const { username } = req.body;
 
   const query = {
     name: "set-downvote",
-    text:
-      "UPDATE posts SET downvotes = downvotes + 1, downvote_users = array_append(downvote_users, $2) where id = $1 RETURNING id",
+    text: `WITH src as (
+      UPDATE posts 
+      SET downvotes = downvotes + 1, downvote_users = array_append(downvote_users, $2::character varying) , upvote_users = array_remove(upvote_users, $2::character varying)
+      WHERE id = $1::bigint AND NOT ($2 = any(downvote_users)) RETURNING id
+      )
+    UPDATE users dst
+    SET interacted_post = array_append(dst.interacted_post, src.id::bigint)
+    FROM src
+    where dst.username = $2 AND NOT (src.id = any(dst.interacted_post)) returning src.id`,
     values: [pid, username],
   };
 
@@ -258,18 +274,23 @@ async function addPostComments(req, res) {
   console.log("req.body", req.body);
   // Date
   date = Date.now();
-
   const query = {
     name: "create-post",
-    text: `INSERT INTO public.comments
+    text: `WITH src as (
+        INSERT INTO public.comments
         (username, date, body, parent_id, anonymous) 
-        VALUES ($1, to_timestamp($2/1000.0), $3, $4, $5) RETURNING id`,
+        VALUES ($1, to_timestamp($2/1000.0), $3, $4, $5) RETURNING *
+      )
+    UPDATE users dst
+      SET interacted_post = array_append(dst.interacted_post, src.parent_id::bigint)
+      FROM src
+      WHERE dst.username = $1 AND NOT (src.parent_id = any(dst.interacted_post)) RETURNING src.id`,
     values: [username, date, body, pid, anonymous],
   };
 
   const { rows } = await db.query(query);
 
-  // console.log("rows", result);
+  console.log("rows", result);
   // Send data back
   const msg = {
     success: true,
