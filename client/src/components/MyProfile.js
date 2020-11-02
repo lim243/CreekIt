@@ -65,6 +65,7 @@ class Posts extends React.Component {
             name={item.name}
             username={item.username}
             post={item.body}
+            postId={item.id}
             date={item.date}
             time={item.time}
             upvotes={item.upvotes}
@@ -122,6 +123,7 @@ class InteractedPosts extends React.Component {
             name={item.name}
             username={item.username}
             post={item.body}
+            postId={item.id}
             date={item.date}
             time={item.time}
             upvotes={item.upvotes}
@@ -191,6 +193,10 @@ class MyProfile extends React.Component {
           />
           <div>
             <Tabs defaultActiveKey='posts' id='uncontrolled-tab-example'>
+              <Tab eventKey='posts' title='Posts' label='Posts'>
+                <br></br>
+                <Posts />
+              </Tab>
               <Tab
                 eventKey='interactedPosts'
                 title='Interacted Posts'
@@ -198,10 +204,6 @@ class MyProfile extends React.Component {
               >
                 <br></br>
                 <InteractedPosts />
-              </Tab>
-              <Tab eventKey='posts' title='Posts' label='Posts'>
-                <br></br>
-                <Posts />
               </Tab>
             </Tabs>
           </div>
