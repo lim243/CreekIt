@@ -112,7 +112,7 @@ class Post extends React.Component {
             <p className='username'>@{this.state.anonymous.username}</p>
           </div>
 
-          <ReactHashtag
+          {/* <ReactHashtag
             renderHashtag={(hashtagValue) => (
               <Hashtag
                 key={this.props.index}
@@ -123,7 +123,8 @@ class Post extends React.Component {
             )}
           >
             {this.props.post}
-          </ReactHashtag>
+          </ReactHashtag> */}
+          <p>{this.props.post}</p>
           <div>
             <Upvote upvotes={this.props.upvotes} />
             <Downvote downvotes={this.props.downvotes} />
@@ -155,7 +156,7 @@ class Post extends React.Component {
             </div>
             <p className='username'>@{this.props.username}</p>
           </div>
-          <ReactHashtag
+          {/* <ReactHashtag
             renderHashtag={(hashtagValue) => (
               <Hashtag
                 key={this.props.index}
@@ -166,7 +167,8 @@ class Post extends React.Component {
             )}
           >
             {this.props.post}
-          </ReactHashtag>
+          </ReactHashtag> */}
+          <p>{this.props.post}</p>
           <div>
             <Upvote upvotes={this.props.upvotes} />
             <Downvote downvotes={this.props.downvotes} />
