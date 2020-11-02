@@ -217,10 +217,10 @@ async function setUpvote(req, res) {
       SET upvotes = upvotes + 1, upvote_users = array_append(upvote_users, $2::character varying),  downvote_users = array_remove(downvote_users, $2::character varying)
       WHERE id = $1::bigint AND NOT ($2 = any(upvote_users)) RETURNING id
       )
-    UPDATE users as dst
+    UPDATE users dst
     SET interacted_post = array_append(dst.interacted_post, src.id::bigint)
     FROM src
-    where dst.username = $2 returning src.id`,
+    where dst.username = $2 AND NOT (src.id = any(dst.interacted_post)) returning src.id`,
     values: [pid, username],
   };
 
@@ -248,10 +248,10 @@ async function setDownvote(req, res) {
       SET downvotes = downvotes + 1, downvote_users = array_append(downvote_users, $2::character varying) , upvote_users = array_remove(upvote_users, $2::character varying)
       WHERE id = $1::bigint AND NOT ($2 = any(downvote_users)) RETURNING id
       )
-    UPDATE users as dst
+    UPDATE users dst
     SET interacted_post = array_append(dst.interacted_post, src.id::bigint)
     FROM src
-    where dst.username = $2 returning src.id`,
+    where dst.username = $2 AND NOT (src.id = any(dst.interacted_post)) returning src.id`,
     values: [pid, username],
   };
 
