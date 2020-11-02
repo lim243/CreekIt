@@ -373,7 +373,7 @@ async function deleteAccount(req, res) {
   db.query(query1)
   .then((data) => {
     console.log("data", data);
-    res.status(200).send("success");
+    //res.status(200).send("success");
   })
   .catch((error) => {
     console.log("error", error);
@@ -386,7 +386,7 @@ async function deleteAccount(req, res) {
   db.query(query2)
   .then((data) => {
     console.log("data", data);
-    res.status(200).send("success");
+    //res.status(200).send("success");
   })
   .catch((error) => {
     console.log("error", error);
