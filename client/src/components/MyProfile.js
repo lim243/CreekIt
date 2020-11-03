@@ -87,16 +87,16 @@ class InteractedPosts extends React.Component {
   fetchInteracted = (username) => {
     // const username = localStorage.getItem("username");
     const accessToken = localStorage.getItem("token");
-    console.log("username", username);
+
     const authString = "Bearer ".concat(accessToken);
     const header = { Authorization: authString };
-    console.log("accessToken", { accessToken });
+
     axios
       .get(`http://localhost:5000/api/v1/users/${username}/interacted`, {
         headers: header,
       })
       .then((res) => {
-        // console.log("res", res.data);
+        console.log("res", res.data);
         this.setState({ interactedPosts: res.data.payload });
       })
       .catch((err) => {
