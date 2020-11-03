@@ -32,7 +32,19 @@ exports.isauth = async function(req,res,next){
     // let token = req.body.accessToken;
     // console.log(token);
     try{
-        var decoded = jwt.verify(token, 'Creekit Secret');
+        let accessToken = jwt.sign(payload, "Creekit Secret", {
+            algorithm: "HS256",
+            expiresIn: 300,
+        });
+        console.log("acess Token", accessToken);
+        req.accessToken = accessToken;
+        req.email = email;
+        const data = {
+            success: true,
+            accessToken: accessToken,
+        };
+        //authenticate.storeToken(username,accessToken);
+        res.status(200).send(data);
     } catch(err){
         console.log(err);
         res.status(401).send(err);
