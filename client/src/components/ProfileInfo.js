@@ -85,6 +85,8 @@ class ProfileInfo extends React.Component {
     this.modalClose2 = this.modalClose2.bind(this);
     this.modalOpen3 = this.modalOpen3.bind(this);
     this.modalClose3 = this.modalClose3.bind(this);
+
+
   }
 
   modalOpen = () =>{
@@ -157,6 +159,63 @@ class ProfileInfo extends React.Component {
     }
   };
 
+  
+
+
+
+  componentDidMount(){
+    this.fetchfollower();
+    this.fetchfollowing();
+    this.fetchtopics();
+  }
+  fetchtopics = () =>{
+    axios.get("http://localhost:5000/api/v1/users/test@email.com/topics/").then((res) => {
+      console.log("res", res);
+      let resultarray = [];
+      let topics = res.data.topics;
+      console.log("topics", topics);
+      for (let idx in topics){
+        console.log("topics", topics[idx]); 
+        resultarray.push({ topic: topics[idx],path: ("http://localhost:3000/feed/topic/" + topics[idx])})
+      }
+      console.log("result",resultarray);
+      this.setState({listTopics :resultarray});
+      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
+    });
+  };
+  fetchfollower = () =>{
+    axios.get("http://localhost:5000/api/v1/users/test@email.com/followed/").then((res) => {
+      console.log("res", res);
+      let resultarray = [];
+      let followed = res.data.followed;
+      console.log("followed", followed);
+      for (let idx in followed){
+        console.log("name", followed[idx]); 
+        resultarray.push({ username: followed[idx],path: ("http://localhost:3000/feed/myprofile/" + followed[idx])})
+      }
+      console.log("result",resultarray);
+      this.setState({listFollow :resultarray});
+      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
+    });
+  };
+  
+  fetchfollowing= () =>{
+    axios.get("http://localhost:5000/api/v1/users/test@email.com/following/").then((res) => {
+      let resultarray = [];
+      let following = res.data.following;
+      following.forEach((element, id) => {
+        console.log("name", element);
+        //axios.get("http://localhost:5000/api/v1/users/"+following[idx]+"/name/").then((res) => {
+          resultarray.push({name: element, username :element,path: "http://localhost:3000/feed/myprofile/" + element})
+       // });
+      });
+      //console.log("following", following);
+      console.log("result", resultarray);
+      this.setState({listFollowing :resultarray});
+      //this.setState({listFollowing :[{name: 'aaaa', username:'bbb',path:"\\"}]});
+    });
+  };
+
   render() {
     if (this.state.redirect) {
       // Fetch the userId and set the userId to that number
@@ -201,7 +260,6 @@ class ProfileInfo extends React.Component {
           {this.state.listFollow.map((item, index) => (      
             <div>    
           <Links
-            name={item.name}
             username={item.username}
             path={item.path}
             key={index}
@@ -221,7 +279,6 @@ class ProfileInfo extends React.Component {
           {this.state.listFollowing.map((item, index) => (
             <div>
           <Links
-            name={item.name}
             username={item.username}
             path={item.path}
             key={index}
@@ -241,7 +298,7 @@ class ProfileInfo extends React.Component {
           {this.state.listTopics.map((item, index) => (
             <div>
           <Links
-            name={item.name}
+            username={item.topic}
             path={item.path}
             key={index}
           />

@@ -23,8 +23,8 @@ router.get("/:username/dob", getDateOfBirth);
 router.get("/:username/education", getEducation);
 router.get("/:username/aboutme", getAboutMe);
 router.get("/:username/photo", getPhoto);
-router.get("/:username/following", authenticate.isauth, getFollowing); //TODO: Undefined
-router.get("/:username/followed", authenticate.isauth, getFollowing); //TODO: Undefined
+router.get("/:username/following",  getFollowing); //TODO: Undefined
+router.get("/:username/followed",  getFollowed); //TODO: Undefined
 router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
@@ -277,14 +277,6 @@ async function getFollowed(req, res) {
   db.query(query)
     .then((data) => {
       console.log(data);
-      /*const msg = {
-        "success": true,
-        "following": `User ${username} created!`,
-      };*/
-
-      /*for (followered in followereds){
-
-      }*/
       res.status(200).send(data.rows[0]);
     })
     .catch((error) => {
@@ -296,9 +288,32 @@ async function getFollowed(req, res) {
     });
 } // TODO: Undefined yet
 async function getBlocked(req, res) {} // TODO: Undefined yet
-async function getTopics(req, res) {} // TODO: Undefined yet
-async function getPosts(req, res) {} // TODO: Undefined yet
+async function getTopics(req, res) {
+  let username = req.params.username;
+  console.log("username", username);
+  const query = {
+    name: "get-followed",
+    text: "select topics from users where username = $1",
+    values: [username],
+    //rowMode: "array",
+  };
 
+  console.log("query", query);
+
+  db.query(query)
+    .then((data) => {
+      console.log(data);
+      res.status(200).send(data.rows[0]);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "payload": `ERROR ${error.code}: ${error.detail} - User ${username} was NOT existed!`,
+      };
+    });
+} // TODO: Undefined yet
+async function getPosts(req, res) {} // TODO: Undefined yet
 async function getInteracted(req, res) {
   const username = req.params.username;
 
@@ -371,26 +386,64 @@ async function addBlocked(req, res) {}
 async function deleteAccount(req, res) {
   let username = req.params.username;
   //following
-  const query = {
+  const query1 = {
+    name: "delete-comments",
+    text: "delete from comments where username = $1 OR parent_id in (select id from posts where username = $1);",
+    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+    values: [username],
+  };
+  const query2 = {
+    name: "delete-comments",
+    text: "delete from posts where username = $1;",
+    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+    values: [username],
+  };
+  const query3 = {
     name: "delete-accouunt",
     text: "delete from users where username = $1;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [username],
   };
-  console.log("query", query);
-  db.query(query)
-    .then((data) => {
-      console.log("data", data);
-      res.status(200).send("success");
-    })
-    .catch((error) => {
-      console.log("error", error);
-      const msg = {
-        "success": false,
-        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-      };
-      res.status(500).send(msg);
-    });
+  console.log("query",query1);
+  db.query(query1)
+  .then((data) => {
+    console.log("data", data);
+    //res.status(200).send("success");
+  })
+  .catch((error) => {
+    console.log("error", error);
+    const msg = {
+      "success": false,
+      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+    };
+    res.status(500).send(msg);
+  });
+  db.query(query2)
+  .then((data) => {
+    console.log("data", data);
+    //res.status(200).send("success");
+  })
+  .catch((error) => {
+    console.log("error", error);
+    const msg = {
+      "success": false,
+      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+    };
+    res.status(500).send(msg);
+  });
+  db.query(query3)
+  .then((data) => {
+    console.log("data", data);
+    res.status(200).send("success");
+  })
+  .catch((error) => {
+    console.log("error", error);
+    const msg = {
+      "success": false,
+      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+    };
+    res.status(500).send(msg);
+  });
 }
 async function updateProfile(req, res) {
   let username = req.params.username;

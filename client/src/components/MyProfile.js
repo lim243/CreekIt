@@ -142,6 +142,8 @@ class MyProfile extends React.Component {
       personal: {},
       currentUser: false,
       test_username: "",
+      following:{},
+      followed:{},
     };
   }
 
@@ -167,6 +169,8 @@ class MyProfile extends React.Component {
       .then((res) => {
         console.log("res", res.data.rows[0]);
         this.setState({ personal: res.data.rows[0] });
+        this.setState({following: res.data.following});
+        this.setState({followed: res.data.followed});
       })
       .catch((err) => {
         console.error(err);
@@ -175,6 +179,7 @@ class MyProfile extends React.Component {
 
   render() {
     const user = this.state.personal;
+    console.log("user", user);
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
     return (
