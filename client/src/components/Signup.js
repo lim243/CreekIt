@@ -84,7 +84,15 @@ const Signup = (props) => (
   <div>
     <Styles>
       <Formik
-        initialValues={{ email: "", password: "", confirm: "", name: "", username: "", gender: "", date: "" }}
+        initialValues={{
+          email: "",
+          password: "",
+          confirm: "",
+          name: "",
+          username: "",
+          gender: "",
+          date: "",
+        }}
         onSubmit={(values, { setSubmitting, setStatus }) => {
           console.log("Logging in", values);
           setSubmitting(false);
@@ -95,6 +103,8 @@ const Signup = (props) => (
               password: values.password,
               username: values.username,
               dob: values.date,
+              name: values.name,
+              gender: values.gender,
             })
             .then(
               (response) => {
@@ -123,8 +133,7 @@ const Signup = (props) => (
           confirm: Yup.string()
             .oneOf([Yup.ref("password"), null], "Password does not match")
             .required("Password confirmation is Required"),
-          name: Yup.string()
-            .required("Required"),
+          name: Yup.string().required("Required"),
           username: Yup.string()
             .required("Required")
             //   .matches(/(^[\w+]*$)/, "Username cannot contain spaces."),
@@ -132,9 +141,7 @@ const Signup = (props) => (
               /(^[\w+-.]*$)/,
               "Username cannot contain spaces and the following characters: @!?()#$%^&*"
             ),
-          gender: Yup.string()
-              .required("Required")
-              .matches(""),
+          gender: Yup.string().required("Required").matches(""),
           date: Yup.string().required("Required"),
           //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
         })}
@@ -215,13 +222,14 @@ const Signup = (props) => (
                 <div className='input-feedback'>{errors.username}</div>
               )}
               <select
-                name="gender" 
+                name='gender'
                 value={values.gender}
                 onChange={handleChange}
-                style={{ display: 'block' }}>
-                <option value="" label="--Specify Gender--" />
-                <option value="Male" label="Male" />
-                <option value="Female" label="Female" />
+                style={{ display: "block" }}
+              >
+                <option value='' label='--Specify Gender--' />
+                <option value='Male' label='Male' />
+                <option value='Female' label='Female' />
               </select>
               {errors.gender && touched.gender && (
                 <div className='input-feedback'>{errors.gender}</div>

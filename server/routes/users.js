@@ -319,9 +319,10 @@ async function getInteracted(req, res) {
 
   const query = {
     name: "get-interacted-posts",
-    text: `SELECT t.*
+    text: `SELECT u.name, t.*
     FROM users, unnest(users.interacted_post) post_id
     LEFT JOIN posts t on t.id=post_id
+    LEFT JOIN users u on u.username = t.username
     where users.username = $1`,
     values: [username],
   };
@@ -571,7 +572,7 @@ async function removefollow(req, res) {
 }
 
 async function signUp(req, res) {
-  const { email, password, username, dob } = req.body;
+  const { email, password, username, dob, name, gender } = req.body;
   console.log("req.body", req.body, Date.now());
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
@@ -581,8 +582,8 @@ async function signUp(req, res) {
     const query = {
       name: "create-user",
       text:
-        "INSERT INTO Users (username, email, password, date_of_birth ) VALUES ($1, $2, $3, $4) RETURNING *",
-      values: [username, email, hashPw, dob],
+        "INSERT INTO Users (username, email, password, date_of_birth, name, gender ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      values: [username, email, hashPw, dob, name, gender],
     };
 
     console.log("query", query);

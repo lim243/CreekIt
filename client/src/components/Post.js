@@ -71,6 +71,7 @@ class Post extends React.Component {
   };
 
   render() {
+    console.log("this.props", this.props);
     // Use src for image
     //Get Name
     //Get Time
@@ -85,9 +86,6 @@ class Post extends React.Component {
           }}
         />
       );
-    }
-    {
-      // console.log("this.props", this.props);
     }
     if (this.props.anonymous === true) {
       return (
@@ -126,8 +124,8 @@ class Post extends React.Component {
           </ReactHashtag> */}
           <p>{this.props.post}</p>
           <div>
-            <Upvote upvotes={this.props.upvotes} />
-            <Downvote downvotes={this.props.downvotes} />
+            <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
+            <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />
             {this.props.commentButton == "false" ? null : (
               <button onClick={this.addCommentHandler} className='interaction'>
                 Comments{" "}
@@ -170,8 +168,8 @@ class Post extends React.Component {
           </ReactHashtag> */}
           <p>{this.props.post}</p>
           <div>
-            <Upvote upvotes={this.props.upvotes} />
-            <Downvote downvotes={this.props.downvotes} />
+            <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
+            <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />
             {this.props.commentButton == "false" ? null : (
               <button onClick={this.addCommentHandler} className='interaction'>
                 Comments{" "}

@@ -46,6 +46,7 @@ class PostView extends React.Component {
     });
   };
   render() {
+    console.log("this.state", this.state);
     return (
       // <div>Hi</div>
       <GridWrapper>
@@ -59,7 +60,7 @@ class PostView extends React.Component {
           index={0}
           anonymous={this.state.post.anonymous}
           name={this.state.post.name}
-          postId={this.state.post_id}
+          postId={this.state.postId}
           username={this.state.post.username}
           post={this.state.post.body}
           date={this.state.post.date}
