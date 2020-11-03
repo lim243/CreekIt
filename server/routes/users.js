@@ -28,13 +28,13 @@ router.get("/:username/followed",  getFollowed); //TODO: Undefined
 router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
-
+router.get("/:username/interacted", getInteracted);
 
 // SET ROUTER
 
 router.post("/signIn", signIn);
 router.post("/signUp", signUp);
-router.post("/addfollow",addfollow);
+router.post("/addfollow", addfollow);
 router.post("/removefollow", removefollow);
 router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
@@ -132,19 +132,28 @@ async function getName(req, res) {
   // Send data back
   return res.status(200).json(data);
 }
-async function getPassword(email) {
-  const query = {
-    name: "get-password",
-    text: "SELECT password FROM Users WHERE email = $1",
-    values: [email],
-  };
+async function getPassword(key, type) {
+  let query = "";
+  if (type === "username") {
+    query = {
+      name: "get-password",
+      text: "SELECT username, email, password FROM Users WHERE username = $1",
+      values: [key],
+    };
+  } else {
+    query = {
+      name: "get-password",
+      text: "SELECT username, email, password FROM Users WHERE email = $1",
+      values: [key],
+    };
+  }
 
   console.log("query", query);
 
   const { rows } = await db.query(query);
 
   if (rows.length > 0) {
-    return rows[0].password;
+    return rows[0];
   } else {
     return "error";
   }
@@ -305,8 +314,34 @@ async function getTopics(req, res) {
     });
 } // TODO: Undefined yet
 async function getPosts(req, res) {} // TODO: Undefined yet
+async function getInteracted(req, res) {
+  const username = req.params.username;
 
+  const query = {
+    name: "get-interacted-posts",
+    text: `SELECT t.*
+    FROM users, unnest(users.interacted_post) post_id
+    LEFT JOIN posts t on t.id=post_id
+    where users.username = $1`,
+    values: [username],
+  };
 
+  const { rows } = await db.query(query);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+
+// async function getPostsById(ids) {
+//   console.log("ids", ids);
+
+//   ids.forEach(id => {
+
+//   });
+// }
 
 /**
  * POST FUNCTIONS
@@ -421,20 +456,20 @@ async function updateProfile(req, res) {
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [aboutme, name, username],
   };
-  console.log("query",query);
+  console.log("query", query);
   db.query(query)
-  .then((data) => {
-    console.log("data", data);
-    res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
 }
 async function addfollow(req, res) {
   let user1 = req.body.user1;
@@ -451,18 +486,18 @@ async function addfollow(req, res) {
     values: [user1, user2],
   };
   db.query(query)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   //followereds
   const query2 = {
     name: "add-followed",
@@ -471,18 +506,18 @@ async function addfollow(req, res) {
     values: [user2, user1],
   };
   db.query(query2)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   res.status(200).send("success");
 }
 async function removefollow(req, res) {
@@ -500,18 +535,18 @@ async function removefollow(req, res) {
     values: [user1, user2],
   };
   db.query(query)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   //followereds
   const query2 = {
     name: "remove-followed",
@@ -520,22 +555,24 @@ async function removefollow(req, res) {
     values: [user2, user1],
   };
   db.query(query2)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   res.status(200).send("success");
 }
+
 async function signUp(req, res) {
-  const { email, password } = req.body;
+  const { email, password, username, dob } = req.body;
+  console.log("req.body", req.body, Date.now());
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
     // Now we can store the password hash in db.
@@ -543,26 +580,28 @@ async function signUp(req, res) {
 
     const query = {
       name: "create-user",
-      text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
-      values: [email, hashPw],
+      text:
+        "INSERT INTO Users (username, email, password, date_of_birth ) VALUES ($1, $2, $3, $4) RETURNING *",
+      values: [username, email, hashPw, dob],
     };
 
     console.log("query", query);
 
     db.query(query)
       .then((data) => {
+        console.log("data", data);
         let payload = { email: email };
         let accessToken = jwt.sign(payload, "Creekit Secret", {
           algorithm: "HS256",
           expiresIn: 30,
         });
-        console.log("acess Token", accessToken);
-        req.accessToken = accessToken;
-        req.email = email;
+
         const msg = {
           success: true,
           accessToken: accessToken,
-          message: `User ${email} created!`,
+          username: data.rows[0].username,
+          email: data.rows[0].email,
+          message: `User ${data.username} created!`,
         };
         //authenticate.storeToken(username,accessToken);
         res.status(200).send(msg);
@@ -579,11 +618,20 @@ async function signUp(req, res) {
 }
 
 async function signIn(req, res) {
-  console.log("req.body", req.body);
+  const { username, email, password } = req.body;
 
-  const { email, password } = req.body;
+  let user = "";
 
-  const hashedPw = await getPassword(email);
+  if (username.length > 0) {
+    user = await getPassword(username, "username");
+  } else {
+    user = await getPassword(email, "email");
+  }
+
+  const hashedPw = user.password;
+  const DBusername = user.username;
+  const DBemail = user.email;
+
   if (hashedPw === "error") {
     const msg = {
       head: "email",
@@ -593,10 +641,10 @@ async function signIn(req, res) {
     };
     return res.status(500).send(msg);
   }
-  // console.log("passed getPW", hashedPw);
+
   bcrypt.compare(password, hashedPw, (err, result) => {
     let payload = { email: email };
-    console.log("password", result);
+
     if (!result) {
       console.log("Password doest not match!");
       const msg = {
@@ -611,15 +659,14 @@ async function signIn(req, res) {
       algorithm: "HS256",
       expiresIn: 30,
     });
-    console.log("acess Token", accessToken);
-    req.accessToken = accessToken;
-    req.email = email;
+
     const data = {
       success: true,
+      username: DBusername,
+      email: DBemail,
       accessToken: accessToken,
     };
-    //authenticate.storeToken(username,accessToken);
+
     res.status(200).send(data);
-    //req.accessToken = accessToken;
   });
 }

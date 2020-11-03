@@ -10,6 +10,7 @@ const GridWrapper = styled.div`
   margin-left: 35%;
   margin-right: 25em;
   padding-top: 75px;
+  width: 500px;
 `;
 
 class Timeline extends React.Component {
@@ -43,6 +44,7 @@ class Timeline extends React.Component {
           {this.state.posts.map((item, index) => (
             <Post
               key={index}
+              index={index}
               anonymous={item.anonymous}
               postId={item.post_id}
               name={item.name}

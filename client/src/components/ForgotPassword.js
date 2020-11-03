@@ -66,22 +66,23 @@ const ForgotPassword = () => (
       <Formik
         initialValues={{ email: "" }}
         onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            console.log("Sending email for verification code", values);
-            setSubmitting(false);
-            const request = {
-              method: "get",
-              headers: { "ContentType": "application/json" },
-              body: {},
-            };
-            let response = axios.get(
-              "http://localhost:5000/api/v1/users/kotori/email",
-              request
-            );
-            //                 document.location.href = 'http://localhost:3000/restore'
-            window.location.href = "/restore";
-          }, 500);
-        }}
+            setTimeout(() => {
+                console.log("Sending email for verification code", values);
+                setSubmitting(false);
+                axios.post("http://localhost:5000/api/v1/validemail",{
+                    email:values.email,
+                }).then((response)=>{
+                    console.log(response);
+                    if (response.data){
+                    localStorage.setItem("code",response.data);
+                    document.location.href = "http://localhost:3000/feed";
+                    }
+                },(error)=>{
+                    console.log(error);
+                });
+                document.location.href = 'http://localhost:3000/restore'
+            }, 500);
+        }} 
         validationSchema={Yup.object().shape({
           email: Yup.string().email().required("Required"),
         })}

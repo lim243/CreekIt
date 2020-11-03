@@ -15,6 +15,7 @@ const Styles = styled.div`
     position: relative;
     top: -10px;
     margin-bottom: 10px;
+    float: left;
   }
   .bio {
   }
@@ -23,9 +24,8 @@ const Styles = styled.div`
     margin-left: 10px;
   }
   .interaction {
-    position: absolute;
-    top: 250px;
-    right: 500px;
+    position: relative;
+    left: 200px;
   }
 
   .avatar {
@@ -37,6 +37,13 @@ const Styles = styled.div`
     position: relative;
     margin-right: 35px;
     font-weight: bold;
+  }
+
+  .listButton {
+    padding: 0;
+    white-space:nowrap;
+    background: white;
+    border: 0;
   }
 `;
 
@@ -239,11 +246,13 @@ class ProfileInfo extends React.Component {
               {this.state.unfollow}{" "}
             </button>
           )}
+          <br></br>
+          <br></br>
           <p className='bio'>{this.props.bio} </p>
 
-          <a href="javascript:;" onClick={e => this.modalOpen(e)}>
+          <button className='listButton' onClick={e => this.modalOpen(e)}>
             <p className='stats'>Followers: {this.props.followers} </p>
-          </a>
+          </button>
 
         <Modal style={customStyles} isOpen={this.state.modal} onRequestClose={this.modalClose}>
           <button onClick={this.modalClose}>close</button>
@@ -260,9 +269,9 @@ class ProfileInfo extends React.Component {
           ))}
         </Modal>
 
-        <a href="javascript:;" onClick={e => this.modalOpen2(e)}>
+        <button className='listButton' onClick={e => this.modalOpen2(e)}>
           <p className='stats'>Following: {this.props.following} </p>
-        </a>
+        </button>
 
         <Modal style={customStyles} isOpen={this.state.modal2} onRequestClose={this.modalClose2}>
           <button onClick={this.modalClose2}>close</button>
@@ -279,9 +288,9 @@ class ProfileInfo extends React.Component {
           ))}
         </Modal>
 
-        <a href="javascript:;" onClick={e => this.modalOpen3(e)}>
+        <button className='listButton' onClick={e => this.modalOpen3(e)}>
           <p className='stats'>Topics: {this.props.topics} </p>
-        </a>
+        </button>
 
         <Modal style={customStyles} isOpen={this.state.modal3} onRequestClose={this.modalClose3}>
           <button onClick={this.modalClose3}>close</button>

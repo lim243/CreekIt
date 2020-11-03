@@ -28,6 +28,7 @@ const Styles = styled.div`
     position: absolute !important;
     left: 60%;
     right: 20%;
+    width: 280px;
   }
 
   .sticky {
@@ -38,7 +39,7 @@ const Styles = styled.div`
   }
 
   .searchButton {
-    margin-left: 5%;
+    margin-left: 3%;
   }
 `;
 

@@ -54,26 +54,33 @@ const Styles = styled.div`
   none {
   }
 `;
-
 const Login = (props) => (
   <div>
     <Styles>
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ val: "", username: "", email: "", password: "" }}
         onSubmit={(values, { setStatus, setSubmitting }) => {
           // setTimeout(() => {
-
+          if (values.val.includes("@")) {
+            values.email = values.val;
+          } else {
+            values.username = values.val;
+          }
+          console.log("Logging in hihi", values);
+          setSubmitting(false);
           axios
             .post("http://localhost:5000/api/v1/users/signIn", {
               email: values.email,
               password: values.password,
+              username: values.username,
             })
             .then(
               (response) => {
+                console.log("res", response);
                 if (response.data) {
                   localStorage.setItem("token", response.data.accessToken);
-                  localStorage.setItem("email", values.email);
-                  localStorage.setItem("username", values.email); // TODO: DANGEROUS Right now is the same thing
+                  localStorage.setItem("email", response.data.email);
+                  localStorage.setItem("username", response.data.username);
                   setStatus("Welcome!");
                   props.login();
                   props.history.push("/feed");
@@ -84,15 +91,14 @@ const Login = (props) => (
                 setStatus(error.response.data.message);
               }
             );
-
           // setSubmitting(false);
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email().required("Required"),
+          val: Yup.string().required("Required"),
           password: Yup.string().required("Required"),
         })}
       >
-        {(props) => {
+        {(properties) => {
           const {
             values,
             touched,
@@ -102,20 +108,21 @@ const Login = (props) => (
             handleBlur,
             handleSubmit,
             status,
-          } = props;
+          } = properties;
           return (
             <form onSubmit={handleSubmit}>
+              {console.log("errors", errors)}
               <input
-                name='email'
+                name='val'
                 types='text'
                 placeholder='Email or username'
-                value={values.email}
+                value={values.text}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={errors.email && touched.email && "error"}
+                className={errors.val && touched.val && "error"}
               />
-              {errors.email && touched.email && (
-                <div className='input-feedback'>{errors.email}</div>
+              {errors.val && touched.val && (
+                <div className='input-feedback'>{errors.val}</div>
               )}
               <input
                 name='password'

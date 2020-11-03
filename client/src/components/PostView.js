@@ -56,13 +56,17 @@ class PostView extends React.Component {
         <h1>Post</h1>
         {/* {console.log('this.state.post', this.state.post)} */}
         <Post
+          index={0}
           anonymous={this.state.post.anonymous}
           name={this.state.post.name}
+          postId={this.state.post_id}
           username={this.state.post.username}
           post={this.state.post.body}
           date={this.state.post.date}
           time={this.state.post.time}
           commentButton={"false"}
+          upvotes={this.state.post.upvotes}
+          downvotes={this.state.post.downvotes}
           topic={this.state.post.topic}
         />
         <strong>
