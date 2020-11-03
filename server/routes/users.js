@@ -304,9 +304,10 @@ async function getInteracted(req, res) {
 
   const query = {
     name: "get-interacted-posts",
-    text: `SELECT t.*
+    text: `SELECT u.name, t.*
     FROM users, unnest(users.interacted_post) post_id
     LEFT JOIN posts t on t.id=post_id
+    LEFT JOIN users u on u.username = t.username
     where users.username = $1`,
     values: [username],
   };
