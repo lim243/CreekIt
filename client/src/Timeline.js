@@ -25,7 +25,10 @@ class Timeline extends React.Component {
   }
 
   fetchPosts = () => {
-    axios.get("http://localhost:5000/api/v1/posts/").then((res) => {
+    let uname = localStorage.getItem("username");
+    console.log("uname", uname);
+    axios.get("http://localhost:5000/api/v1/posts/"+uname+"/somepost/"
+      ).then((res) => {
       console.log("res", res.data.payload);
       this.setState({ posts: res.data.payload });
     });
