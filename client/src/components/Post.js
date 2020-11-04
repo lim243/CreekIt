@@ -6,6 +6,7 @@ import Downvote from "./Downvote";
 import { Redirect, withRouter } from "react-router-dom";
 import ReactHashtag from "react-hashtag";
 import moment from "moment-timezone";
+import axios from "axios";
 import { Button, Modal, ModalBody } from "react-bootstrap";
 
 const Styles = styled.div`
@@ -76,6 +77,21 @@ class Post extends React.Component {
 
   deleteHandler = () => {
     // HANDLE DELETION HERE
+    axios
+    .post("http://localhost:5000/api/v1/posts/"+ this.props.postId+"/deletepost", {
+    })
+    .then(
+      (response) => {
+        console.log("res", response);
+        if (response) {
+        }
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
+    this.setState({ modal1: false });
+    window.location.reload();
   };
 
   handleShowConfirm = () => {
