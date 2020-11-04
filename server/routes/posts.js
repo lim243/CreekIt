@@ -5,7 +5,7 @@ const router = express.Router();
 module.exports = router;
 
 // Router Functions
-router.get("/", getAllPosts);
+router.get("/:uid/somepost", getAllPosts);
 
 router.get("/:pid", getPost);
 router.get("/:pid/upvotes", getUpvotesUsers);
@@ -24,11 +24,14 @@ router.post("/:pid/topic", setTopic);
  * GET FUNCTIONS
  */
 async function getAllPosts(req, res) {
+  uname = req.params.uid;
+  console.log(uname);
   const query = {
     name: "get-all-post",
     text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.anonymous,
       p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, p.comment_ids
-      FROM posts as p, users as u WHERE p.username = u.username AND p.username in (select unnest(following) from users where username = 'kotori') ORDER BY p.date DESC`,
+      FROM posts as p, users as u WHERE (p.username = u.username AND p.username in (select unnest(following) from users where username = $1)) OR (p.username = u.username AND p.username = $1 ) ORDER BY p.date DESC`,
+      values: [uname],
   };
   const { rows } = await db.query(query);
 
