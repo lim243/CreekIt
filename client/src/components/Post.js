@@ -51,7 +51,7 @@ class Post extends React.Component {
         name: "Anonymous Panda",
         username: "anonymous",
       },
-      deleteButton: true,
+      deleteButton: true, // UPDATE THIS FOR POSTS THAT ARE NOT USER OR IS USER
     };
   }
 
