@@ -127,6 +127,7 @@ class EditProfile extends React.Component {
     this.onCrop = this.onCrop.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this);
+    this.handleSubmitPhoto = this.handleSubmitPhoto.bind(this);
   }
 
   componentDidMount() {
@@ -161,11 +162,35 @@ class EditProfile extends React.Component {
     // this.props.history.push("/");
   }
 
+  handleSubmitPhoto = (e) => {
+    const username = localStorage.getItem("username");
+    console.log("this.state", this.state);
+
+    // const index = this.state.preview.indexOf(",");
+    // console.log("index", index);
+
+    const img = this.state.preview.split(",")[1];
+
+    axios
+      .post(`http://localhost:5000/api/v1/users/${username}/updatePhoto`, {
+        img,
+      })
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
+
   fetchUserInfo = (username) => {
     axios.get(`http://localhost:5000/api/v1/users/${username}`).then(
       (response) => {
         console.log("res", response);
-        this.setState({ user: response.data.rows[0] });
+        this.setState({
+          user: response.data.rows[0],
+          preview: "data:image/png;base64,".concat(response.data.rows[0].profile_picture),
+        });
       },
       (error) => {
         console.log(error.response);
@@ -213,6 +238,7 @@ class EditProfile extends React.Component {
   }
 
   render() {
+    console.log("this.state", this.state);
     return (
       <Styles>
         <Formik
@@ -265,7 +291,7 @@ class EditProfile extends React.Component {
                     />
                   </Modal.Body>
                   <Modal.Footer>
-                    <Button variant='primary' onClick={(e) => this.handleClose1(e)}>
+                    <Button variant='primary' onClick={() => this.handleSubmitPhoto()}>
                       Set as Profile Picture
                     </Button>
                   </Modal.Footer>

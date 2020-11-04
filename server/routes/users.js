@@ -39,6 +39,7 @@ router.post("/removefollow", removefollow);
 router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
 router.post("/:username/password", setPassword);
+router.post("/:username/updatePhoto", updatePhoto);
 
 /**
  * GET FUNCTIONS
@@ -65,7 +66,11 @@ async function getOneUserByUsername(req, res) {
 
   const query = {
     name: "get-post",
-    text: "SELECT * FROM users WHERE username = $1",
+    text: `SELECT username, email, gender, date_of_birth, education, 
+    about_me, profile_photo, following, followed, blocked, topics, 
+    password, name, posts, interacted_post, private, encode(profile_picture,'base64') as profile_picture
+    FROM public.users
+    WHERE username = $1`,
     values: [username],
   };
 
@@ -504,6 +509,41 @@ async function updateProfile(req, res) {
       res.status(500).send(msg);
     });
 }
+
+async function updatePhoto(req, res) {
+  const { username } = req.params;
+  const { filename, img } = req.body;
+
+  const query = {
+    name: "update-profile-picture",
+    text: `UPDATE users 
+    SET profile_picture = decode($2,'base64')
+    WHERE username  = $1 returning *`,
+    values: [username, img],
+  };
+
+  console.log("query", query, username);
+
+  db.query(query)
+    .then((data) => {
+      console.log("data", data);
+      const msg = {
+        success: "true",
+        message: "User deleted!",
+        img: img,
+      };
+      res.status(200).send(msg);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
+}
+
 async function addfollow(req, res) {
   let user1 = req.body.user1;
   let user2 = req.body.user2;
