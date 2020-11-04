@@ -4,8 +4,10 @@ import * as Yup from "yup";
 import styled from "styled-components";
 import DatePicker from "./DatePicker";
 import axios from "axios";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, ModalBody } from "react-bootstrap";
 import Avatar from "react-avatar-edit";
+import { withRouter } from "react-router-dom";
+
 const Styles = styled.div`
   text-align: center;
   background-color: #282c34;
@@ -90,9 +92,9 @@ const Styles = styled.div`
 
   button {
     padding: 10px 15px;
-    background-color: rgb(70, 153, 179);
+    // background-color: rgb(70, 153, 179);
     color: white;
-    border: 1px solid rgb(70, 153, 179);
+    // border: 1px solid rgb(70, 153, 179);
     background-color: 250ms;
   }
 
@@ -102,19 +104,6 @@ const Styles = styled.div`
     color: rgb(70, 153, 179);
   }
 `;
-function deleteAccount() {
-  console.log("delete account");
-  const username = localStorage.getItem("username");
-  axios.post(`http://localhost:5000/api/v1/users/${username}/deleteAccount`).then(
-    (response) => {
-      console.log("res", response);
-    },
-    (error) => {
-      console.log(error.response);
-    }
-  );
-  document.location.href = "http://localhost:3000/";
-}
 
 class EditProfile extends React.Component {
   constructor(props) {
@@ -123,22 +112,66 @@ class EditProfile extends React.Component {
     this.state = {
       modal1: false,
       modal2: false,
-      modal3: false,
       preview: null,
       isLoading: false,
       message: "",
       src,
+      user: { name: "" },
+      deleteMessage: "",
     };
     this.handleClose1 = this.handleClose1.bind(this);
     this.handleShow1 = this.handleShow1.bind(this);
     this.handleClose2 = this.handleClose2.bind(this);
     this.handleShow2 = this.handleShow2.bind(this);
-    this.handleClose3 = this.handleClose3.bind(this);
-    this.handleShow3 = this.handleShow3.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
     this.onCrop = this.onCrop.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this);
   }
+
+  componentDidMount() {
+    const username = localStorage.getItem("username");
+    this.fetchUserInfo(username);
+  }
+
+  deleteAccount() {
+    console.log("delete account");
+    const username = localStorage.getItem("username");
+    axios.post(`http://localhost:5000/api/v1/users/${username}/deleteAccount`).then(
+      (response) => {
+        console.log("res", response);
+        this.setState({ deleteMessage: response.data.message });
+        setTimeout(() => {
+          this.handleClose2();
+          localStorage.clear();
+          this.props.history.push("/");
+          window.location.reload();
+        }, 3000);
+      },
+      (error) => {
+        console.log(error.response);
+        this.setState({ deleteMessage: error.response });
+        setTimeout(() => {
+          this.handleClose2();
+          this.props.history.push("/");
+        }, 2000);
+      }
+    );
+
+    // this.props.history.push("/");
+  }
+
+  fetchUserInfo = (username) => {
+    axios.get(`http://localhost:5000/api/v1/users/${username}`).then(
+      (response) => {
+        console.log("res", response);
+        this.setState({ user: response.data.rows[0] });
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
+  };
 
   handleClose1 = () => {
     this.setState({ modal1: false });
@@ -185,36 +218,12 @@ class EditProfile extends React.Component {
         <Formik
           enableReinitialize={true}
           initialValues={{
-            name: "",
-            gender: "",
-            bio: "",
-            private: false,
+            name: this.state.user.name,
+            gender: this.state.user.gender,
+            bio: this.state.user.about_me || "",
+            private: this.state.user.private,
             link: this.state.preview,
           }}
-          // onClick={(values, { setSubmitting, setStatus }) => {
-          //   values.link = this.state.preview;
-          //   console.log("Logging in", values);
-          //   setSubmitting(false);
-          //   const username = localStorage.getItem("username");
-          //   axios
-          //     .post(`http://localhost:5000/api/v1/${username}/updateProfile`, {
-          //       aboutme: values.bio,
-          //       name: values.name,
-          //       gender: values.gender,
-          //       private: values.private,
-          //       profile_picture: values.link,
-          //     })
-          //     .then(
-          //       (response) => {
-          //         console.log("res", response);
-          //       },
-          //       (error) => {
-          //         console.log(error.response);
-          //         setStatus(error.response.data.message);
-          //       }
-          //     );
-          //   // window.location.href = "http://localhost:3000/feed";
-          // }}
           validationSchema={Yup.object().shape({
             name: Yup.string().required("Required"),
             bio: Yup.string().max(75, "Bio must be less than 75 characters"),
@@ -318,6 +327,7 @@ class EditProfile extends React.Component {
 
                 {this.state.message && <h3>{this.state.message}</h3>}
                 <Button
+                  variant='info'
                   disabled={this.state.isLoading}
                   onClick={() => {
                     console.log("Hi", values);
@@ -341,7 +351,6 @@ class EditProfile extends React.Component {
                       .then(
                         (response) => {
                           console.log("res", response);
-                          // TODO: SHOW STATUS
                           this.setState({
                             message: response.data.message,
                             isLoading: false,
@@ -349,7 +358,6 @@ class EditProfile extends React.Component {
                         },
                         (error) => {
                           console.log(error.response);
-                          // TODO: SHOW STATUS
                           this.setState({ message: error.response, isLoading: false });
                         }
                       );
@@ -357,40 +365,43 @@ class EditProfile extends React.Component {
                 >
                   Confirm Changes
                 </Button>
-                <br></br>
-                <br></br>
+                <br />
+                <br />
+                <Button variant='danger' onClick={(e) => this.handleShow2(e)}>
+                  Delete Account
+                </Button>
+
+                <Modal show={this.state.modal2} onHide={(e) => this.handleClose2(e)}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Delete Account?</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    You're about to permanently delete your account. If you're ready to
+                    delete, click Delete My Account
+                  </Modal.Body>
+                  <ModalBody>{this.state.deleteMessage}</ModalBody>
+                  <Modal.Footer>
+                    <Button variant='secondary' onClick={(e) => this.handleClose2(e)}>
+                      Close
+                    </Button>
+                    <Button
+                      disabled={this.state.isLoading}
+                      variant='danger'
+                      onClick={this.deleteAccount}
+                    >
+                      Delete My Account
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
               </form>
             );
           }}
         </Formik>
-        <Button
-          variant='danger'
-          //onClick={deleteAccount}
-          onClick={(e) => this.handleShow2(e)}
-        >
-          Delete Account
-        </Button>
-        <Modal show={this.state.modal2} onHide={(e) => this.handleClose2(e)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Delete Account?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            You're about to permanently delete your account. If you're ready to delete,
-            click Delete My Account
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' onClick={(e) => this.handleClose2(e)}>
-              Close
-            </Button>
-            <Button variant='primary' onClick={deleteAccount}>
-              Delete My Account
-            </Button>
-          </Modal.Footer>
-        </Modal>
+
         <br></br>
       </Styles>
     );
   }
 }
 
-export default EditProfile;
+export default withRouter(EditProfile);

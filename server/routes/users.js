@@ -436,7 +436,11 @@ async function deleteAccount(req, res) {
   db.query(query3)
     .then((data) => {
       console.log("data", data);
-      res.status(200).send("success");
+      const msg = {
+        success: "true",
+        message: "User deleted!",
+      };
+      res.status(200).send(msg);
     })
     .catch((error) => {
       console.log("error", error);
