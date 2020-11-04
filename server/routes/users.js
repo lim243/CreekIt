@@ -23,8 +23,8 @@ router.get("/:username/dob", getDateOfBirth);
 router.get("/:username/education", getEducation);
 router.get("/:username/aboutme", getAboutMe);
 router.get("/:username/photo", getPhoto);
-router.get("/:username/following",  getFollowing); //TODO: Undefined
-router.get("/:username/followed",  getFollowed); //TODO: Undefined
+router.get("/:username/following", getFollowing); //TODO: Undefined
+router.get("/:username/followed", getFollowed); //TODO: Undefined
 router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
@@ -389,7 +389,8 @@ async function deleteAccount(req, res) {
   //following
   const query1 = {
     name: "delete-comments",
-    text: "delete from comments where username = $1 OR parent_id in (select id from posts where username = $1);",
+    text:
+      "delete from comments where username = $1 OR parent_id in (select id from posts where username = $1);",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [username],
   };
@@ -405,60 +406,34 @@ async function deleteAccount(req, res) {
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [username],
   };
-  console.log("query",query1);
+  console.log("query", query1);
   db.query(query1)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   db.query(query2)
-  .then((data) => {
-    console.log("data", data);
-    //res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
   db.query(query3)
-  .then((data) => {
-    console.log("data", data);
-    res.status(200).send("success");
-  })
-  .catch((error) => {
-    console.log("error", error);
-    const msg = {
-      "success": false,
-      "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
-    };
-    res.status(500).send(msg);
-  });
-}
-async function updateProfile(req, res) {
-  let username = req.params.username;
-  let aboutme = req.body.aboutme;
-  let name = req.body.name;
-  //following
-  const query = {
-    name: "update-about",
-    text: "update users set about_me = $1, name = $2 where username  = $3;",
-    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
-    values: [aboutme, name, username],
-  };
-  console.log("query", query);
-  db.query(query)
     .then((data) => {
       console.log("data", data);
       res.status(200).send("success");
@@ -468,6 +443,59 @@ async function updateProfile(req, res) {
       const msg = {
         "success": false,
         "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
+}
+async function updateProfile(req, res) {
+  const { username } = req.params;
+  const {
+    email,
+    gender,
+    dob,
+    education,
+    aboutme,
+    profile_picture,
+    private,
+    name,
+  } = req.body;
+
+  const query = {
+    name: "update-profile-info",
+    text: `UPDATE users 
+    SET email = $2, gender = $3, date_of_birth = $4, 
+      education = $5, about_me = $6, private = $7, name = $8
+    WHERE username  = $1 returning *`,
+    values: [
+      username,
+      email,
+      gender,
+      dob,
+      education,
+      aboutme,
+      private,
+      name,
+      // profile_picture,
+    ],
+  };
+  console.log("query", query);
+  db.query(query)
+    .then((data) => {
+      console.log("data", data);
+
+      const msg = {
+        success: true,
+        message: `user updated!`,
+        payload: data,
+      };
+
+      res.status(200).send(msg);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - Info was NOT updated!`,
       };
       res.status(500).send(msg);
     });
