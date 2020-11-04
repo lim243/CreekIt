@@ -6,6 +6,7 @@ import Downvote from "./Downvote";
 import { Redirect, withRouter } from "react-router-dom";
 import ReactHashtag from "react-hashtag";
 import moment from "moment-timezone";
+import { Button, Modal, ModalBody } from "react-bootstrap";
 
 const Styles = styled.div`
   .right {
@@ -43,11 +44,14 @@ class Post extends React.Component {
       time: "",
       date: "",
       post: "",
+      modal1: false,
+      deletePost: "",
       commentButton: "",
       anonymous: {
         name: "Anonymous Panda",
         username: "anonymous",
       },
+      deleteButton: true,
     };
   }
 
@@ -69,6 +73,18 @@ class Post extends React.Component {
   saveHandler = () => {
     // mark the post as saved
   };
+
+  deleteHandler = () => {
+    // HANDLE DELETION HERE
+  };
+
+  handleShowConfirm = () => {
+    this.setState({ modal1: true });
+  }
+
+  handleCloseConfirm = () => {
+    this.setState({ modal1: false });
+  }
 
   render() {
     console.log("this.props", this.props);
@@ -135,6 +151,12 @@ class Post extends React.Component {
             <button onClick={this.saveHandler} className='interaction'>
               Save{" "}
             </button>
+            {this.state.deleteButton === false ? null : ( // Might have to use this.props to display delete if the post is user
+                <button onClick={this.deleteHandler} className='interaction'>
+                Delete{" "}
+              </button>
+            )}
+            
           </div>
         </Styles>
       );
@@ -185,6 +207,33 @@ class Post extends React.Component {
             <button onClick={this.saveHandler} className='interaction'>
               Save{" "}
             </button>
+            {this.state.deleteButton === false ? null : ( // Might have to use this.props to display delete if the post is user
+                <button onClick={(e) => this.handleShowConfirm(e)} className='interaction'>
+                Delete{" "}
+              </button>
+            )}
+
+            <Modal show={this.state.modal1} onHide={(e) => this.handleCloseConfirm(e)}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Delete Post?</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    You're about to delete this post. To continue deletion, click Delete this post
+                  </Modal.Body>
+                  <ModalBody>{this.state.deletePost}</ModalBody>
+                  <Modal.Footer>
+                    <Button variant='secondary' onClick={(e) => this.handleCloseConfirm(e)}>
+                      Close
+                    </Button>
+                    <Button
+                      disabled={this.state.isLoading}
+                      variant='danger'
+                      onClick={this.deleteHandler}
+                    >
+                      Delete this post
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
           </div>
         </Styles>
       );
