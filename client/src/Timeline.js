@@ -31,6 +31,7 @@ class Timeline extends React.Component {
     });
   };
   render() {
+    console.log("this.state", this.state);
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
     return (
@@ -55,6 +56,7 @@ class Timeline extends React.Component {
               upvotes={item.upvotes}
               downvotes={item.downvotes}
               topic={item.topic}
+              profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
             />
           ))}
         </GridWrapper>

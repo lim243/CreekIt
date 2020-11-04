@@ -69,12 +69,16 @@ class PostView extends React.Component {
           upvotes={this.state.post.upvotes}
           downvotes={this.state.post.downvotes}
           topic={this.state.post.topic}
+          profile_picture={"data:image/png;base64,".concat(
+            this.state.post.profile_picture
+          )}
         />
         <strong>
           <h3>Comments</h3>
         </strong>
         {this.state.comments.map((item, index) => (
           <Comment
+            profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
             key={index}
             anonymous={item.anonymous}
             name={item.name}

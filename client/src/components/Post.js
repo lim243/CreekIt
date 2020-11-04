@@ -92,6 +92,7 @@ class Post extends React.Component {
         <Styles>
           <div>
             <Avatar
+              src={this.props.profile_picture}
               name={this.state.anonymous.name}
               size='50'
               round='100px'
@@ -141,7 +142,13 @@ class Post extends React.Component {
       return (
         <Styles>
           <div>
-            <Avatar name={this.props.name} size='50' round='100px' className='right' />
+            <Avatar
+              src={this.props.profile_picture}
+              name={this.props.name}
+              size='50'
+              round='100px'
+              className='right'
+            />
             <h5 style={{ fontWeight: "bold" }} className='right'>
               {this.props.name}
             </h5>

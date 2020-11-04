@@ -25,7 +25,7 @@ router.post("/:pid/topic", setTopic);
 async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
-    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, p.date as date, p.anonymous,
+    text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.anonymous,
       p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, p.comment_ids
       FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC`,
   };
@@ -45,7 +45,7 @@ async function getPost(req, res) {
 
   const query = {
     name: "get-post",
-    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, p.date as date, p.body, p.topic, 
+    text: `SELECT p.id as post_id, p.username, u.name,  encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.body, p.topic, 
       array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes,
       p.upvote_users, p.downvote_users, p.comment_ids , p.anonymous
       FROM posts as p, users as u 
@@ -135,6 +135,7 @@ async function getComments(req, res) {
   const query = {
     name: "get-all-post-comments",
     text: `SELECT u.name, c.username as username, c.date as date, 
+    encode(u.profile_picture) as profile_picture,
     c.body , array_length(c.upvote_users, 1) as upvotes, array_length(c.downvote_users, 1) as downvotes, c.upvotes_user ,
     c.downvote_users  , c.parent_id , c.anonymous
     FROM public.posts as p, public.comments as c, public.users as u

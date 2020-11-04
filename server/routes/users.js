@@ -47,7 +47,7 @@ router.post("/:username/updatePhoto", updatePhoto);
 async function getUsers(req, res) {
   const query = {
     name: "get-all-user",
-    text: "SELECT * FROM users",
+    text: "SELECT *, encode(profile_picture,'base64') as profile_picture FROM users",
   };
 
   const result = await db.query(query);
@@ -324,7 +324,7 @@ async function getInteracted(req, res) {
 
   const query = {
     name: "get-interacted-posts",
-    text: `SELECT u.name, t.*
+    text: `SELECT u.name, encode(u.profile_picture,'base64') as profile_picture, t.*
     FROM users, unnest(users.interacted_post) post_id
     LEFT JOIN posts t on t.id=post_id
     LEFT JOIN users u on u.username = t.username

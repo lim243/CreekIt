@@ -4,7 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { NavLink, Redirect } from "react-router-dom";
 import Modal from "react-modal";
-import Links from './Links';
+import Links from "./Links";
 
 const Styles = styled.div`
   .right {
@@ -41,21 +41,21 @@ const Styles = styled.div`
 
   .listButton {
     padding: 0;
-    white-space:nowrap;
+    white-space: nowrap;
     background: white;
     border: 0;
   }
 `;
 
 const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 class ProfileInfo extends React.Component {
@@ -72,12 +72,12 @@ class ProfileInfo extends React.Component {
       followers: "",
       topics: "",
       unfollow: "Follow",
-      modal: '',
-      modal2: '',
-      modal3: '',
-      listFollow: [],  // TODO: Populate this
-      listFollowing: [],  // TODO: Populate this
-      listTopics: [],  // TODO: Populate this (not implemented yet)
+      modal: "",
+      modal2: "",
+      modal3: "",
+      listFollow: [], // TODO: Populate this
+      listFollowing: [], // TODO: Populate this
+      listTopics: [], // TODO: Populate this (not implemented yet)
     };
     this.modalOpen = this.modalOpen.bind(this);
     this.modalClose = this.modalClose.bind(this);
@@ -85,17 +85,15 @@ class ProfileInfo extends React.Component {
     this.modalClose2 = this.modalClose2.bind(this);
     this.modalOpen3 = this.modalOpen3.bind(this);
     this.modalClose3 = this.modalClose3.bind(this);
-
-
   }
 
-  modalOpen = () =>{
+  modalOpen = () => {
     this.setState({ modal: true });
   };
 
   modalClose = () => {
     this.setState({
-      modal: false
+      modal: false,
     });
   };
 
@@ -127,93 +125,103 @@ class ProfileInfo extends React.Component {
     const global_username = window.location.href.split("/").pop(-1);
     console.log("CLICKED");
     let uname = "";
-    
+
     uname = global_username;
     console.log(uname);
-    console.log(localStorage.getItem('username'));
-    const body = { user1: uname,user2: localStorage.getItem('username') };
+    console.log(localStorage.getItem("username"));
+    const body = { user1: uname, user2: localStorage.getItem("username") };
     if (this.state.unfollow == "Follow") {
       axios
-      .post(`http://localhost:5000/api/v1/users/addfollow`,  body )
-      .then((res) => {
-        console.log("res", res);
-        //this.setState({ posts: res.data.payload });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+        .post(`http://localhost:5000/api/v1/users/addfollow`, body)
+        .then((res) => {
+          console.log("res", res);
+          //this.setState({ posts: res.data.payload });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       this.setState({ unfollow: "Unfollow" });
       // Handle follow in backend
     } else {
       axios
-      .post(`http://localhost:5000/api/v1/users/removefollow`,  body )
-      .then((res) => {
-        console.log("res", res);
-        //this.setState({ posts: res.data.payload });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+        .post(`http://localhost:5000/api/v1/users/removefollow`, body)
+        .then((res) => {
+          console.log("res", res);
+          //this.setState({ posts: res.data.payload });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       this.setState({ unfollow: "Follow" });
       // Handle unfollow in backend
     }
   };
 
-  
-
-
-
-  componentDidMount(){
+  componentDidMount() {
     this.fetchfollower();
     this.fetchfollowing();
     this.fetchtopics();
   }
-  fetchtopics = () =>{
+  fetchtopics = () => {
     axios.get("http://localhost:5000/api/v1/users/test@email.com/topics/").then((res) => {
       console.log("res", res);
       let resultarray = [];
       let topics = res.data.topics;
       console.log("topics", topics);
-      for (let idx in topics){
-        console.log("topics", topics[idx]); 
-        resultarray.push({ topic: topics[idx],path: ("http://localhost:3000/feed/topic/" + topics[idx])})
+      for (let idx in topics) {
+        console.log("topics", topics[idx]);
+        resultarray.push({
+          topic: topics[idx],
+          path: "http://localhost:3000/feed/topic/" + topics[idx],
+        });
       }
-      console.log("result",resultarray);
-      this.setState({listTopics :resultarray});
-      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
-    });
-  };
-  fetchfollower = () =>{
-    axios.get("http://localhost:5000/api/v1/users/test@email.com/followed/").then((res) => {
-      console.log("res", res);
-      let resultarray = [];
-      let followed = res.data.followed;
-      console.log("followed", followed);
-      for (let idx in followed){
-        console.log("name", followed[idx]); 
-        resultarray.push({ username: followed[idx],path: ("http://localhost:3000/feed/myprofile/" + followed[idx])})
-      }
-      console.log("result",resultarray);
-      this.setState({listFollow :resultarray});
-      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
-    });
-  };
-  
-  fetchfollowing= () =>{
-    axios.get("http://localhost:5000/api/v1/users/test@email.com/following/").then((res) => {
-      let resultarray = [];
-      let following = res.data.following;
-      following.forEach((element, id) => {
-        console.log("name", element);
-        //axios.get("http://localhost:5000/api/v1/users/"+following[idx]+"/name/").then((res) => {
-          resultarray.push({name: element, username :element,path: "http://localhost:3000/feed/myprofile/" + element})
-       // });
-      });
-      //console.log("following", following);
       console.log("result", resultarray);
-      this.setState({listFollowing :resultarray});
-      //this.setState({listFollowing :[{name: 'aaaa', username:'bbb',path:"\\"}]});
+      this.setState({ listTopics: resultarray });
+      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
     });
+  };
+  fetchfollower = () => {
+    axios
+      .get("http://localhost:5000/api/v1/users/test@email.com/followed/")
+      .then((res) => {
+        console.log("res", res);
+        let resultarray = [];
+        let followed = res.data.followed;
+        console.log("followed", followed);
+        for (let idx in followed) {
+          console.log("name", followed[idx]);
+          resultarray.push({
+            username: followed[idx],
+            path: "http://localhost:3000/feed/myprofile/" + followed[idx],
+          });
+        }
+        console.log("result", resultarray);
+        this.setState({ listFollow: resultarray });
+        //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
+      });
+  };
+
+  fetchfollowing = () => {
+    axios
+      .get("http://localhost:5000/api/v1/users/test@email.com/following/")
+      .then((res) => {
+        let resultarray = [];
+        let following = res.data.following;
+        following.forEach((element, id) => {
+          console.log("name", element);
+          //axios.get("http://localhost:5000/api/v1/users/"+following[idx]+"/name/").then((res) => {
+          resultarray.push({
+            name: element,
+            username: element,
+            path: "http://localhost:3000/feed/myprofile/" + element,
+          });
+          // });
+        });
+        //console.log("following", following);
+        console.log("result", resultarray);
+        this.setState({ listFollowing: resultarray });
+        //this.setState({listFollowing :[{name: 'aaaa', username:'bbb',path:"\\"}]});
+      });
   };
 
   render() {
@@ -223,7 +231,7 @@ class ProfileInfo extends React.Component {
         <Redirect
           to={{
             pathname: "/feed/edit",
-            state: { userId: localStorage.getItem('username') },
+            state: { userId: localStorage.getItem("username") },
           }}
         />
       );
@@ -232,7 +240,13 @@ class ProfileInfo extends React.Component {
       <Styles>
         {console.log("this.props", this.props)}
         <div>
-          <Avatar name={this.props.name} size='80' round='100px' className='avatar' />
+          <Avatar
+            src={this.props.profile_picture}
+            name={this.props.name}
+            size='80'
+            round='100px'
+            className='avatar'
+          />
           <h5 style={{ fontWeight: "bold" }} className=''>
             {this.props.name}
           </h5>
@@ -250,66 +264,69 @@ class ProfileInfo extends React.Component {
           <br></br>
           <p className='bio'>{this.props.bio} </p>
 
-          <button className='listButton' onClick={e => this.modalOpen(e)}>
+          <button className='listButton' onClick={(e) => this.modalOpen(e)}>
             <p className='stats'>Followers: {this.props.followers} </p>
           </button>
 
-        <Modal style={customStyles} isOpen={this.state.modal} onRequestClose={this.modalClose}>
-          <button onClick={this.modalClose}>close</button>
-          <div>List of Followers</div> {/* Map thru a list of followers here :::::: use a href */ }
-          {this.state.listFollow.map((item, index) => (      
-            <div>    
-          <Links
-            username={item.username}
-            path={item.path}
-            key={index}
-          />
-          <br></br>
-          </div>   
-          ))}
-        </Modal>
+          <Modal
+            style={customStyles}
+            isOpen={this.state.modal}
+            onRequestClose={this.modalClose}
+          >
+            <button onClick={this.modalClose}>close</button>
+            <div>List of Followers</div>{" "}
+            {/* Map thru a list of followers here :::::: use a href */}
+            {this.state.listFollow.map((item, index) => (
+              <div>
+                <Links username={item.username} path={item.path} key={index} />
+                <br></br>
+              </div>
+            ))}
+          </Modal>
 
-        <button className='listButton' onClick={e => this.modalOpen2(e)}>
-          <p className='stats'>Following: {this.props.following} </p>
-        </button>
+          <button className='listButton' onClick={(e) => this.modalOpen2(e)}>
+            <p className='stats'>Following: {this.props.following} </p>
+          </button>
 
-        <Modal style={customStyles} isOpen={this.state.modal2} onRequestClose={this.modalClose2}>
-          <button onClick={this.modalClose2}>close</button>
-          <div>List of Following</div> {/* Map thru a list of following here :::::: use a href */ }
-          {this.state.listFollowing.map((item, index) => (
-            <div>
-          <Links
-            username={item.username}
-            path={item.path}
-            key={index}
-          />
-          <br></br>
-          </div>
-          ))}
-        </Modal>
+          <Modal
+            style={customStyles}
+            isOpen={this.state.modal2}
+            onRequestClose={this.modalClose2}
+          >
+            <button onClick={this.modalClose2}>close</button>
+            <div>List of Following</div>{" "}
+            {/* Map thru a list of following here :::::: use a href */}
+            {this.state.listFollowing.map((item, index) => (
+              <div>
+                <Links username={item.username} path={item.path} key={index} />
+                <br></br>
+              </div>
+            ))}
+          </Modal>
 
-        <button className='listButton' onClick={e => this.modalOpen3(e)}>
-          <p className='stats'>Topics: {this.props.topics} </p>
-        </button>
+          <button className='listButton' onClick={(e) => this.modalOpen3(e)}>
+            <p className='stats'>Topics: {this.props.topics} </p>
+          </button>
 
-        <Modal style={customStyles} isOpen={this.state.modal3} onRequestClose={this.modalClose3}>
-          <button onClick={this.modalClose3}>close</button>
-          <div>List of Topics</div> {/* Map thru a list of topics here :::::: use a href */ }
-          {this.state.listTopics.map((item, index) => (
-            <div>
-          <Links
-            username={item.topic}
-            path={item.path}
-            key={index}
-          />
-          <br></br>
-          </div>
-          ))}
-        </Modal>
+          <Modal
+            style={customStyles}
+            isOpen={this.state.modal3}
+            onRequestClose={this.modalClose3}
+          >
+            <button onClick={this.modalClose3}>close</button>
+            <div>List of Topics</div>{" "}
+            {/* Map thru a list of topics here :::::: use a href */}
+            {this.state.listTopics.map((item, index) => (
+              <div>
+                <Links username={item.topic} path={item.path} key={index} />
+                <br></br>
+              </div>
+            ))}
+          </Modal>
 
           {/* <p className='stats'>Followers: {this.props.followers} </p>
           <p className='stats'>Following: {this.props.following} </p> */}
-          
+
           <p className='stats'>Posts: {this.props.postNum} </p>
         </div>
       </Styles>

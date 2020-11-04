@@ -118,6 +118,7 @@ class InteractedPosts extends React.Component {
       <div style={{ marginTop: "10px" }}>
         {this.state.interactedPosts.map((item, index) => (
           <Post
+            profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
             index={index}
             key={index}
             name={item.name}
@@ -142,8 +143,8 @@ class MyProfile extends React.Component {
       personal: {},
       currentUser: false,
       test_username: "",
-      following:{},
-      followed:{},
+      following: {},
+      followed: {},
     };
   }
 
@@ -169,8 +170,8 @@ class MyProfile extends React.Component {
       .then((res) => {
         console.log("res", res.data.rows[0]);
         this.setState({ personal: res.data.rows[0] });
-        this.setState({following: res.data.following});
-        this.setState({followed: res.data.followed});
+        this.setState({ following: res.data.following });
+        this.setState({ followed: res.data.followed });
       })
       .catch((err) => {
         console.error(err);
@@ -187,6 +188,7 @@ class MyProfile extends React.Component {
         <GridWrapper>
           <ProfileInfo
             name={user.name}
+            profile_picture={"data:image/png;base64,".concat(user.profile_picture)}
             username={user.username}
             bio={user.about_me}
             followButton={this.state.currentUser}
