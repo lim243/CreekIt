@@ -16,6 +16,7 @@ router.post("/new", createPost);
 router.post("/:pid/upvote", setUpvote);
 router.post("/:pid/downvote", setDownvote);
 router.post("/:pid/newcomment", addPostComments);
+router.post("/:pid/deletepost", deleteposts);
 
 router.post("/:pid/topic", setTopic);
 
@@ -27,9 +28,8 @@ async function getAllPosts(req, res) {
     name: "get-all-post",
     text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.anonymous,
       p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, p.comment_ids
-      FROM posts as p, users as u WHERE p.username = u.username ORDER BY p.date DESC`,
+      FROM posts as p, users as u WHERE p.username = u.username AND p.username in (select unnest(following) from users where username = 'kotori') ORDER BY p.date DESC`,
   };
-
   const { rows } = await db.query(query);
 
   // Send data back
@@ -294,6 +294,28 @@ async function addPostComments(req, res) {
   const { rows } = await db.query(query);
 
   console.log("rows", result);
+  // Send data back
+  const msg = {
+    success: true,
+    commentId: rows[0].id,
+  };
+  return res.status(200).json(msg);
+}
+
+async function deleteposts(req, res){
+  const pid = req.params.pid;
+  //const { username, body, anonymous } = req.body;
+  console.log("req.body", req.body);
+
+  const query = {
+    name: "delete post",
+    text: `delete from posts where id = $1 RETURNING id`,
+    values: [pid],
+  };
+
+  const { rows } = await db.query(query);
+
+  // console.log("rows", result);
   // Send data back
   const msg = {
     success: true,
