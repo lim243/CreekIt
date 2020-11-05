@@ -163,7 +163,13 @@ class ProfileInfo extends React.Component {
     this.fetchtopics();
   }
   fetchtopics = () => {
-    axios.get("http://localhost:5000/api/v1/users/test@email.com/topics/").then((res) => {
+    const global_username = window.location.href.split("/").pop(-1);
+    let uname = global_username;
+    if (!uname){
+      uname = localStorage.getItem("username");
+    }
+    console.log("topic uname",uname);
+    axios.get("http://localhost:5000/api/v1/users/"+uname+"/topics/").then((res) => {
       console.log("res", res);
       let resultarray = [];
       let topics = res.data.topics;
@@ -181,8 +187,14 @@ class ProfileInfo extends React.Component {
     });
   };
   fetchfollower = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    let uname = global_username;
+    if (!uname){
+      uname = localStorage.getItem("username");
+    }
+    console.log("follower uname",uname);
     axios
-      .get("http://localhost:5000/api/v1/users/test@email.com/followed/")
+      .get("http://localhost:5000/api/v1/users/"+uname+"/followed/")
       .then((res) => {
         console.log("res", res);
         let resultarray = [];
@@ -202,9 +214,16 @@ class ProfileInfo extends React.Component {
   };
 
   fetchfollowing = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    let uname = global_username;
+    if (!uname){
+      uname = localStorage.getItem("username");
+    }
+    console.log("following uname",uname);
     axios
-      .get("http://localhost:5000/api/v1/users/test@email.com/following/")
+      .get("http://localhost:5000/api/v1/users/"+uname+"/following/")
       .then((res) => {
+        console.log("following data", res.data);
         let resultarray = [];
         let following = res.data.following;
         following.forEach((element, id) => {
