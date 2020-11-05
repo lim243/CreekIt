@@ -37,7 +37,7 @@ router.post("/signUp", signUp);
 router.post("/addfollow", addfollow);
 router.post("/removefollow", removefollow);
 router.post("/:username/followTopic", followTopic);
-router.post("/:username/unfollowTopic", followTopic);
+router.post("/:username/unfollowTopic", unfollowTopic);
 router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
 router.post("/:username/password", setPassword);
