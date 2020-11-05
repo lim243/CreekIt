@@ -36,6 +36,8 @@ router.post("/signIn", signIn);
 router.post("/signUp", signUp);
 router.post("/addfollow", addfollow);
 router.post("/removefollow", removefollow);
+router.post("/:username/followTopic", followTopic);
+router.post("/:username/unfollowTopic", unfollowTopic);
 router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
 router.post("/:username/password", setPassword);
@@ -328,7 +330,7 @@ async function getInteracted(req, res) {
     FROM users, unnest(users.interacted_post) post_id
     LEFT JOIN posts t on t.id=post_id
     LEFT JOIN users u on u.username = t.username
-    where users.username = $1`,
+    where users.username = $1 ORDER BY t.date DESC`,
     values: [username],
   };
 
@@ -340,14 +342,6 @@ async function getInteracted(req, res) {
   };
   return res.status(200).json(msg);
 }
-
-// async function getPostsById(ids) {
-//   console.log("ids", ids);
-
-//   ids.forEach(id => {
-
-//   });
-// }
 
 /**
  * POST FUNCTIONS
@@ -540,7 +534,8 @@ async function addfollow(req, res) {
   //following
   const query = {
     name: "add-following",
-    text: "update users set following = array_append(following,$1) where username  = $2 AND NOT ($1 = any(following)) returning username;",
+    text:
+      "update users set following = array_append(following,$1) where username  = $2 AND NOT ($1 = any(following)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user1, user2],
   };
@@ -560,7 +555,8 @@ async function addfollow(req, res) {
   //followereds
   const query2 = {
     name: "add-followed",
-    text: "update users set followed = array_append(followed,$1) where username  = $2 AND NOT ($1 = any(followed)) returning username;",
+    text:
+      "update users set followed = array_append(followed,$1) where username  = $2 AND NOT ($1 = any(followed)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user2, user1],
   };
@@ -728,4 +724,55 @@ async function signIn(req, res) {
 
     res.status(200).send(data);
   });
+}
+
+async function followTopic(req, res) {
+  const { username } = req.params;
+
+  const { topic } = req.body;
+  //following
+  const query = {
+    name: "add-following-topic",
+    text:
+      "update users set topics = array_append(topics,$2::character varying) where username = $1 AND NOT ($2::character varying = any(topics)) returning username;",
+    values: [username, topic],
+  };
+
+  db.query(query)
+    .then((data) => {
+      res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `Topic was not followed!`,
+      };
+      res.status(500).send(msg);
+    });
+}
+
+async function unfollowTopic(req, res) {
+  const { username } = req.params;
+
+  const { topic } = req.body;
+  //following
+  const query = {
+    name: "remove-following-topic",
+    text:
+      "update users set topics = array_remove(topics,$2::character varying) where username = $1 AND ($2::character varying = any(topics)) returning username;",
+    values: [username, topic],
+  };
+  db.query(query)
+    .then((data) => {
+      res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `Topic was not removed!`,
+      };
+      res.status(500).send(msg);
+    });
 }
