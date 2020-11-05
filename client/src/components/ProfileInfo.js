@@ -65,6 +65,10 @@ class ProfileInfo extends React.Component {
       name: "",
       username: "",
       bio: "",
+      age: "",
+      gender: "",
+      education: "",
+      private: false,
       followButton: "",
       education: "",
       postNum: "",
@@ -263,7 +267,14 @@ class ProfileInfo extends React.Component {
           <br></br>
           <br></br>
           <p className='bio'>{this.props.bio} </p>
-
+          {this.props.private === false &&
+          <div>
+          <br></br>
+          <p className='age'>Age: {this.props.age} </p>
+          <p className='gender'>Gender: {this.props.gender} </p>
+          <p className='education'>Education: {this.props.education} </p>
+          </div>
+          }
           <button className='listButton' onClick={(e) => this.modalOpen(e)}>
             <p className='stats'>Followers: {this.props.followers} </p>
           </button>

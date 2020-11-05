@@ -5,6 +5,7 @@ import axios from "axios";
 import ProfileInfo from "./ProfileInfo";
 import CoolTabs from "react-cool-tabs";
 import { Tabs, Tab } from "react-bootstrap-tabs";
+import moment from 'moment';
 
 const GridWrapper = styled.div`
   display: block;
@@ -191,6 +192,10 @@ class MyProfile extends React.Component {
             profile_picture={"data:image/png;base64,".concat(user.profile_picture)}
             username={user.username}
             bio={user.about_me}
+            private={user.private}
+            age={moment().diff(user.date_of_birth, 'years')}
+            gender={user.gender}
+            education={user.education}
             followButton={this.state.currentUser}
             postNum={(user.posts && user.posts.length) || 0}
             following={(user.following && user.following.length) || 0}
