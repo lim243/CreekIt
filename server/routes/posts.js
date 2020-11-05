@@ -306,21 +306,28 @@ async function addPostComments(req, res) {
 async function deleteposts(req, res) {
   const pid = req.params.pid;
   //const { username, body, anonymous } = req.body;
-  // console.log("req.body", req.body);
-
-  const query = {
+  console.log("req.body", req.body);
+  //TODO: delete comment
+  const query1 = {
+    name: "delete comments",
+    text: "delete from comments where parent_id = $1;",
+    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+    values: [pid],
+  };
+  const query2 = {
     name: "delete post",
     text: `delete from posts where id = $1 RETURNING id`,
     values: [pid],
   };
 
-  const { rows } = await db.query(query);
+  const { rows1 } = await db.query(query1);
+  const { rows2 } = await db.query(query2);
 
   // console.log("rows", result);
   // Send data back
   const msg = {
     success: true,
-    commentId: rows[0].id,
+    commentId: rows1[0].id,
   };
   return res.status(200).json(msg);
 }

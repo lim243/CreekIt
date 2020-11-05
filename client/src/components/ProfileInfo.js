@@ -65,6 +65,10 @@ class ProfileInfo extends React.Component {
       name: "",
       username: "",
       bio: "",
+      age: "",
+      gender: "",
+      education: "",
+      private: false,
       followButton: "",
       education: "",
       postNum: "",
@@ -174,6 +178,10 @@ class ProfileInfo extends React.Component {
       let resultarray = [];
       let topics = res.data.topics;
       console.log("topics", topics);
+      if (!topics){
+        this.setState({ listTopics: resultarray });
+        return;
+      }
       for (let idx in topics) {
         console.log("topics", topics[idx]);
         resultarray.push({
@@ -200,6 +208,10 @@ class ProfileInfo extends React.Component {
         let resultarray = [];
         let followed = res.data.followed;
         console.log("followed", followed);
+        if (!followed){
+          this.setState({ listFollow: resultarray });
+          return;
+        }
         for (let idx in followed) {
           console.log("name", followed[idx]);
           resultarray.push({
@@ -226,6 +238,10 @@ class ProfileInfo extends React.Component {
         console.log("following data", res.data);
         let resultarray = [];
         let following = res.data.following;
+        if (!following){
+          this.setState({ listFollowing: resultarray });
+          return;
+        }
         following.forEach((element, id) => {
           console.log("name", element);
           //axios.get("http://localhost:5000/api/v1/users/"+following[idx]+"/name/").then((res) => {
@@ -282,7 +298,14 @@ class ProfileInfo extends React.Component {
           <br></br>
           <br></br>
           <p className='bio'>{this.props.bio} </p>
-
+          {this.props.private === false &&
+          <div>
+          <br></br>
+          <p className='age'>Age: {this.props.age} </p>
+          <p className='gender'>Gender: {this.props.gender} </p>
+          <p className='education'>Education: {this.props.education} </p>
+          </div>
+          }
           <button className='listButton' onClick={(e) => this.modalOpen(e)}>
             <p className='stats'>Followers: {this.props.followers} </p>
           </button>

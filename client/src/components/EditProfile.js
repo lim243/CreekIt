@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import styled from "styled-components";
 import DatePicker from "./DatePicker";
 import axios from "axios";
-import { Button, Modal, ModalBody } from "react-bootstrap";
+import { Form, Button, Modal, ModalBody } from "react-bootstrap";
 import Avatar from "react-avatar-edit";
 import { withRouter } from "react-router-dom";
 
@@ -118,6 +118,7 @@ class EditProfile extends React.Component {
       src,
       user: { name: "" },
       deleteMessage: "",
+      checked: false
     };
     this.handleClose1 = this.handleClose1.bind(this);
     this.handleShow1 = this.handleShow1.bind(this);
@@ -128,6 +129,7 @@ class EditProfile extends React.Component {
     this.onClose = this.onClose.bind(this);
     this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this);
     this.handleSubmitPhoto = this.handleSubmitPhoto.bind(this);
+    this.handleCheckBox = this.handleCheckBox.bind(this);
   }
 
   componentDidMount() {
@@ -181,6 +183,13 @@ class EditProfile extends React.Component {
       .catch((err) => {
         console.log("err", err);
       });
+  };
+
+  handleCheckBox = (event) => {
+    //Anonymous Handling
+    let check = this.state.checked;
+    check = event.target.value;
+    this.setState({ checked: check });
   };
 
   fetchUserInfo = (username) => {
@@ -258,13 +267,16 @@ class EditProfile extends React.Component {
           enableReinitialize={true}
           initialValues={{
             name: this.state.user.name,
+            email: this.state.user.email,
             gender: this.state.user.gender,
+            education: this.state.user.education,
             bio: this.state.user.about_me || "",
-            private: this.state.user.private,
+            private: this.state.checked,
             link: this.state.preview,
           }}
           validationSchema={Yup.object().shape({
             name: Yup.string().required("Required"),
+            email: Yup.string().required("Required"),
             bio: Yup.string().max(75, "Bio must be less than 75 characters"),
           })}
         >
@@ -324,6 +336,19 @@ class EditProfile extends React.Component {
                   <div className='input-feedback'>{errors.name}</div>
                 )}
 
+                <p style={{ color: "#9FFFCB" }}>Email</p>
+                <input
+                  name='email'
+                  types='text'
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={errors.email && touched.email && "error"}
+                />
+                {errors.email && touched.email && (
+                  <div className='input-feedback'>{errors.email}</div>
+                )}
+
                 <p style={{ color: "#9FFFCB" }}>Gender</p>
 
                 <select
@@ -335,6 +360,21 @@ class EditProfile extends React.Component {
                   <option value='' label='' />
                   <option value='Male' label='Male' />
                   <option value='Female' label='Female' />
+                </select>
+
+                <p style={{ color: "#9FFFCB" }}>Education</p>
+
+                <select
+                  name='education'
+                  value={values.education}
+                  onChange={handleChange}
+                  style={{ display: "block" }}
+                >
+                  <option value='' label='' />
+                  <option value='High School or Lower' label='High School or Lower' />
+                  <option value='College' label='College' />
+                  <option value='Vocational School' label='Vocational School' />
+                  <option value='Other' label='Other' />
                 </select>
 
                 <p style={{ color: "#9FFFCB" }}>Biography: Tell us about yourself</p>
@@ -353,12 +393,19 @@ class EditProfile extends React.Component {
                 </p>
 
                 <br></br>
-                <div role='group' aria-labelledby='checkbox-group'>
+                {/*<div role='group' aria-labelledby='checkbox-group'>
                   <label style={{ fontSize: "12px" }}>
                     <Field type='checkbox' name='private' value='Hide' />
                     Hide Gender and Age
                   </label>
-                </div>
+                </div>*/}
+                <Form.Check
+                  type='checkbox'
+                  value='true'
+                  label={<span style={{fontSize: '14px'}}>{'Hide Private Information (Gender, Age, Education)'}</span>}
+                  className='checkbox'
+                  onClick={this.handleCheckBox}
+                />
 
                 <br></br>
 
