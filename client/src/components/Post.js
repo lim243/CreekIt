@@ -39,6 +39,7 @@ const Hashtag = styled.a`
 class Post extends React.Component {
   constructor(props) {
     super(props);
+    
     this.state = {
       name: "",
       username: "",
@@ -52,9 +53,10 @@ class Post extends React.Component {
         name: "Anonymous Panda",
         username: "anonymous",
       },
-      deleteButton: true, // UPDATE THIS FOR POSTS THAT ARE NOT USER OR IS USER
     };
   }
+
+
 
   handleHashtagClick = (ev) => {
     console.log("val", ev.currentTarget);
@@ -167,7 +169,7 @@ class Post extends React.Component {
             <button onClick={this.saveHandler} className='interaction'>
               Save{" "}
             </button>
-            {this.state.deleteButton === false ? null : ( // Might have to use this.props to display delete if the post is user
+            {this.props.username !== localStorage.getItem("username") ? null : ( 
                 <button onClick={this.deleteHandler} className='interaction'>
                 Delete{" "}
               </button>
@@ -223,13 +225,14 @@ class Post extends React.Component {
             <button onClick={this.saveHandler} className='interaction'>
               Save{" "}
             </button>
-            {this.state.deleteButton === false ? null : ( // Might have to use this.props to display delete if the post is user
+
+            {this.props.username !== localStorage.getItem("username") ? null : ( 
                 <button onClick={(e) => this.handleShowConfirm(e)} className='interaction'>
                 Delete{" "}
               </button>
             )}
 
-            <Modal show={this.state.modal1} onHide={(e) => this.handleCloseConfirm(e)}>
+            <Modal animation={false} show={this.state.modal1} onHide={(e) => this.handleCloseConfirm(e)}>
                   <Modal.Header closeButton>
                     <Modal.Title>Delete Post?</Modal.Title>
                   </Modal.Header>

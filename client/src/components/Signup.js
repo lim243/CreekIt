@@ -91,6 +91,7 @@ const Signup = (props) => (
           name: "",
           username: "",
           gender: "",
+          education: "",
           date: "",
         }}
         onSubmit={(values, { setSubmitting, setStatus }) => {
@@ -142,6 +143,7 @@ const Signup = (props) => (
               "Username cannot contain spaces and the following characters: @!?()#$%^&*"
             ),
           gender: Yup.string().required("Required").matches(""),
+          education: Yup.string().required("Required").matches(""),
           date: Yup.string().required("Required"),
           //.matches(/^(?:(?:(?:0?[13578]|1[02])(\/|-|\.)31)\1|(?:(?:0?[1,3-9]|1[0-2])(\/|-|\.)(?:29|30)\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:0?2(\/|-|\.)29\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:(?:0?[1-9])|(?:1[0-2]))(\/|-|\.)(?:0?[1-9]|1\d|2[0-8])\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/, "Enter a valid date with the given format: MM/DD/YYYY."),
         })}
@@ -233,6 +235,21 @@ const Signup = (props) => (
               </select>
               {errors.gender && touched.gender && (
                 <div className='input-feedback'>{errors.gender}</div>
+              )}
+              <select
+                name='education'
+                value={values.education}
+                onChange={handleChange}
+                style={{ display: "block" }}
+              >
+                <option value='' label='--Specify Education--' />
+                <option value='High School or Lower' label='High School or Lower' />
+                <option value='College' label='College' />
+                <option value='Vocational School' label='Vocational School' />
+                <option value='Other' label='Other' />
+              </select>
+              {errors.education && touched.education && (
+                <div className='input-feedback'>{errors.education}</div>
               )}
 
               <DatePicker name='date' />
