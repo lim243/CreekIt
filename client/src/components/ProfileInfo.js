@@ -141,6 +141,7 @@ class ProfileInfo extends React.Component {
           console.error(err);
         });
       this.setState({ unfollow: "Unfollow" });
+      window.location.reload();
       // Handle follow in backend
     } else {
       axios
@@ -153,6 +154,7 @@ class ProfileInfo extends React.Component {
           console.error(err);
         });
       this.setState({ unfollow: "Follow" });
+      window.location.reload();
       // Handle unfollow in backend
     }
   };
@@ -161,7 +163,26 @@ class ProfileInfo extends React.Component {
     this.fetchfollower();
     this.fetchfollowing();
     this.fetchtopics();
+    this.setFollowStatus();
   }
+  setFollowStatus = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+
+    let user1 = localStorage.getItem("username");
+    let user2 = global_username;
+    axios.post("http://localhost:5000/api/v1/users/followStatus/",{user1: user1, user2: user2}).then((res) => {
+      console.log("res", res);
+      let status = res.data.status;
+      if (status == "true"){
+        this.setState({ unfollow: "Unfollow" });
+      }
+      else {
+        this.setState({ unfollow: "Follow" });
+      }
+      console.log("status", status);
+      //this.setState({listFollow :[{name: 'aaaa', username:'bbb',path:"\\"},{name: 'bbaa', username:'ccb',path:"\\"}]});
+    });
+  };
   fetchtopics = () => {
     const global_username = window.location.href.split("/").pop(-1);
     let uname = global_username;
