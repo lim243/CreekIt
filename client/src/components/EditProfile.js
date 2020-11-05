@@ -112,7 +112,7 @@ class EditProfile extends React.Component {
     this.state = {
       modal1: false,
       modal2: false,
-      preview: null,
+      preview: "",
       isLoading: false,
       message: "",
       src,
@@ -187,10 +187,23 @@ class EditProfile extends React.Component {
     axios.get(`http://localhost:5000/api/v1/users/${username}`).then(
       (response) => {
         console.log("res", response);
-        this.setState({
-          user: response.data.rows[0],
-          preview: "data:image/png;base64,".concat(response.data.rows[0].profile_picture),
-        });
+
+        console.log(response.data.rows[0].profile_picture);
+        if (response.data.rows[0].profile_picture) {
+          console.log("hi");
+          this.setState({
+            user: response.data.rows[0],
+            preview: "data:image/png;base64,".concat(
+              response.data.rows[0].profile_picture
+            ),
+          });
+        } else {
+          console.log("no");
+          this.setState({
+            user: response.data.rows[0],
+            preview: "",
+          });
+        }
       },
       (error) => {
         console.log(error.response);
@@ -368,7 +381,6 @@ class EditProfile extends React.Component {
                           name: values.name,
                           email: values.email,
                           gender: values.gender,
-                          dob: values.dob,
                           education: values.education,
                           aboutme: values.bio,
                           private: values.private,

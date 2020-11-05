@@ -458,28 +458,18 @@ async function deleteAccount(req, res) {
 }
 async function updateProfile(req, res) {
   const { username } = req.params;
-  const {
-    email,
-    gender,
-    dob,
-    education,
-    aboutme,
-    profile_picture,
-    private,
-    name,
-  } = req.body;
+  const { email, gender, education, aboutme, profile_picture, private, name } = req.body;
 
   const query = {
     name: "update-profile-info",
     text: `UPDATE users 
-    SET email = $2, gender = $3, date_of_birth = $4, 
-      education = $5, about_me = $6, private = $7, name = $8
+    SET email = $2, gender = $3,  
+      education = $4, about_me = $5, private = $6, name = $7
     WHERE username  = $1 returning *`,
     values: [
       username,
       email,
       gender,
-      dob,
       education,
       aboutme,
       private,
