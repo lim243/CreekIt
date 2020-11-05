@@ -37,7 +37,7 @@ router.post("/signUp", signUp);
 router.post("/addfollow", addfollow);
 router.post("/removefollow", removefollow);
 router.post("/:username/followTopic", followTopic);
-router.post("/:username/unfollowTopic", unfollowTopic);
+router.post("/:username/unfollowTopic", followTopic);
 router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
 router.post("/:username/password", setPassword);
@@ -92,7 +92,7 @@ async function getPostsByUsername(req, res) {
   const query = {
     name: "get-all-posts-by-username",
     text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') as date,
-    to_char(p.date, 'HH24:MI') as time, p.body, p.topic, p.upvotes, p.downvotes, p.upvote_users, 
+    to_char(p.date, 'HH24:MI') as time, p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes , p.upvote_users, 
     p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = $1 AND p.username = u.username;`,
     values: [username],
   };
@@ -326,7 +326,8 @@ async function getInteracted(req, res) {
 
   const query = {
     name: "get-interacted-posts",
-    text: `SELECT u.name, encode(u.profile_picture,'base64') as profile_picture, t.*
+    text: `SELECT u.name, encode(u.profile_picture,'base64') as profile_picture, array_length(t.upvote_users,1) as upvotes,
+    array_length(t.downvote_users,1) as downvotes, t.id, t.username, t.date, t.body, t.topic, t.anonymous
     FROM users, unnest(users.interacted_post) post_id
     LEFT JOIN posts t on t.id=post_id
     LEFT JOIN users u on u.username = t.username
