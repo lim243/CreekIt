@@ -252,7 +252,7 @@ async function getFollowing(req, res) {
 
   db.query(query)
     .then((data) => {
-      console.log(data);
+      console.log(data.rows[0]);
       /*const msg = {
         "success": true,
         "following": `User ${username} created!`,
