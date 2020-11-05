@@ -548,13 +548,9 @@ async function addfollow(req, res) {
   let user1 = req.body.user1;
   let user2 = req.body.user2;
   //following
-  console.log(req.body);
-  console.log(res.body);
-  console.log(user1);
-  console.log(user2);
   const query = {
     name: "add-following",
-    text: "update users set following = array_append(following,$1) where username  = $2;",
+    text: "update users set following = array_append(following,$1) where username  = $2 AND NOT ($1 = any(following)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user1, user2],
   };
@@ -574,7 +570,7 @@ async function addfollow(req, res) {
   //followereds
   const query2 = {
     name: "add-followed",
-    text: "update users set followed = array_append(followed,$1) where username  = $2;",
+    text: "update users set followed = array_append(followed,$1) where username  = $2 AND NOT ($1 = any(followed)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user2, user1],
   };
