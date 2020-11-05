@@ -46,6 +46,18 @@ class MakePost extends React.Component {
       .catch((err) => {
         console.error(err);
       });
+      console.log("post username", localStorage.getItem("username"));
+      axios
+            .post("http://localhost:5000/api/v1/users/refresh", {
+              username: localStorage.getItem("username"),
+            })
+            .then(
+              (response) => {
+                console.log("post res", response);
+                if (response.data) {
+                  localStorage.setItem("token", response.data.accessToken);
+                }
+              })
   }
 
   handleChange(event) {

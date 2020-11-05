@@ -40,6 +40,7 @@ router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
 router.post("/:username/password", setPassword);
 router.post("/:username/updatePhoto", updatePhoto);
+router.post("/refresh", refresh);
 
 /**
  * GET FUNCTIONS
@@ -780,4 +781,20 @@ async function signIn(req, res) {
 
     res.status(200).send(data);
   });
+}
+
+async function refresh(req, res){
+  let username = req.body.username;
+  let payload = { username: username };
+  let accessToken = jwt.sign(payload, "Creekit Secret", {
+    algorithm: "HS256",
+    expiresIn: 30,
+  });
+  console.log("refresh token", accessToken)
+  const data = {
+    accessToken: accessToken,
+  };
+  console.log(data);
+  res.status(200).send(data);
+
 }
