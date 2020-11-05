@@ -20,6 +20,15 @@ exports.login = function(req, res){
         return res.status(401).send()
     }    
 }
+exports.refresh = async function(username){
+    let payload = { username: username };
+    let accessToken = jwt.sign(payload, "Creekit Secret", {
+      algorithm: "HS256",
+      expiresIn: 30,
+    });
+    console.log("refresh token", accessToken)
+    return accessToken;
+}
 
 
 exports.isauth = async function(req,res,next){
