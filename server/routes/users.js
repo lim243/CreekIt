@@ -31,7 +31,7 @@ router.get("/:username/posts", getPosts); //TODO: Undefined
 router.get("/:username/interacted", getInteracted);
 
 // SET ROUTER
-
+router.post("/followStatus", followStatus);
 router.post("/signIn", signIn);
 router.post("/signUp", signUp);
 router.post("/addfollow", addfollow);
@@ -535,8 +535,7 @@ async function addfollow(req, res) {
   //following
   const query = {
     name: "add-following",
-    text:
-      "update users set following = array_append(following,$1) where username  = $2 AND NOT ($1 = any(following)) returning username;",
+    text: "update users set following = array_append(following,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(following)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user1, user2],
   };
@@ -549,15 +548,13 @@ async function addfollow(req, res) {
       console.log("error", error);
       const msg = {
         "success": false,
-        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+        "message": `Cannot add following`,
       };
-      res.status(500).send(msg);
     });
   //followereds
   const query2 = {
     name: "add-followed",
-    text:
-      "update users set followed = array_append(followed,$1) where username  = $2 AND NOT ($1 = any(followed)) returning username;",
+    text: "update users set followed = array_append(followed,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(followed)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user2, user1],
   };
@@ -570,7 +567,7 @@ async function addfollow(req, res) {
       console.log("error", error);
       const msg = {
         "success": false,
-        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+        "message": `Cannot add followed`,
       };
       res.status(500).send(msg);
     });
@@ -672,6 +669,49 @@ async function signUp(req, res) {
       });
   });
 }
+//followStatus
+async function followStatus(req, res) {
+  const { user1, user2 } = req.body;
+  console.log(req.body);
+  //let user1 = req.body.user1;
+  //let user2 = req.body.user2;
+  console.log("usernames", user1,user2);
+  const query = {
+    name: "get followStatus",
+    text: `select username from users where (username = $2) AND ($1 = any(followed))`,
+    values: [user1, user2],
+  };
+
+  console.log("query", query);
+
+  db.query(query)
+    .then((data) => {
+      console.log("data", data);
+      let s = "";
+      if (data.rows[0]){
+        s = "true";
+      }
+      else {
+        s = "false";
+      }
+      console.log(data.rows[0]);
+      const msg = {
+        success: "true",
+        message: "User deleted!",
+        status: s,
+      };
+      res.status(200).send(msg);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `ERROR ${error.code}: ${error.detail} - User ${email} was NOT created!`,
+      };
+      res.status(500).send(msg);
+    });
+}
+
 
 async function signIn(req, res) {
   const { username, email, password } = req.body;
