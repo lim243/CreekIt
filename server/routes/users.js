@@ -37,6 +37,7 @@ router.post("/signUp", signUp);
 router.post("/addfollow", addfollow);
 router.post("/removefollow", removefollow);
 router.post("/:username/followTopic", followTopic);
+router.post("/:username/unfollowTopic", unfollowTopic);
 router.post("/:username/deleteAccount", deleteAccount);
 router.post("/:username/updateProfile", updateProfile);
 router.post("/:username/password", setPassword);
@@ -733,12 +734,12 @@ async function followTopic(req, res) {
   const query = {
     name: "add-following-topic",
     text:
-      "update users set topics = array_append(topics,$2) where username = $1 AND NOT ($2 = any(topics)) returning username;",
+      "update users set topics = array_append(topics,$2::character varying) where username = $1 AND NOT ($2::character varying = any(topics)) returning username;",
     values: [username, topic],
   };
+
   db.query(query)
     .then((data) => {
-      console.log("data", data);
       res.status(200).send("success");
     })
     .catch((error) => {
@@ -759,12 +760,11 @@ async function unfollowTopic(req, res) {
   const query = {
     name: "remove-following-topic",
     text:
-      "update users set topics = array_remove(topics,$2) where username = $1 AND ($2 = any(topics)) returning username;",
+      "update users set topics = array_remove(topics,$2::character varying) where username = $1 AND ($2::character varying = any(topics)) returning username;",
     values: [username, topic],
   };
   db.query(query)
     .then((data) => {
-      console.log("data", data);
       res.status(200).send("success");
     })
     .catch((error) => {

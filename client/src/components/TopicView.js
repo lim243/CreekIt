@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Comment from "./Comment";
 // import AddComment from "./AddComment";
 import axios from "axios";
+import { Button } from "react-bootstrap";
 
 const GridWrapper = styled.div`
   display: block;
@@ -20,6 +21,8 @@ class TopicView extends React.Component {
     this.state = {
       posts: [],
       topic: "",
+      follow: true,
+      userTopics: [],
     };
   }
 
@@ -30,7 +33,23 @@ class TopicView extends React.Component {
     console.log("This is topic:" + topic);
     this.setState({ topic });
     this.fetchTopics(topic);
+    this.fetchUser();
   }
+
+  fetchUser = () => {
+    axios
+      .get(`http://localhost:5000/api/v1/users/${localStorage.getItem("username")}`)
+      .then((res) => {
+        console.log("res", res.data.rows[0].topics);
+        if (res.data.rows[0].topics.includes(this.state.topic)) {
+          this.setState({ userTopics: res.data.rows[0].topics, follow: false });
+          console.log("Hi");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   fetchTopics = (topic) => {
     axios
@@ -44,8 +63,36 @@ class TopicView extends React.Component {
       });
   };
 
+  handleFollowTopic = () => {
+    axios
+      .post(`http://localhost:5000/api/v1/users/${localStorage.username}/followTopic`, {
+        topic: this.state.topic,
+      })
+      .then((res) => {
+        console.log("res", res.data);
+        this.setState({ follow: false });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  handleUnFollowTopic = () => {
+    axios
+      .post(`http://localhost:5000/api/v1/users/${localStorage.username}/unfollowTopic`, {
+        topic: this.state.topic,
+      })
+      .then((res) => {
+        console.log("res", res.data.payload);
+        this.setState({ follow: true });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   render() {
-    console.log("this.state", this.state.posts.length);
+    console.log("this.state", this.state);
 
     return (
       <GridWrapper>
@@ -57,22 +104,31 @@ class TopicView extends React.Component {
         {this.state.posts.length === 0 ? (
           <div>Topic does not exist</div>
         ) : (
-          this.state.posts.map((item, index) => (
-            <Post
-              key={index}
-              index={index}
-              anonymous={item.anonymous}
-              postId={item.post_id}
-              name={item.name}
-              username={item.username}
-              post={item.body}
-              date={item.date}
-              time={item.time}
-              upvotes={item.upvotes}
-              downvotes={item.downvotes}
-              topic={item.topic}
-            />
-          ))
+          <span>
+            {this.state.follow === false ? (
+              <Button onClick={this.handleUnFollowTopic}>Unfollow</Button>
+            ) : (
+              <Button onClick={this.handleFollowTopic}>Follow</Button>
+            )}
+            <br />
+            <br />
+            {this.state.posts.map((item, index) => (
+              <Post
+                key={index}
+                index={index}
+                anonymous={item.anonymous}
+                postId={item.post_id}
+                name={item.name}
+                username={item.username}
+                post={item.body}
+                date={item.date}
+                time={item.time}
+                upvotes={item.upvotes}
+                downvotes={item.downvotes}
+                topic={item.topic}
+              />
+            ))}
+          </span>
         )}
       </GridWrapper>
     );
