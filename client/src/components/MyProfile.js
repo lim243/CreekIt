@@ -66,7 +66,7 @@ class Posts extends React.Component {
             name={item.name}
             username={item.username}
             post={item.body}
-            postId={item.id}
+            postId={item.post_id}
             date={item.date}
             time={item.time}
             upvotes={item.upvotes}
@@ -125,7 +125,7 @@ class InteractedPosts extends React.Component {
             name={item.name}
             username={item.username}
             post={item.body}
-            postId={item.id}
+            postId={item.post_id}
             date={item.date}
             time={item.time}
             upvotes={item.upvotes}
