@@ -536,7 +536,8 @@ async function addfollow(req, res) {
   //following
   const query = {
     name: "add-following",
-    text: "update users set following = array_append(following,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(following)) returning username;",
+    text:
+      "update users set following = array_append(following,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(following)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user1, user2],
   };
@@ -555,7 +556,8 @@ async function addfollow(req, res) {
   //followereds
   const query2 = {
     name: "add-followed",
-    text: "update users set followed = array_append(followed,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(followed)) returning username;",
+    text:
+      "update users set followed = array_append(followed,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(followed)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user2, user1],
   };
@@ -676,7 +678,7 @@ async function followStatus(req, res) {
   console.log(req.body);
   //let user1 = req.body.user1;
   //let user2 = req.body.user2;
-  console.log("usernames", user1,user2);
+  console.log("usernames", user1, user2);
   const query = {
     name: "get followStatus",
     text: `select username from users where (username = $2) AND ($1 = any(followed))`,
@@ -689,10 +691,9 @@ async function followStatus(req, res) {
     .then((data) => {
       console.log("data", data);
       let s = "";
-      if (data.rows[0]){
+      if (data.rows[0]) {
         s = "true";
-      }
-      else {
+      } else {
         s = "false";
       }
       console.log(data.rows[0]);
@@ -712,7 +713,6 @@ async function followStatus(req, res) {
       res.status(500).send(msg);
     });
 }
-
 
 async function signIn(req, res) {
   const { username, email, password } = req.body;
@@ -768,19 +768,20 @@ async function signIn(req, res) {
   });
 }
 
-async function refresh(req, res){
+async function refresh(req, res) {
   let username = req.body.username;
   let payload = { username: username };
   let accessToken = jwt.sign(payload, "Creekit Secret", {
     algorithm: "HS256",
     expiresIn: 30,
   });
-  console.log("refresh token", accessToken)
+  console.log("refresh token", accessToken);
   const data = {
     accessToken: accessToken,
   };
   console.log(data);
   res.status(200).send(data);
+}
 
 async function followTopic(req, res) {
   const { username } = req.params;
