@@ -106,6 +106,7 @@ const Signup = (props) => (
               dob: values.date,
               name: values.name,
               gender: values.gender,
+              education: values.education,
             })
             .then(
               (response) => {
