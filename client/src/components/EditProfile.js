@@ -165,6 +165,7 @@ class EditProfile extends React.Component {
   }
 
   handleSubmitPhoto = (e) => {
+    this.setState({ modal1: false });
     const username = localStorage.getItem("username");
     console.log("this.state", this.state);
 
