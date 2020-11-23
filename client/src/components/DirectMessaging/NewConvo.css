@@ -1,5 +1,5 @@
 #new-message-container {
-  background: #0048AA;
+  background: #7ecaa0;
 }
 
 #new-message-container {
@@ -16,9 +16,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eee;
+  background: #222;
   border-radius: 100%;
-  color: #002C88;
+  color: #7ecaa0;
   text-decoration: none;
   font-size: 2.5rem;
   padding-bottom: 5px;

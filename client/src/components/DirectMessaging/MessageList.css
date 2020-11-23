@@ -4,6 +4,7 @@
     flex-direction: column-reverse;
     padding: 10px 50px;
     overflow-y: scroll;
+    background-color: black;
   }
   
   .message-row {
@@ -50,9 +51,9 @@
   }
   
   .you-message .message-text {
-    background: #0048AA;
+    background: #538a6b;
     color: #eee;
-    border: 1px solid #0048AA;
+    border: 1px solid #538a6b;
     border-radius: 14px 14px 0 14px;
   }
   

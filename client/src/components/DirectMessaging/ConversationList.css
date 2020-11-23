@@ -1,6 +1,6 @@
 #conversation-list {
     grid-area: conversation-list;
-    background: #0048AA;
+    background: #7ecaa0;
     overflow-y: scroll;
 }
 
@@ -8,15 +8,15 @@
     display: grid;
     grid-template-columns: 150px 1fr max-content;
     grid-gap: 10px;
-    color: #ddd;
+    color: rgb(31, 30, 30);
     font-size: 1.2rem;
-    border-bottom: 1px solid #002C88;
+    border-bottom: 1px solid #078651;
     padding: 20px 20px 20px 15px;
   }
   
   .conversation.active,
   .conversation:hover {
-    background: #002C88;
+    background: #538a6b;
   }
   
   .conversation:hover {
@@ -32,7 +32,7 @@
   
   .title-text {
     font-weight: bold;
-    color: #eee;
+    color: rgb(20, 20, 20);
     padding-left: 5px;
     white-space: nowrap;
     overflow-x: hidden;
@@ -40,7 +40,7 @@
   }
   
   .created-date {
-    color: #ddd;
+    color: rgb(24, 23, 23);
     white-space: nowrap;
     font-size: 1rem;
   }

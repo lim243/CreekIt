@@ -6,7 +6,7 @@ const ChatTitle = (props) => {
     return (
         <div id="chat-title">
             <span>{props.selectedConversation.title}</span>
-            {/* <img src={require("../../images/icons/trash-logo.svg")} alt="Delete Conversation" /> */}
+            <button>Delete</button>
         </div>
     );
 }
