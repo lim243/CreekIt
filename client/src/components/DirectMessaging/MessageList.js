@@ -3,8 +3,8 @@ import React from 'react';
 import Message from './Message';
 import './MessageList.css';
 
-const MessageList = (props) => {
-    const messageItems = props.messages.map((message, index) => {
+const MessageList = ({ messages }) => {
+    const messageItems = messages.map((message, index) => {
         return <Message 
             key={index}
             isMyMessage={message.isMyMessage}
