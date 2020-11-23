@@ -5,7 +5,7 @@ import axios from "axios";
 import ProfileInfo from "./ProfileInfo";
 import CoolTabs from "react-cool-tabs";
 import { Tabs, Tab } from "react-bootstrap-tabs";
-import moment from 'moment';
+import moment from "moment";
 
 const GridWrapper = styled.div`
   display: block;
@@ -61,6 +61,7 @@ class Posts extends React.Component {
       <div style={{ marginTop: "10px" }}>
         {this.state.posts.map((item, index) => (
           <Post
+            profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
             index={index}
             key={index}
             name={item.name}
@@ -125,7 +126,7 @@ class InteractedPosts extends React.Component {
             name={item.name}
             username={item.username}
             post={item.body}
-            postId={item.post_id}
+            postId={item.id}
             date={item.date}
             time={item.time}
             upvotes={item.upvotes}
@@ -193,7 +194,7 @@ class MyProfile extends React.Component {
             username={user.username}
             bio={user.about_me}
             private={user.private}
-            age={moment().diff(user.date_of_birth, 'years')}
+            age={moment().diff(user.date_of_birth, "years")}
             gender={user.gender}
             education={user.education}
             followButton={this.state.currentUser}

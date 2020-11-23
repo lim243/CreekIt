@@ -92,8 +92,7 @@ async function getPostsByUsername(req, res) {
 
   const query = {
     name: "get-all-posts-by-username",
-    text: `SELECT p.id as post_id, p.username, u.name, u.profile_photo, to_char(p.date, 'YYYY-MM-DD') as date,
-    to_char(p.date, 'HH24:MI') as time, p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes , p.upvote_users, 
+    text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date, p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes , p.upvote_users, 
     p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = $1 AND p.username = u.username;`,
     values: [username],
   };
