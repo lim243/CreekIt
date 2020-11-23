@@ -1,31 +1,48 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './ChatForm.css';
 
-const ChatForm = ({ onMessageSubmitted }) => {
-  const [textMessage, setTextMessage] = useState('');
-  const handleChange = (e) => {
-      // console.log(e.target.value);
-      setTextMessage(e.target.value);
-  };
+const isMessageEmpty = (textMessage) => {
+    return adjustTextMessage(textMessage).length === 0;
+}
 
-  const handleSubmit = (e) => {
-      e.preventDefault();
-      
-      onMessageSubmitted(textMessage);
-      setTextMessage('');
-  };
-    return (
-        <form id="chat-form" onSubmit={handleSubmit}>
-            {/* <img src={require("../../images/icons/attachment-logo.svg")} alt="Add Attachment" /> */}
-            <textarea type="text" 
-                placeholder="type a message" 
-                value={textMessage}
-                onChange={handleChange} />
-            <div id="send-button">
+const adjustTextMessage = (textMessage) => {
+    return textMessage.trim();
+};
+
+const ChatForm = ({ selectedConversation, onMessageSubmitted }) => {
+    const [textMessage, setTextMessage] = useState('');
+    const disableButton = isMessageEmpty(textMessage);
+    let formContents = null;
+    let handleFormSubmit = null;
+
+    if (selectedConversation) {
+        formContents = (
+            <>
+                <textarea 
+                    type="text" 
+                    placeholder="type a message" 
+                    value={textMessage}
+                    onChange={ (e) => { setTextMessage(e.target.value); } } />
+                <div id="send-button">
             <button type="submit">Send</button>
           </div>
-        </form>
-        
+            </>
+        );
+    
+        handleFormSubmit = (e) => {
+            e.preventDefault();
+            
+            if (!isMessageEmpty(textMessage)) {
+                onMessageSubmitted(textMessage);
+                setTextMessage('');
+            }
+        };
+    }
+
+    return (
+        <form id="chat-form" onSubmit={handleFormSubmit}>
+            {formContents}
+        </form> 
     );
 }
 

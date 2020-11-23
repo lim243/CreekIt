@@ -2,11 +2,21 @@ import React from 'react';
 
 import './ChatTitle.css';
 
-const ChatTitle = ({selectedConversation, onDeleteConversation}) => {
+const ChatTitle = ({ selectedConversation, onDeleteConversation }) => {
+    let chatTitleContents = null;
+
+    if (selectedConversation) {
+        chatTitleContents = (
+            <>
+                <span>{ selectedConversation.title }</span>
+                <button onClick={() => { onDeleteConversation(); } } >Delete</button>
+            </>
+        );
+    }
+
     return (
         <div id="chat-title">
-            <span>{selectedConversation.title}</span>
-            <button onClick={() => { onDeleteConversation(); } } >Delete</button>
+            { chatTitleContents }
         </div>
     );
 }

@@ -7,22 +7,38 @@ import MessageList from './components/DirectMessaging/MessageList.js';
 import ChatForm from './components/DirectMessaging/ChatForm.js';
 import {conversationChanged, newMessageAdded, conversationDeleted} from './components/DirectMessaging/actionIndex'
 import { connect } from 'react-redux';
+import NoConversations from './components/DirectMessaging/NoConversations';
 
 
 import './DirectMessage.css';
 import Sidebar from './components/SideBar.js';
 
 const DirectMessage= ({conversations, selectedConversation, conversationChanged, onMessageSubmitted, onDeleteConversation})=> {
+    let conversationContent = (
+        <>
+           <NoConversations></NoConversations>
+        </>
+    );
+
+    if (conversations.length > 0) {
+        conversationContent = (
+            <>
+                <MessageList selectedConversation={selectedConversation} />
+            </>
+        );
+    }
     return (
         <div>
             <Sidebar />
         <div id="chat-container">
             <ChatSearch />
-            <ConversationList conversations={conversations} selectedConversationId={selectedConversation.id} onConversationItemSelected={conversationChanged} />
+            <ConversationList conversations={conversations} selectedConversation={selectedConversation} onConversationItemSelected={conversationChanged} />
             <NewConversation />
             <ChatTitle selectedConversation={selectedConversation} onDeleteConversation={onDeleteConversation}/>
-            <MessageList messages={selectedConversation.messages} />
-            <ChatForm onMessageSubmitted={onMessageSubmitted} /> 
+            {/* <MessageList messages={selectedConversation.messages} /> */}
+            {conversationContent}
+            <ChatForm selectedConversation={selectedConversation}
+                onMessageSubmitted={onMessageSubmitted} /> 
         </div>
         </div>
     );
