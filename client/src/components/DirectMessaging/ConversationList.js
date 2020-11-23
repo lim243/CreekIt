@@ -1,14 +1,20 @@
 import React from 'react';
 
-import ConversationItem from './ConversationItem.js';
+import ConversationItem from './ConversationItem';
 import './ConversationList.css';
 
-const ConversationList = (props) => {
-    const selectedConversationIndex = 0;
-    const conversationItems = props.conversations.map((conversation, index) => {
+const ConversationList = (
+    { 
+        conversations, 
+        selectedConversationId, 
+        onConversationItemSelected 
+    }
+) => {
+    const conversationItems = conversations.map((conversation) => {
         return <ConversationItem 
-            key={index}
-            isActive={index === selectedConversationIndex }
+            key={conversation.id}
+            onConversationItemSelected={onConversationItemSelected}
+            isActive={conversation.id === selectedConversationId }
             conversation={conversation} />;
     });
 

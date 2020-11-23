@@ -1,21 +1,26 @@
 import React from 'react';
+import classNames from 'classnames';
 
 import './ConversationItem.css';
 
-const ConversationItem = (props) => {
-    let className = 'conversation';
-
-    if (props.isActive) {
-        className += ' active';
+const ConversationItem = (
+    { 
+        conversation, 
+        isActive,
+        onConversationItemSelected
     }
+) => {
+    const className = classNames('conversation', {
+        'active': isActive
+    });
 
     return (
-        <div className={className}>
-            {/* <img src={props.conversation.imageUrl} alt={props.conversation.imageAlt} /> */}
-            <div className="title-text">{props.conversation.title}</div>
-            <div className="created-date">{props.conversation.createdAt}</div>
+        <div className={className} onClick={() => onConversationItemSelected(conversation.id)}>
+            {/* <img src={conversation.imageUrl} alt={conversation.imageAlt} /> */}
+            <div className="title-text">{conversation.title}</div>
+            <div className="created-date">{conversation.createdAt}</div>
             <div className="conversation-message">
-                {props.conversation.latestMessageText}
+                {conversation.latestMessageText}
             </div>
         </div>
     );
