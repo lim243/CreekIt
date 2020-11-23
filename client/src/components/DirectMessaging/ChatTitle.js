@@ -2,11 +2,11 @@ import React from 'react';
 
 import './ChatTitle.css';
 
-const ChatTitle = (props) => {
+const ChatTitle = ({selectedConversation, onDeleteConversation}) => {
     return (
         <div id="chat-title">
-            <span>{props.selectedConversation.title}</span>
-            <button>Delete</button>
+            <span>{selectedConversation.title}</span>
+            <button onClick={() => { onDeleteConversation(); } } >Delete</button>
         </div>
     );
 }

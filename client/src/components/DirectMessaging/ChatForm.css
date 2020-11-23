@@ -1,12 +1,9 @@
-#chat-form {
-    background: #222;
-  }
-  
-  /* #chat-form > img {
+   /* #chat-form > img {
     cursor: pointer;
   } */
   
   #chat-form {
+    background: #222;
     display: grid;
     grid: 51px / 32px 1fr;
     align-content: center;
@@ -32,5 +29,5 @@
   }
 
   #send-button {
-    padding-left: 500px;
+    padding-left: 500px;  
   }
