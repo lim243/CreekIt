@@ -4,6 +4,9 @@ import styled from "styled-components";
 import MakePost from "./components/MakePost";
 import axios from "axios";
 
+import socketClient from "socket.io-client";
+const SERVER = "http://127.0.0.1:8080";
+
 const GridWrapper = styled.div`
   display: block;
   margin-top: 1em;
@@ -13,6 +16,10 @@ const GridWrapper = styled.div`
   width: 500px;
 `;
 
+var socket = socketClient(SERVER);
+socket.on("connection", () => {
+  console.log(`I'm connected with the back-end`);
+});
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +27,7 @@ class Timeline extends React.Component {
       posts: [],
     };
   }
+
   componentDidMount() {
     this.fetchPosts();
   }
@@ -27,11 +35,12 @@ class Timeline extends React.Component {
   fetchPosts = () => {
     let uname = localStorage.getItem("username");
     console.log("uname", uname);
-    axios.get("http://localhost:5000/api/v1/posts/"+uname+"/somepost/"
-      ).then((res) => {
-      console.log("res", res.data.payload);
-      this.setState({ posts: res.data.payload });
-    });
+    axios
+      .get("http://localhost:5000/api/v1/posts/" + uname + "/somepost/")
+      .then((res) => {
+        console.log("res", res.data.payload);
+        this.setState({ posts: res.data.payload });
+      });
   };
   render() {
     console.log("this.state", this.state);
