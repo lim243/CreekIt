@@ -15,3 +15,18 @@ export const conversationDeleted = () => ({
 export const conversationsRequested = () => ({
     type: 'CONVERSATIONS_REQUESTED'
 });
+
+export const messagesRequested = (conversationId) => ({
+    type: 'MESSAGES_REQUESTED',
+    payload: {
+        conversationId
+    }
+});
+
+export const messagesLoaded = (conversationId, messages) => ({
+    type: 'MESSAGES_LOADED',
+    payload: {
+        conversationId,
+        messages
+    }
+});

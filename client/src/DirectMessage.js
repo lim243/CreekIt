@@ -3,7 +3,7 @@ import ChatSearch from './components/DirectMessaging/ChatSearch.js';
 import ConversationList from './components/DirectMessaging/ConversationList.js';
 import NewConversation from './components/DirectMessaging/NewConvo.js';
 import ChatTitle from './components/DirectMessaging/ChatTitle.js';
-import MessageList from './components/DirectMessaging/MessageList.js';
+import MessageList from './components/DirectMessaging/Container/MessageList.js';
 import ChatForm from './components/DirectMessaging/ChatForm.js';
 import {conversationChanged, newMessageAdded, conversationDeleted, conversationsRequested} from './components/DirectMessaging/actionIndex'
 import { connect } from 'react-redux';
@@ -35,7 +35,7 @@ const DirectMessage= ({
     if (conversations.length > 0) {
         conversationContent = (
             <>
-                <MessageList selectedConversation={selectedConversation} />
+                <MessageList conversationId={selectedConversation.id} />
             </>
         );
     }

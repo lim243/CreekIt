@@ -8,8 +8,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import rootSaga from './components/DirectMessaging/sagaIndex';
-import rootReducer from './components/DirectMessaging/reducerIndex';
+import rootSaga from './components/DirectMessaging/Sagas/sagaIndex';
+import rootReducer from './components/DirectMessaging/Reducers/reducerIndex';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
