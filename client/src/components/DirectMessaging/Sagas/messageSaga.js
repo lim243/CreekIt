@@ -177,8 +177,6 @@ const messagesSaga = function*(action) {
     const { conversationId } = action.payload;
     const messages = messageDetails[conversationId];
 
-    yield delay(500);
-
     yield put({
         type: 'MESSAGES_LOADED',
         payload: {

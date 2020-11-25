@@ -47,7 +47,6 @@ const DirectMessage= ({
             <ConversationList conversations={conversations} selectedConversation={selectedConversation} onConversationItemSelected={conversationChanged} />
             <NewConversation />
             <ChatTitle selectedConversation={selectedConversation} onDeleteConversation={onDeleteConversation}/>
-            {/* <MessageList messages={selectedConversation.messages} /> */}
             {conversationContent}
             <ChatForm selectedConversation={selectedConversation}
                 onMessageSubmitted={onMessageSubmitted} /> 
