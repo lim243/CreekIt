@@ -11,3 +11,7 @@ export const newMessageAdded = textMessage => ({
 export const conversationDeleted = () => ({
     type: 'DELETE_CONVERSATION'
 });
+
+export const conversationsRequested = () => ({
+    type: 'CONVERSATIONS_REQUESTED'
+});
