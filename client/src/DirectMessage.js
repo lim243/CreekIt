@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import ChatSearch from './components/DirectMessaging/ChatSearch.js';
 import ConversationList from './components/DirectMessaging/ConversationList.js';
 import NewConversation from './components/DirectMessaging/NewConvo.js';
 import ChatTitle from './components/DirectMessaging/ChatTitle.js';
-import MessageList from './components/DirectMessaging/MessageList.js';
+import MessageList from './components/DirectMessaging/Container/MessageList.js';
 import ChatForm from './components/DirectMessaging/ChatForm.js';
-import {conversationChanged, newMessageAdded, conversationDeleted} from './components/DirectMessaging/actionIndex'
+import {conversationChanged, newMessageAdded, conversationDeleted, conversationsRequested} from './components/DirectMessaging/actionIndex'
 import { connect } from 'react-redux';
 import NoConversations from './components/DirectMessaging/NoConversations';
 
@@ -13,7 +13,19 @@ import NoConversations from './components/DirectMessaging/NoConversations';
 import './DirectMessage.css';
 import Sidebar from './components/SideBar.js';
 
-const DirectMessage= ({conversations, selectedConversation, conversationChanged, onMessageSubmitted, onDeleteConversation})=> {
+const DirectMessage= ({
+    conversations,
+    selectedConversation,
+    conversationChanged,
+    onMessageSubmitted,
+    onDeleteConversation,
+    loadConversations
+})=> {
+
+    useEffect(() => {
+        loadConversations();
+    }, [loadConversations]);
+
     let conversationContent = (
         <>
            <NoConversations></NoConversations>
@@ -23,7 +35,7 @@ const DirectMessage= ({conversations, selectedConversation, conversationChanged,
     if (conversations.length > 0) {
         conversationContent = (
             <>
-                <MessageList selectedConversation={selectedConversation} />
+                <MessageList conversationId={selectedConversation.id} />
             </>
         );
     }
@@ -35,7 +47,6 @@ const DirectMessage= ({conversations, selectedConversation, conversationChanged,
             <ConversationList conversations={conversations} selectedConversation={selectedConversation} onConversationItemSelected={conversationChanged} />
             <NewConversation />
             <ChatTitle selectedConversation={selectedConversation} onDeleteConversation={onDeleteConversation}/>
-            {/* <MessageList messages={selectedConversation.messages} /> */}
             {conversationContent}
             <ChatForm selectedConversation={selectedConversation}
                 onMessageSubmitted={onMessageSubmitted} /> 
@@ -54,7 +65,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     conversationChanged: conversationId => dispatch(conversationChanged(conversationId)),
     onMessageSubmitted: messageText => { dispatch(newMessageAdded(messageText)); },
-    onDeleteConversation: () => { dispatch(conversationDeleted()); }
+    onDeleteConversation: () => { dispatch(conversationDeleted()); },
+    loadConversations: () => { dispatch(conversationsRequested())}
 });
 
 export default connect(
