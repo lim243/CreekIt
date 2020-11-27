@@ -3,7 +3,7 @@ export const conversationChanged = conversationId => ({
     conversationId
 });
 
-export const newMessageAdded = textMessage => ({
+export const newMessageAdded = (textMessage) => ({
     type: 'NEW_MESSAGE_ADDED',
     textMessage
 });

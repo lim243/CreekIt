@@ -4,9 +4,6 @@ import styled from "styled-components";
 import MakePost from "./components/MakePost";
 import axios from "axios";
 
-import socketClient from "socket.io-client";
-const SERVER = "http://127.0.0.1:8080";
-
 const GridWrapper = styled.div`
   display: block;
   margin-top: 1em;
@@ -15,11 +12,6 @@ const GridWrapper = styled.div`
   padding-top: 75px;
   width: 500px;
 `;
-
-var socket = socketClient(SERVER);
-socket.on("connection", () => {
-  console.log(`I'm connected with the back-end`);
-});
 class Timeline extends React.Component {
   constructor(props) {
     super(props);

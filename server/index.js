@@ -38,14 +38,23 @@ const io = require("socket.io")(http, {
   },
 });
 
-const SOCKET_IO_PORT = process.env.SOCKET_IO_PORT || 3001;
+const SOCKET_IO_PORT = process.env.SOCKET_IO_PORT || 8081;
 
 http.listen(SOCKET_IO_PORT, () => {
   console.log(`listening on *:${SOCKET_IO_PORT}`);
 });
 
 io.on("connection", (socket) => {
-  console.log("new client connected");
-  socket.emit("connection", null);
+  console.log(`new client at ${socket.id} connected`);
+
+  socket.on('disconnect', () => {
+    console.log(`user ${socket.id} disconnected`);
+  });
+
+  socket.on("sendMessage", (data) => {
+    console.log('MSG DATA', data);
+  })
 });
+
+
 // TODO: Direct messaging

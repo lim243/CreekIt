@@ -13,6 +13,12 @@ import NoConversations from './components/DirectMessaging/NoConversations';
 import './DirectMessage.css';
 import Sidebar from './components/SideBar.js';
 
+import { io } from 'socket.io-client';
+
+const socket = io("http://localhost:8080/");
+socket.emit("sendMessage", "Hi");
+console.log('HI');
+
 const DirectMessage= ({
     conversations,
     selectedConversation,
@@ -66,7 +72,13 @@ const mapDispatchToProps = dispatch => ({
     conversationChanged: conversationId => dispatch(conversationChanged(conversationId)),
     onMessageSubmitted: messageText => { dispatch(newMessageAdded(messageText)); },
     onDeleteConversation: () => { dispatch(conversationDeleted()); },
-    loadConversations: () => { dispatch(conversationsRequested())}
+    loadConversations: () => { dispatch(conversationsRequested())},
+    // TODO: Andrew's version
+    onMessageSubmitted: messageText => { 
+        socket.emit("sendMessage", messageText);
+        dispatch(newMessageAdded(messageText)); 
+    },
+    onDeleteConversation: () => { dispatch(conversationDeleted()); }
 });
 
 export default connect(
