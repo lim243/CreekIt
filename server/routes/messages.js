@@ -64,8 +64,8 @@ async function getConversationById(req, res) {
 
   const query = {
     name: "get-conversation-by-id",
-    text: `SELECT username, date, message_body
-          FROM messages WHERE conversation_id = $1`,
+    text: `SELECT *
+          FROM direct_message WHERE id = $1`,
     values: [convoId],
   };
 
@@ -74,8 +74,33 @@ async function getConversationById(req, res) {
       console.log("query result", result);
 
       const { rows } = result;
+      let data = {};
+      if (rows.length > 0) {
+        // Map and make into message object
+        const { body, sender, times } = rows[0];
 
-      const data = { conversation_id: convoId, rows };
+        let messages = [];
+
+        for (let i = 0; i < body.length; i++) {
+          console.log(body[i]);
+          const msg_entry = {
+            body: body[i],
+            sender: sender[i],
+            time: times[i],
+          };
+          messages.unshift(msg_entry);
+        }
+        const payload = {
+          last_updated_time: rows[0].last_updated_time,
+          id: rows[0].id,
+          messages: messages,
+        };
+        data.payload = payload;
+        data.success = true;
+        data.id = rows[0].id;
+      } else {
+        data = { id: convoId, success: false, payload: [] };
+      }
 
       // Send data back
       return res.status(200).json(data);
