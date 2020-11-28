@@ -147,7 +147,7 @@ class MyProfile extends React.Component {
       test_username: "",
       following: {},
       followed: {},
-      blocked: true // blocked
+      blocked: false // blocked
     };
   }
 
