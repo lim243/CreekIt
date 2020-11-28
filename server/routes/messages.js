@@ -78,7 +78,7 @@ async function getAllConversationByUsername(req, res) {
           // Map and make into message object
           const { body, sender, times } = conversation;
           const messages = mapMessagesWithMetaAndUsername(body, sender, times, username);
-
+          console.log('conversation', messages);
           const removed = {
             username1: conversation.username1,
             username2: conversation.username2,
@@ -86,8 +86,10 @@ async function getAllConversationByUsername(req, res) {
               conversation.username2 === username
                 ? conversation.username1
                 : conversation.username2,
-            last_updated_time: conversation.last_updated_time,
+            createdAt: conversation.last_updated_time,
+            latestMessageText: (messages.length > 0 && messages[0].messageText) || "New conversation",
             messages,
+            id: conversation.id,
           };
 
           conversations_list.push(removed);
@@ -104,10 +106,10 @@ function mapMessagesWithMetaAndUsername(body, sender, times, username) {
 
   for (let i = 0; i < body.length; i++) {
     const msg_entry = {
-      body: body[i],
+      messageText: body[i],
       sender: sender[i],
-      time: times[i],
-      isMe: sender[i] === username ? true : false,
+      createdAt: times[i],
+      isMyMessage: sender[i] === username ? true : false,
     };
     messages.unshift(msg_entry);
   }
@@ -119,9 +121,10 @@ function mapMessagesWithMeta(body, sender, times) {
 
   for (let i = 0; i < body.length; i++) {
     const msg_entry = {
-      body: body[i],
+      messageText: body[i],
       sender: sender[i],
-      time: times[i],
+      createdAt: times[i],
+      // isMyMessage: true
     };
     messages.unshift(msg_entry);
   }
@@ -144,16 +147,16 @@ async function getConversationById(req, res) {
       let data = {};
       if (rows.length > 0) {
         // Map and make into message object
+        console.log('rows[0]', rows[0]);
         const { body, sender, times } = rows[0];
         const messages = mapMessagesWithMeta(body, sender, times);
-        const payload = {
-          last_updated_time: rows[0].last_updated_time,
-          id: rows[0].id,
-          messages: messages,
-        };
-        data.payload = payload;
-        data.success = true;
-        data.id = rows[0].id;
+        console.log('conversation', messages);
+        data = {
+          createdAt: (messages.length > 0 && messages[0].createdAt) || null,
+          latestMessageText: (messages.length > 0 && messages[0].messageText) || "New conversation",
+          messages,
+          id: convoId
+        }
       } else {
         data = { id: convoId, success: false, payload: [] };
       }
