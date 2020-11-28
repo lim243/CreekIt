@@ -80,7 +80,6 @@ export const conversationsSaga = function* () {
   // fetch from backend
     const username = localStorage.getItem("username");
     let { data } = yield call(fetchConversation, username);
-    console.log("DATA", data);
 
     yield put({
         type: "CONVERSATIONS_LOADED",

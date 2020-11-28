@@ -196,9 +196,9 @@ const checkIsMyMessage = (messages) => {
 const messagesSaga = function*(action) {
     const { conversationId } = action.payload;
     // const messages = messageDetails[conversationId];
-    console.log('conversationId', conversationId);
+    // console.log('conversationId', conversationId);
     const {data} = yield call(fetchConversationById, conversationId)
-    console.log('MESSAGE SAGA DATA', data);
+    // console.log('MESSAGE SAGA DATA', data);
 
     const parsed_messages = checkIsMyMessage(data.messages)
 

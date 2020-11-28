@@ -78,7 +78,7 @@ async function getAllConversationByUsername(req, res) {
           // Map and make into message object
           const { body, sender, times } = conversation;
           const messages = mapMessagesWithMetaAndUsername(body, sender, times, username);
-          console.log('conversation', messages);
+
           const removed = {
             username1: conversation.username1,
             username2: conversation.username2,
@@ -147,10 +147,10 @@ async function getConversationById(req, res) {
       let data = {};
       if (rows.length > 0) {
         // Map and make into message object
-        console.log('rows[0]', rows[0]);
+
         const { body, sender, times } = rows[0];
         const messages = mapMessagesWithMeta(body, sender, times);
-        console.log('conversation', messages);
+
         data = {
           createdAt: (messages.length > 0 && messages[0].createdAt) || null,
           latestMessageText: (messages.length > 0 && messages[0].messageText) || "New conversation",
