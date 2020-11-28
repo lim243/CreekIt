@@ -147,6 +147,7 @@ class MyProfile extends React.Component {
       test_username: "",
       following: {},
       followed: {},
+      blocked: true // blocked
     };
   }
 
@@ -185,44 +186,53 @@ class MyProfile extends React.Component {
     console.log("user", user);
     // Add posts to this array on the top as a stack (most recent should be at index 0)
     //These are just hard-coded example. We would need to fetch the database to get the feed
-    return (
-      <Fragment>
+    if (this.state.blocked === true) {
+      return (
         <GridWrapper>
-          <ProfileInfo
-            name={user.name}
-            profile_picture={"data:image/png;base64,".concat(user.profile_picture)}
-            username={user.username}
-            bio={user.about_me}
-            private={user.private}
-            age={moment().diff(user.date_of_birth, "years")}
-            gender={user.gender}
-            education={user.education}
-            followButton={this.state.currentUser}
-            postNum={(user.posts && user.posts.length) || 0}
-            following={(user.following && user.following.length) || 0}
-            followers={(user.followed && user.followed.length) || 0}
-            topics={(user.topics && user.topics.length) || 0}
-            className='sticky'
-          />
-          <div>
-            <Tabs defaultActiveKey='posts' id='uncontrolled-tab-example'>
-              <Tab eventKey='posts' title='Posts' label='Posts'>
-                <br></br>
-                <Posts />
-              </Tab>
-              <Tab
-                eventKey='interactedPosts'
-                title='Interacted Posts'
-                label='Interacted Posts'
-              >
-                <br></br>
-                <InteractedPosts />
-              </Tab>
-            </Tabs>
-          </div>
+          <h1>This user has blocked you from viewing his/her profile.</h1>
         </GridWrapper>
-      </Fragment>
-    );
+      );
+    } else {
+      return (
+        <Fragment>
+          <GridWrapper>
+            <ProfileInfo
+              name={user.name}
+              profile_picture={"data:image/png;base64,".concat(user.profile_picture)}
+              username={user.username}
+              bio={user.about_me}
+              private={user.private}
+              age={moment().diff(user.date_of_birth, "years")}
+              gender={user.gender}
+              education={user.education}
+              followButton={this.state.currentUser}
+              postNum={(user.posts && user.posts.length) || 0}
+              following={(user.following && user.following.length) || 0}
+              followers={(user.followed && user.followed.length) || 0}
+              topics={(user.topics && user.topics.length) || 0}
+              className='sticky'
+            />
+            <div>
+              <Tabs defaultActiveKey='posts' id='uncontrolled-tab-example'>
+                <Tab eventKey='posts' title='Posts' label='Posts'>
+                  <br></br>
+                  <Posts />
+                </Tab>
+                <Tab
+                  eventKey='interactedPosts'
+                  title='Interacted Posts'
+                  label='Interacted Posts'
+                >
+                  <br></br>
+                  <InteractedPosts />
+                </Tab>
+              </Tabs>
+            </div>
+          </GridWrapper>
+        </Fragment>
+      );
+    }
+    
   }
 }
 
