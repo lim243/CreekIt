@@ -5,7 +5,8 @@ const router = new Router();
 module.exports = router;
 
 // Router Functions
-router.get("/:convoId", getConversationById);
+router.get("/convo/:convoId", getConversationById);
+router.get("/:username", getAllConversationByUsername);
 
 router.post("/createConvo", createConversation);
 router.post("/sendMessage", sendMessage);
@@ -58,6 +59,74 @@ async function getMessageInfo(name) {
 /**
  * GET FUNCTIONS
  */
+async function getAllConversationByUsername(req, res) {
+  const { username } = req.params;
+
+  const query = {
+    name: "get-all-conversation-by-username",
+    text: `SELECT *
+          FROM direct_message WHERE username1 = $1 or username2 = $1`,
+    values: [username],
+  };
+
+  db.query(query)
+    .then((result) => {
+      const { rows } = result;
+      let conversations_list = [];
+      if (rows.length > 0) {
+        rows.forEach((conversation) => {
+          // Map and make into message object
+          const { body, sender, times } = conversation;
+          const messages = mapMessagesWithMetaAndUsername(body, sender, times, username);
+
+          const removed = {
+            username1: conversation.username1,
+            username2: conversation.username2,
+            title:
+              conversation.username2 === username
+                ? conversation.username1
+                : conversation.username2,
+            last_updated_time: conversation.last_updated_time,
+            messages,
+          };
+
+          conversations_list.push(removed);
+        });
+      }
+
+      return res.status(200).json(conversations_list);
+    })
+    .catch((err) => console.error(err));
+}
+
+function mapMessagesWithMetaAndUsername(body, sender, times, username) {
+  let messages = [];
+
+  for (let i = 0; i < body.length; i++) {
+    const msg_entry = {
+      body: body[i],
+      sender: sender[i],
+      time: times[i],
+      isMe: sender[i] === username ? true : false,
+    };
+    messages.unshift(msg_entry);
+  }
+  return messages;
+}
+
+function mapMessagesWithMeta(body, sender, times) {
+  let messages = [];
+
+  for (let i = 0; i < body.length; i++) {
+    const msg_entry = {
+      body: body[i],
+      sender: sender[i],
+      time: times[i],
+    };
+    messages.unshift(msg_entry);
+  }
+  return messages;
+}
 
 async function getConversationById(req, res) {
   const { convoId } = req.params;
@@ -71,25 +140,12 @@ async function getConversationById(req, res) {
 
   db.query(query)
     .then((result) => {
-      console.log("query result", result);
-
       const { rows } = result;
       let data = {};
       if (rows.length > 0) {
         // Map and make into message object
         const { body, sender, times } = rows[0];
-
-        let messages = [];
-
-        for (let i = 0; i < body.length; i++) {
-          console.log(body[i]);
-          const msg_entry = {
-            body: body[i],
-            sender: sender[i],
-            time: times[i],
-          };
-          messages.unshift(msg_entry);
-        }
+        const messages = mapMessagesWithMeta(body, sender, times);
         const payload = {
           last_updated_time: rows[0].last_updated_time,
           id: rows[0].id,
