@@ -70,7 +70,6 @@ class ProfileInfo extends React.Component {
       education: "",
       private: false,
       followButton: "",
-      education: "",
       postNum: "",
       following: "",
       followers: "",

@@ -48,7 +48,7 @@ class Posts extends React.Component {
     axios
       .get(`http://localhost:5000/api/v1/users/${username}/posts`, { headers: header })
       .then((res) => {
-        // console.log("res", res.data);
+        console.log("res", res.data.payload);
         this.setState({ posts: res.data.payload });
       })
       .catch((err) => {
@@ -98,7 +98,7 @@ class InteractedPosts extends React.Component {
         headers: header,
       })
       .then((res) => {
-        console.log("res", res.data);
+        console.log("res", res.data.payload);
         this.setState({ interactedPosts: res.data.payload });
       })
       .catch((err) => {

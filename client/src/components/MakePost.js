@@ -31,6 +31,7 @@ class MakePost extends React.Component {
     this.state = {
       post: "",
       checked: false,
+      error: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -72,25 +73,32 @@ class MakePost extends React.Component {
   };
 
   handleSubmit(event) {
-    const hashtag = this.state.post.match(/(?:|^)?#[A-Za-z0-9\-\.\_]+(?:|$)/g);
-    const URL = this.state.post.match(
-      /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
-    );
-    let tag = "";
-    if (hashtag && hashtag.length > 0) {
-      tag = hashtag[0].substring(1).trim();
+    const re = new RegExp(/^[^\#]*[\#]?[^\#]*$/)
+    if (re.test(this.state.post) && this.state.post.length > 0) {
+      const hashtag = this.state.post.match(/(?:|^)?#[A-Za-z0-9\-\.\_]+(?:|$)/);
+      const URL = this.state.post.match(
+        /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi
+      );
+      let tag = "";
+      if (hashtag && hashtag.length > 0) {
+        tag = hashtag[0].substring(1).trim();
+      }
+
+      const data = {
+        body: this.state.post,
+        username: localStorage.getItem("username"),
+        topic: tag,
+        anonymous: this.state.checked,
+      };
+
+      this.submitPost(data);
+      this.forceUpdate();
+      // TODO: After POST, we have to make hashtag and URL be hyperlinks and also anonymous mode
+    } else {
+      // alert("Only one hashtag is allowed per post!")
+      this.state.error = true;
+      return;
     }
-
-    const data = {
-      body: this.state.post,
-      username: localStorage.getItem("username"),
-      topic: tag,
-      anonymous: this.state.checked,
-    };
-
-    this.submitPost(data);
-    this.forceUpdate();
-    // TODO: After POST, we have to make hashtag and URL be hyperlinks and also anonymous mode
   }
 
   render() {
@@ -108,12 +116,18 @@ class MakePost extends React.Component {
 
       return (
         <div>
+          {!this.state.error ? (
+            null
+          ) : (
+          <p style={{color: 'red'}}>
+            Only one hashtag is allowed per post!
+          </p>)}
           <textarea
             rows={rows}
             cols={43}
             onChange={(event) => setFormattedContent(event.target.value)}
             value={content}
-            placeholder='Make a post'
+            placeholder='Make a post. One hashtag is allowed per post.'
             className='textarea'
           />
           <p>
