@@ -1,7 +1,8 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Modal } from "react-bootstrap";
 import styled from "styled-components";
 import axios from "axios";
+import ImageUploader from 'react-images-upload';
 const Styles = styled.div`
   .form-center {
     position: absolute !important;
@@ -31,12 +32,38 @@ class MakePost extends React.Component {
     this.state = {
       post: "",
       checked: false,
+      image: "",
+      modal1: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckBox = this.handleCheckBox.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.handleClose1 = this.handleClose1.bind(this);
+    this.handleShow1 = this.handleShow1.bind(this);
+    this.addImage = this.addImage.bind(this);
   }
 
+  onDrop(picture, pictureDataURLs) {
+    console.log(pictureDataURLs);
+    this.setState({
+        image: pictureDataURLs
+    });
+}
+
+handleShow1 = () => {
+  this.setState({ modal1: true });
+};
+
+handleClose1 = () => {
+  this.setState({ modal1: false });
+};
+
+// EDIT THIS PART TO HANDLE ADDING IMAGE TO POST. Will be rendered in Timeline when mapping thru Post Component
+// Image URL is stores under this.state.image
+addImage = () => {
+  console.log("ADDDDDDD");
+}
   submitPost(data) {
     axios
       .post("http://localhost:5000/api/v1/posts/new", data)
@@ -131,6 +158,33 @@ class MakePost extends React.Component {
               <LimitedTextarea limit={500} value='' rows='3' />
             </Form.Group>
           </div>
+          {/* ADDING IMAGES */}
+          <div>
+            <Button variant='primary' onClick={(e) => this.handleShow1(e)}>
+              Add Image
+            </Button>
+          </div>
+          <Modal show={this.state.modal1} onHide={(e) => this.handleClose1(e)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Add Image</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <ImageUploader
+                withIcon={true}
+                buttonText='Choose image'
+                onChange={this.onDrop}
+                imgExtension={['.jpg', '.png']}
+                maxFileSize={6291456} // 6MB Size in Bytes
+                label={'Max File Size: 6MB'}
+              />
+            </Modal.Body>
+              <Modal.Footer>
+                <Button variant='primary' onClick={() => this.addImage()}>
+                  Add Image
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          <br></br>
           <div>
             <Button variant='primary' onClick={this.handleSubmit}>
               Post
