@@ -65,7 +65,9 @@ async function getAllConversationByUsername(req, res) {
   const query = {
     name: "get-all-conversation-by-username",
     text: `SELECT *
-          FROM direct_message WHERE username1 = $1 or username2 = $1`,
+          FROM direct_message WHERE username1 = $1 or username2 = $1
+          order by last_updated_time DESC
+          `,
     values: [username],
   };
 

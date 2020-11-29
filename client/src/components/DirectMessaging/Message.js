@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import moment from 'moment-timezone';
 
 import './Message.css';
 
@@ -19,7 +20,11 @@ const Message = ({ isMyMessage, message }) => {
                 <div className="message-text">
                     {message.messageText}
                 </div>
-                <div className="message-time">{message.createdAt}</div>
+                <div className="message-time">{
+                                moment(message.createdAt)
+                                    .tz("America/New_York")
+                                    .format("h:mm a")
+            }</div>
             </div>
         </div>
     );
