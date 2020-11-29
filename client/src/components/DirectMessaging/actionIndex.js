@@ -8,6 +8,11 @@ export const newMessageAdded = (textMessage) => ({
     textMessage
 });
 
+export const newMessageDetected = (textMessage) => ({
+    type: 'NEW_MESSAGE_DETECTED',
+    textMessage
+})
+
 export const conversationDeleted = () => ({
     type: 'DELETE_CONVERSATION'
 });
