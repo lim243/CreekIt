@@ -23,7 +23,7 @@ const Message = ({ isMyMessage, message }) => {
                 <div className="message-time">{
                                 moment(message.createdAt)
                                     .tz("America/New_York")
-                                    .format("h:mm a")
+                                    .format("h:mm a MMM Do ")
             }</div>
             </div>
         </div>
