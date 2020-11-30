@@ -177,12 +177,14 @@ async function getConversationById(req, res) {
 async function createConversation(req, res) {
   const { username_A, username_B } = req.body;
 
+  let date = Date.now()
+
   const query = {
     name: "create-new-conversation",
-    text: `INSERT INTO direct_message(username1, username2)
-      VALUES ($1, $2)
+    text: `INSERT INTO direct_message(username1, username2, last_updated_time)
+      VALUES ($1, $2, to_timestamp($3/1000.0))
       RETURNING id`,
-    values: [username_A, username_B],
+    values: [username_A, username_B, date],
   };
 
   db.query(query)

@@ -29,6 +29,7 @@ class NewConvo extends React.Component {
         this.handleNewDM = this.handleNewDM.bind(this);
         this.fetchNewConvoUsers = this.fetchNewConvoUsers.bind(this);
         this.fetchPrivacy = this.fetchPrivacy.bind(this);
+        this.createNewConversation = this.createNewConversation.bind(this);
     };
 
     fetchNewConvoUsers(isPrivate){
@@ -55,6 +56,12 @@ class NewConvo extends React.Component {
         }
     }
 
+    async createNewConversation(username_B) {
+        const data = {username_A: localStorage.getItem('username'), username_B}
+        const res = await axios.post(`http://localhost:5000/api/v1/messages/createConvo`, data)
+        console.log('res', res);
+    }
+
     async fetchPrivacy() {
         const username = localStorage.getItem('username')
         const res = await axios.get(`http://localhost:5000/api/v1/users/${username}/getPrivacy`)
@@ -68,10 +75,13 @@ class NewConvo extends React.Component {
 
     handleNewDM(event) {
         // Handle adding to conversation
+        const username2 = event.target.value;
+        this.createNewConversation(username2);
+
         this.modalClose2();
     }
 
-    modalOpen2 = () => {
+    modalOpen2 = (e) => {
         this.setState({ modal2: true });
         console.log("CLICKED");
         console.log(this.state.modal2);
@@ -96,7 +106,7 @@ class NewConvo extends React.Component {
                     <br></br>
                     {this.state.listFollowing.map((item, index) => (
                         <div key={index}>
-                            <button id="dm" onClick={this.handleNewDM} >{item.username}</button>
+                            <button id="dm" onClick={this.handleNewDM} value={item.username}>{item.username}</button>
                             <br></br>
                         </div>
                     ))}
