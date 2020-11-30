@@ -8,7 +8,7 @@ import ChatForm from './components/DirectMessaging/ChatForm.js';
 import {conversationChanged, newMessageAdded, conversationDeleted, conversationsRequested} from './components/DirectMessaging/actionIndex'
 import { connect } from 'react-redux';
 import NoConversations from './components/DirectMessaging/NoConversations';
-
+import axios from 'axios'
 
 import './DirectMessage.css';
 import Sidebar from './components/SideBar.js';
@@ -75,9 +75,11 @@ const mapDispatchToProps = dispatch => ({
     onMessageSubmitted: messageText => { 
         dispatch(newMessageAdded(messageText)); 
     },
-    onDeleteConversation: () => { dispatch(conversationDeleted()); },
     loadConversations: () => { dispatch(conversationsRequested())},
-    onDeleteConversation: () => { dispatch(conversationDeleted()); }
+    onDeleteConversation: (conversationId) => { 
+        axios.post(`http://localhost:5000/api/v1/messages/delete/${conversationId}`).then(res => console.log('res', res))
+        dispatch(conversationDeleted()); 
+    }
 });
 
 export default connect(

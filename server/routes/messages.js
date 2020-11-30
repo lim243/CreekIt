@@ -10,6 +10,7 @@ router.get("/:username", getAllConversationByUsername);
 
 router.post("/createConvo", createConversation);
 router.post("/sendMessage", sendMessage);
+router.post("/delete/:convoId", deleteConversation);
 
 router.get("/text", async (req, res) => {
   //console.log("req.body", req.body);
@@ -192,6 +193,26 @@ async function createConversation(req, res) {
       const convoId = res1.rows[0].id;
       console.log("convoId", convoId);
       const data = { success: true, payload: convoId };
+      res.status(200).send(data);
+    })
+    .catch((error) => console.error(error));
+}
+
+async function deleteConversation(req, res) {
+  const {convoId} = req.params
+
+  const query = {
+    name: "delete-conversation-by-id",
+    text: `DELETE FROM public.direct_message
+          WHERE id = $1 returning *;`,
+    values: [convoId],
+  };
+
+  db.query(query)
+    .then((res1) => {
+      const convoId = res1.rows[0].id;
+      
+      const data = { success: true, payload: res1.rows };
       res.status(200).send(data);
     })
     .catch((error) => console.error(error));
