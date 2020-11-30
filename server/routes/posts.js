@@ -6,6 +6,7 @@ module.exports = router;
 
 // Router Functions
 router.get("/:uid/somepost", getAllPosts);
+router.get("/:uid/savedpost", getSavedPosts);
 
 router.get("/:pid", getPost);
 router.get("/:pid/upvotes", getUpvotesUsers);
@@ -35,6 +36,27 @@ async function getAllPosts(req, res) {
       values: [uname],
   };
   const { rows } = await db.query(query);
+
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+
+async function getSavedPosts(req, res) {
+  uname = req.params.uid;
+  console.log(uname);
+  const query = {
+    name: "get-all-post",
+    text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.anonymous,
+    p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, u.saved, p.comment_ids
+    FROM posts as p INNER JOIN users as u on p.username = u.username WHERE (p.id in (select unnest(saved) from users where username = $1)) ORDER BY p.date DESC;`,
+      values: [uname],
+  };
+  const { rows } = await db.query(query);
+  console.log("row for saved post",rows);
 
   // Send data back
   const msg = {
