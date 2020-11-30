@@ -181,8 +181,9 @@ async function createPost(req, res) {
   let id = rows[0].id;
   const query2 = {
     name: "append-post",
-    text: "update users set posts = array_append(posts,$1) where username  = $2;",
-    values: [id, username],
+    text:
+      "update users set posts = array_append(posts,$1), topics = array_append(topics, $3) where username  = $2;",
+    values: [id, username, topic],
   };
 
   const { rows2 } = await db.query(query2);

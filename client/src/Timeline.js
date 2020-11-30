@@ -12,7 +12,6 @@ const GridWrapper = styled.div`
   padding-top: 75px;
   width: 500px;
 `;
-
 class Timeline extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +19,7 @@ class Timeline extends React.Component {
       posts: [],
     };
   }
+
   componentDidMount() {
     this.fetchPosts();
   }
@@ -27,11 +27,12 @@ class Timeline extends React.Component {
   fetchPosts = () => {
     let uname = localStorage.getItem("username");
     console.log("uname", uname);
-    axios.get("http://localhost:5000/api/v1/posts/"+uname+"/somepost/"
-      ).then((res) => {
-      console.log("res", res.data.payload);
-      this.setState({ posts: res.data.payload });
-    });
+    axios
+      .get("http://localhost:5000/api/v1/posts/" + uname + "/somepost/")
+      .then((res) => {
+        console.log("res", res.data.payload);
+        this.setState({ posts: res.data.payload });
+      });
   };
   render() {
     console.log("this.state", this.state);
@@ -60,6 +61,7 @@ class Timeline extends React.Component {
               downvotes={item.downvotes}
               topic={item.topic}
               profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
+              image={item.image} // Added This for Image
             />
           ))}
         </GridWrapper>

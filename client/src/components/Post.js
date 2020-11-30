@@ -39,7 +39,7 @@ const Hashtag = styled.a`
 class Post extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       name: "",
       username: "",
@@ -54,6 +54,7 @@ class Post extends React.Component {
         name: "Anonymous Panda",
         username: "anonymous",
       },
+      image: "" //../logo192.png to test
     };
   }
   fetchsave = () => {
@@ -62,6 +63,7 @@ class Post extends React.Component {
   componentDidMount() {
     this.fetchsave();
   }
+
 
 
   handleHashtagClick = (ev) => {
@@ -120,37 +122,30 @@ class Post extends React.Component {
   deleteHandler = () => {
     // HANDLE DELETION HERE
     axios
-    .post("http://localhost:5000/api/v1/posts/"+ this.props.postId+"/deletepost", {
-    })
-    .then(
-      (response) => {
-        console.log("res", response);
-        if (response) {
+      .post("http://localhost:5000/api/v1/posts/" + this.props.postId + "/deletepost", {})
+      .then(
+        (response) => {
+          console.log("res", response);
+          if (response) {
+          }
+        },
+        (error) => {
+          console.log(error.response);
         }
-      },
-      (error) => {
-        console.log(error.response);
-      }
-    );
+      );
     this.setState({ modal1: false });
     window.location.reload();
   };
 
   handleShowConfirm = () => {
     this.setState({ modal1: true });
-  }
+  };
 
   handleCloseConfirm = () => {
     this.setState({ modal1: false });
-  }
+  };
 
   render() {
-    console.log("this.props", this.props);
-    // Use src for image
-    //Get Name
-    //Get Time
-    //Get Date
-    //Get post to="/feed/post"
     if (this.state.redirect) {
       // Fetch the postId and set the post id to that number
       return (
@@ -185,7 +180,7 @@ class Post extends React.Component {
             <p className='username'>@{this.state.anonymous.username}</p>
           </div>
 
-          <ReactHashtag
+          {/*<ReactHashtag
             renderHashtag={(hashtagValue) => (
               <Hashtag
                 key={this.props.index}
@@ -196,8 +191,14 @@ class Post extends React.Component {
             )}
           >
             {this.props.post}
-            </ReactHashtag>
+            </ReactHashtag>*/}
           <p>{this.props.post}</p>
+          {this.props.image === undefined ? null : (
+          <img
+              src={this.props.image}
+              alt=''
+              style={{ width: "150px", height: "150px" }}
+          />)}
           <div>
             <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
             <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />
@@ -214,13 +215,11 @@ class Post extends React.Component {
               <button onClick={this.saveHandler} className='interaction'>
               Save{" "}
             </button>
-            )}
-            {this.props.username !== localStorage.getItem("username") ? null : ( 
-                <button onClick={this.deleteHandler} className='interaction'>
+            {this.props.username !== localStorage.getItem("username") ? null : (
+              <button onClick={this.deleteHandler} className='interaction'>
                 Delete{" "}
               </button>
             )}
-            
           </div>
         </Styles>
       );
@@ -247,7 +246,7 @@ class Post extends React.Component {
             </div>
             <p className='username'>@{this.props.username}</p>
           </div>
-          <ReactHashtag
+          {/*<ReactHashtag
             renderHashtag={(hashtagValue) => (
               <Hashtag
                 key={this.props.index}
@@ -258,8 +257,15 @@ class Post extends React.Component {
             )}
           >
             {this.props.post}
-          </ReactHashtag>
-          {/*<p>{this.props.post}</p>*/}
+            </ReactHashtag>*/}
+          <p>{this.props.post}</p>
+          {/* {console.log(this.props.image)} */}
+          {this.props.image === undefined ? null : (
+          <img
+              src={this.props.image}
+              alt=''
+              style={{ width: "150px", height: "150px" }}
+          />)}
           <div>
             <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
             <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />
@@ -279,33 +285,38 @@ class Post extends React.Component {
             )}
 
 
-            {this.props.username !== localStorage.getItem("username") ? null : ( 
-                <button onClick={(e) => this.handleShowConfirm(e)} className='interaction'>
+            {this.props.username !== localStorage.getItem("username") ? null : (
+              <button onClick={(e) => this.handleShowConfirm(e)} className='interaction'>
                 Delete{" "}
               </button>
             )}
 
-            <Modal animation={false} show={this.state.modal1} onHide={(e) => this.handleCloseConfirm(e)}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Delete Post?</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    You're about to delete this post. To continue deletion, click Delete this post
-                  </Modal.Body>
-                  <ModalBody>{this.state.deletePost}</ModalBody>
-                  <Modal.Footer>
-                    <Button variant='secondary' onClick={(e) => this.handleCloseConfirm(e)}>
-                      Close
-                    </Button>
-                    <Button
-                      disabled={this.state.isLoading}
-                      variant='danger'
-                      onClick={this.deleteHandler}
-                    >
-                      Delete this post
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
+            <Modal
+              animation={false}
+              show={this.state.modal1}
+              onHide={(e) => this.handleCloseConfirm(e)}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Delete Post?</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                You're about to delete this post. To continue deletion, click Delete this
+                post
+              </Modal.Body>
+              <ModalBody>{this.state.deletePost}</ModalBody>
+              <Modal.Footer>
+                <Button variant='secondary' onClick={(e) => this.handleCloseConfirm(e)}>
+                  Close
+                </Button>
+                <Button
+                  disabled={this.state.isLoading}
+                  variant='danger'
+                  onClick={this.deleteHandler}
+                >
+                  Delete this post
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </div>
         </Styles>
       );
