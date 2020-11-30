@@ -303,7 +303,7 @@ async function getTopics(req, res) {
   let username = req.params.username;
   console.log("username", username);
   const query = {
-    name: "get-followed",
+    name: "get-blocked",
     text: "select topics from users where username = $1",
     values: [username],
     //rowMode: "array",
@@ -840,7 +840,7 @@ async function savePost(req, res) {
   const { uid,pid } = req.body;
   //following
   const query = {
-    name: "remove-following-topic",
+    name: "save post",
     text:
       "update users set saved = array_append(saved,$1::bigint) where username = $2;",
     values: [pid, uid],
@@ -862,7 +862,7 @@ async function unsavePost(req, res) {
   const { uid,pid } = req.body;
   //following
   const query = {
-    name: "remove-following-topic",
+    name: "unsave-post",
     text:
       "update users set saved = array_remove(saved,$1::bigint) where username = $2;",
     values: [pid, uid],
@@ -889,7 +889,7 @@ async function block(req, res) {
   const query = {
     name: "block",
     text:
-      "update users set block = array_append(block,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(block)) returning username;",
+      "update users set blocked = array_append(blocked,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(blocked)) returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user1, user2],
   };
@@ -913,9 +913,9 @@ async function unblock(req, res) {
   let user2 = req.body.user2;
   //following
   const query = {
-    name: "block",
+    name: "unblock",
     text:
-      "update users set block = array_remove(block,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(block)) returning username;",
+      "update users set blocked = array_remove(blocked,cast($1 AS character varying)) where username  = $2 returning username;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [user1, user2],
   };

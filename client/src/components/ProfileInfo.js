@@ -127,7 +127,36 @@ class ProfileInfo extends React.Component {
 
   // Block Handling -- Base this off followHandler
   blockHandler = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    console.log("CLICKED");
+    let uname = "";
+    uname = global_username;
+    const body = { user1: uname, user2: localStorage.getItem("username") }
+    axios
+    .post(`http://localhost:5000/api/v1/users/block`, body)
+    .then((res) => {
+      console.log("res", res);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
     this.setState({ block: "Unblock" });
+  }
+  unblockHandler = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    console.log("CLICKED");
+    let uname = "";
+    uname = global_username;
+    const body = { user1: uname, user2: localStorage.getItem("username") }
+    axios
+    .post(`http://localhost:5000/api/v1/users/unblock`, body)
+    .then((res) => {
+      console.log("res", res);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+    this.setState({ block: "Block" });
   }
 
   followHandler = () => {
@@ -174,7 +203,20 @@ class ProfileInfo extends React.Component {
     this.fetchfollowing();
     this.fetchtopics();
     this.setFollowStatus();
+    this.fetchBlock();
   }
+  fetchBlock = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    let uname = global_username;
+    if (this.props.block && global_username && this.props.block.some(item => item === global_username)){
+      this.setState({block: "Unblock"});
+
+    }
+    else {
+      this.setState({block: "Block"});
+    }
+  };
+
   setFollowStatus = () => {
     const global_username = window.location.href.split("/").pop(-1);
 
@@ -323,7 +365,9 @@ class ProfileInfo extends React.Component {
             </button>
           )}
           {/* Handling Blocking Other Users Button */}
-          {this.props.followButton === true ? null : (
+          {this.state.block === "Unblock" ? (<button onClick={this.unblockHandler} className='interaction'>
+              {this.state.block}{" "}
+            </button>) : (
             <button onClick={this.blockHandler} className='interaction'>
               {this.state.block}{" "}
             </button>
