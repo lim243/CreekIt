@@ -43,6 +43,10 @@ router.post("/:username/updateProfile", updateProfile);
 router.post("/:username/password", setPassword);
 router.post("/:username/updatePhoto", updatePhoto);
 router.post("/refresh", refresh);
+router.post("/save",savePost);
+router.post("/unsave",unsavePost);
+router.post("/block", block);
+router.post("/unblock", unblock);
 
 /**
  * GET FUNCTIONS
@@ -831,4 +835,101 @@ async function unfollowTopic(req, res) {
       };
       res.status(500).send(msg);
     });
+}
+async function savePost(req, res) {
+  const { uid,pid } = req.body;
+  //following
+  const query = {
+    name: "remove-following-topic",
+    text:
+      "update users set saved = array_append(saved,$1::bigint) where username = $2;",
+    values: [pid, uid],
+  };
+  db.query(query)
+    .then((data) => {
+      res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `Topic was not removed!`,
+      };
+      res.status(500).send(msg);
+    });
+}
+async function unsavePost(req, res) {
+  const { uid,pid } = req.body;
+  //following
+  const query = {
+    name: "remove-following-topic",
+    text:
+      "update users set saved = array_remove(saved,$1::bigint) where username = $2;",
+    values: [pid, uid],
+  };
+  db.query(query)
+    .then((data) => {
+      res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `Topic was not removed!`,
+      };
+      res.status(500).send(msg);
+    });
+}
+
+
+async function block(req, res) {
+  let user1 = req.body.user1;
+  let user2 = req.body.user2;
+  //following
+  const query = {
+    name: "block",
+    text:
+      "update users set block = array_append(block,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(block)) returning username;",
+    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+    values: [user1, user2],
+  };
+  db.query(query)
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `Cannot add following`,
+      };
+    });
+  res.status(200).send("success");
+}
+
+async function unblock(req, res) {
+  let user1 = req.body.user1;
+  let user2 = req.body.user2;
+  //following
+  const query = {
+    name: "block",
+    text:
+      "update users set block = array_remove(block,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(block)) returning username;",
+    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+    values: [user1, user2],
+  };
+  db.query(query)
+    .then((data) => {
+      console.log("data", data);
+      //res.status(200).send("success");
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `Cannot add following`,
+      };
+    });
+  res.status(200).send("success");
 }
