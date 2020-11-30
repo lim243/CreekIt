@@ -5,15 +5,15 @@ const router = express.Router();
 module.exports = router;
 
 // Router Functions
+router.get("/:uid/somepost", getAllPosts);
 
 router.get("/:pid", getPost);
 router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
 router.get("/:pid/comments", getComments);
 
-router.get("/:uid/somepost", getAllPosts);
-
 router.post("/new", createPost);
+router.post("/:pid/save", setSaved);
 router.post("/:pid/upvote", setUpvote);
 router.post("/:pid/downvote", setDownvote);
 router.post("/:pid/newcomment", addPostComments);
@@ -26,21 +26,13 @@ router.post("/:pid/topic", setTopic);
  */
 async function getAllPosts(req, res) {
   uname = req.params.uid;
-  // console.log(uname);
+  console.log(uname);
   const query = {
     name: "get-all-post",
     text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.anonymous,
-    p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, p.comment_ids
-    FROM posts as p, users as u 
-  WHERE (p.username = u.username AND p.username in 
-     (select unnest(following) from users where username = $1)) 
-     OR 
-     (p.username = u.username AND p.username = $1 )
-     OR
-     (p.username = u.username AND p.topic in
-       (select unnest(topics) from users where username = $1))
-     ORDER BY p.date DESC`,
-    values: [uname],
+      p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, p.saved, p.comment_ids
+      FROM posts as p, users as u WHERE (p.username = u.username AND p.username in (select unnest(following) from users where username = $1)) OR (p.username = u.username AND p.username = $1 ) ORDER BY p.date DESC`,
+      values: [uname],
   };
   const { rows } = await db.query(query);
 
@@ -57,13 +49,15 @@ async function getPost(req, res) {
 
   const query = {
     name: "get-post",
-    text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.body, p.topic, 
+    text: `SELECT p.id as post_id, p.username, u.name,  encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.body, p.topic, 
       array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes,
       p.upvote_users, p.downvote_users, p.comment_ids , p.anonymous
       FROM posts as p, users as u 
       WHERE p.id = $1 AND p.username = u.username;`,
     values: [pid],
   };
+
+  console.log("query", query);
 
   const { rows } = await db.query(query);
   console.log("rows", rows);
@@ -112,7 +106,7 @@ async function getUpvotesUsers(req, res) {
   };
 
   const { rows } = await db.query(query);
-  // console.log("rows", rows);
+  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -144,13 +138,14 @@ async function getComments(req, res) {
 
   const query = {
     name: "get-all-post-comments",
-    text: `SELECT u.name, c.username as username, c.date as date, encode(u.profile_picture,'base64') as profile_picture,
-    c.body , array_length(c.upvote_users, 1) as upvotes, array_length(c.downvote_users, 1) as downvotes, c.upvote_users ,
+    text: `SELECT u.name, c.username as username, c.date as date, 
+    encode(u.profile_picture) as profile_picture,
+    c.body , array_length(c.upvote_users, 1) as upvotes, array_length(c.downvote_users, 1) as downvotes, c.upvotes_user ,
     c.downvote_users  , c.parent_id , c.anonymous
-    FROM posts as p, comments as c, users as u
-    WHERE p.id = $1 and p.id = c.parent_id 
-	  AND u.username = c.username
-    ORDER BY c.date DESC;`,
+    FROM public.posts as p, public.comments as c, public.users as u
+    where p.id = $1 and p.id = c.parent_id 
+	  and u.username = c.username
+    order by c.date DESC;`,
     values: [pid],
   };
 
@@ -171,7 +166,7 @@ async function getComments(req, res) {
 
 async function createPost(req, res) {
   const { username, body, topic, anonymous } = req.body;
-  // console.log("req.body", req.body);
+  console.log("req.body", req.body);
   // Date
   date = Date.now();
 
@@ -182,7 +177,7 @@ async function createPost(req, res) {
     values: [username, date, body, topic, anonymous],
   };
   const { rows } = await db.query(query1);
-  // console.log(rows);
+  console.log(rows);
   let id = rows[0].id;
   const query2 = {
     name: "append-post",
@@ -211,7 +206,7 @@ async function setTopic(req, res) {
   };
 
   const { rows } = await db.query(query);
-  // console.log("rows", rows);
+  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -237,10 +232,10 @@ async function setUpvote(req, res) {
     values: [pid, username],
   };
 
-  // console.log("query", query);
+  console.log("query", query);
 
   const { rows } = await db.query(query);
-  // console.log("rows", rows);
+  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -268,7 +263,7 @@ async function setDownvote(req, res) {
   };
 
   const { rows } = await db.query(query);
-  // console.log("rows", rows);
+  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -278,12 +273,35 @@ async function setDownvote(req, res) {
 }
 // async function setDownvoteUsers(req, res) {}
 async function setPostComments(req, res) {}
-async function setSaved(req, res) {}
+async function setSaved(req, res) {
+  const pid = req.params.pid;
+  const { username } = req.body;
+
+  const query = {
+    name: "set-saved",
+    text: `UPDATE users
+    SET saved = array_append(saved, $1::bigint)
+    FROM users
+    where username = $2 returning username`,
+    values: [pid, username],
+  };
+
+  console.log("query", query);
+
+  const { rows } = await db.query(query);
+  console.log("rows", rows);
+  // Send data back
+  const msg = {
+    success: true,
+    payload: rows,
+  };
+  return res.status(200).json(msg);
+}
 // async function setId(req, res) {}
 async function addPostComments(req, res) {
   const pid = req.params.pid;
   const { username, body, anonymous } = req.body;
-  // console.log("req.body", req.body);
+  console.log("req.body", req.body);
   // Date
   date = Date.now();
   const query = {
@@ -302,7 +320,7 @@ async function addPostComments(req, res) {
 
   const { rows } = await db.query(query);
 
-  // console.log("rows", result);
+  console.log("rows", result);
   // Send data back
   const msg = {
     success: true,
@@ -311,31 +329,36 @@ async function addPostComments(req, res) {
   return res.status(200).json(msg);
 }
 
-async function deleteposts(req, res) {
+async function deleteposts(req, res){
   const pid = req.params.pid;
   //const { username, body, anonymous } = req.body;
-  console.log("req.body", req.body);
   //TODO: delete comment
   const query1 = {
     name: "delete comments",
-    text: "delete from comments where parent_id = $1;",
+    text:
+      "delete from comments where parent_id = $1 RETURNING id;",
     //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
     values: [pid],
   };
   const query2 = {
     name: "delete post",
-    text: `delete from posts where id = $1 RETURNING id`,
+    text: `delete from posts where id = $1 RETURNING username;`,
     values: [pid],
   };
-
-  const { rows1 } = await db.query(query1);
-  const { rows2 } = await db.query(query2);
-
+  const  rows1  = await db.query(query1);
+  const  rows2  = await db.query(query2);
+  username = rows2.rows[0].username;
+  const query3 = {
+    name: "update post in user",
+    text: `update users set posts =  array_remove(posts, $1::bigint) where username = $2 RETURNING username;`,
+    values: [pid, username],
+  };
+  const { rows3 } = db.query(query3);
   // console.log("rows", result);
   // Send data back
   const msg = {
     success: true,
-    commentId: rows1[0].id,
+    username: username,
   };
   return res.status(200).json(msg);
 }

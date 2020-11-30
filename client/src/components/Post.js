@@ -49,13 +49,19 @@ class Post extends React.Component {
       modal1: false,
       deletePost: "",
       commentButton: "",
+      save:false,
       anonymous: {
         name: "Anonymous Panda",
         username: "anonymous",
       },
     };
   }
-
+  fetchsave = () => {
+    this.setState({save:false})
+  };
+  componentDidMount() {
+    this.fetchsave();
+  }
 
 
   handleHashtagClick = (ev) => {
@@ -75,6 +81,40 @@ class Post extends React.Component {
 
   saveHandler = () => {
     // mark the post as saved
+    this.setState({ save: true });
+    let username = localStorage.getItem("username")
+    axios
+    .post("http://localhost:5000/api/v1/users/save", { 'uid' : username , 'pid':this.props.postId
+    })
+    .then(
+      (response) => {
+        console.log("res", response);
+        if (response) {
+        }
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
+    this.setState({ save: true });
+  };
+  unsaveHandler = () => {
+    // mark the post as saved
+    let username = localStorage.getItem("username")
+    axios
+    .post("http://localhost:5000/api/v1/users/unsave", { 'uid' : username , 'pid':this.props.postId
+    })
+    .then(
+      (response) => {
+        console.log("res", response);
+        if (response) {
+        }
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
+    this.setState({ save: false });
   };
 
   deleteHandler = () => {
@@ -166,9 +206,15 @@ class Post extends React.Component {
                 Comments{" "}
               </button>
             )}
-            <button onClick={this.saveHandler} className='interaction'>
+            {this.state.save == true ?  (
+              <button onClick={this.unsaveHandler} className='interaction'>
+                Unsave{" "}
+              </button>
+            ):(
+              <button onClick={this.saveHandler} className='interaction'>
               Save{" "}
             </button>
+            )}
             {this.props.username !== localStorage.getItem("username") ? null : ( 
                 <button onClick={this.deleteHandler} className='interaction'>
                 Delete{" "}
@@ -222,9 +268,16 @@ class Post extends React.Component {
                 Comments{" "}
               </button>
             )}
-            <button onClick={this.saveHandler} className='interaction'>
-              Save{" "}
+            {this.state.save == false ?  (
+              <button onClick={this.saveHandler} className='interaction'>
+                Save{" "}
+              </button>
+            ):(
+              <button onClick={this.unsaveHandler} className='interaction'>
+              Unsave{" "}
             </button>
+            )}
+
 
             {this.props.username !== localStorage.getItem("username") ? null : ( 
                 <button onClick={(e) => this.handleShowConfirm(e)} className='interaction'>
