@@ -51,13 +51,34 @@ class Post extends React.Component {
       modal1: false,
       deletePost: "",
       commentButton: "",
+      save:true,
       anonymous: {
         name: "Anonymous Panda",
         username: "anonymous",
       },
       image: "" //../logo192.png to test
     };
+
   }
+  fetchsave = () => {
+    console.log("postid:", this.props.postId);
+    console.log("saved:", this.props.saved);
+    if (this.props.saved && this.props.saved.some(item => this.props.postId === item)){
+        console.log("if");
+        this.setState({save:true});
+    }
+    else{
+        console.log("else");
+        this.setState({save:false});
+    }
+    console.log("save",this.state.save);
+
+  };
+  componentDidMount() {
+    this.fetchsave();
+  }
+
+
 
   handleHashtagClick = (ev) => {
     console.log("val", ev.currentTarget);
@@ -76,6 +97,40 @@ class Post extends React.Component {
 
   saveHandler = () => {
     // mark the post as saved
+    this.setState({ save: true });
+    let username = localStorage.getItem("username")
+    axios
+    .post("http://localhost:5000/api/v1/users/save", { 'uid' : username , 'pid':this.props.postId
+    })
+    .then(
+      (response) => {
+        console.log("res", response);
+        if (response) {
+        }
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
+    this.setState({ save: true });
+  };
+  unsaveHandler = () => {
+    // mark the post as saved
+    let username = localStorage.getItem("username")
+    axios
+    .post("http://localhost:5000/api/v1/users/unsave", { 'uid' : username , 'pid':this.props.postId
+    })
+    .then(
+      (response) => {
+        console.log("res", response);
+        if (response) {
+        }
+      },
+      (error) => {
+        console.log(error.response);
+      }
+    );
+    this.setState({ save: false });
   };
 
   deleteHandler = () => {
@@ -93,7 +148,6 @@ class Post extends React.Component {
         }
       );
     this.setState({ modal1: false });
-    window.location.reload();
   };
 
   handleShowConfirm = () => {
@@ -192,9 +246,15 @@ class Post extends React.Component {
                 Comments{" "}
               </button>
             )}
-            <button onClick={this.saveHandler} className='interaction'>
+            {this.state.save == true ?  (
+              <button onClick={this.unsaveHandler} className='interaction'>
+                Unsave{" "}
+              </button>
+            ):(
+              <button onClick={this.saveHandler} className='interaction'>
               Save{" "}
             </button>
+            )}
             {this.props.username !== localStorage.getItem("username") ? null : (
               <button onClick={this.deleteHandler} className='interaction'>
                 Delete{" "}
@@ -255,9 +315,16 @@ class Post extends React.Component {
                 Comments{" "}
               </button>
             )}
-            <button onClick={this.saveHandler} className='interaction'>
-              Save{" "}
+            {this.state.save == false ?  (
+              <button onClick={this.saveHandler} className='interaction'>
+                Save{" "}
+              </button>
+            ):(
+              <button onClick={this.unsaveHandler} className='interaction'>
+              Unsave{" "}
             </button>
+            )}
+
 
             {this.props.username !== localStorage.getItem("username") ? null : (
               <button onClick={(e) => this.handleShowConfirm(e)} className='interaction'>

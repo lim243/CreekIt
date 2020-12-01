@@ -3,6 +3,7 @@ import Post from "./components/Post";
 import styled from "styled-components";
 import MakePost from "./components/MakePost";
 import axios from "axios";
+//import { post } from "../../server/routes/posts";
 
 const GridWrapper = styled.div`
   display: block;
@@ -62,6 +63,7 @@ class Timeline extends React.Component {
               topic={item.topic}
               profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
               image={item.image} // Added This for Image
+              saved={item.saved}
             />
           ))}
         </GridWrapper>

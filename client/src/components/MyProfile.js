@@ -206,6 +206,7 @@ class MyProfile extends React.Component {
               gender={user.gender}
               education={user.education}
               followButton={this.state.currentUser}
+              block = {user.block}
               postNum={(user.posts && user.posts.length) || 0}
               following={(user.following && user.following.length) || 0}
               followers={(user.followed && user.followed.length) || 0}

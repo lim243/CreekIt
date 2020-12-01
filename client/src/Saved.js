@@ -20,6 +20,7 @@ class Saved extends React.Component {
       posts: [],
     };
   }
+  
 
   componentDidMount() {
     this.fetchPosts();
@@ -27,14 +28,14 @@ class Saved extends React.Component {
 
   // Fetch All Saved Posts Here
   fetchPosts = () => {
-    // let uname = localStorage.getItem("username");
-    // console.log("uname", uname);
-    // axios
-    //   .get("http://localhost:5000/api/v1/posts/" + uname + "/somepost/")
-    //   .then((res) => {
-    //     console.log("res", res.data.payload);
-    //     this.setState({ posts: res.data.payload });
-    //   });
+     let uname = localStorage.getItem("username");
+     console.log("uname", uname);
+     axios
+      .get("http://localhost:5000/api/v1/posts/" + uname + "/savedpost/")
+      .then((res) => {
+        console.log("res", res.data.payload);
+        this.setState({ posts: res.data.payload });
+      });
   };
   render() {
     console.log("this.state", this.state);
