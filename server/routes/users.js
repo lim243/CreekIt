@@ -16,6 +16,7 @@ router.get("/:username", getOneUserByUsername);
 router.get("/:username/posts", getPostsByUsername);
 router.get("/:username/email", getEmail);
 router.get("/:username/name", getName);
+router.get("/:username/getPrivacy", getPrivacy);
 router.get("/:username/username", getUsername); //TODO: Undefined
 router.get("/:username/password", getPassword); //TODO: Undefined
 router.get("/:username/gender", getGender);
@@ -29,6 +30,7 @@ router.get("/:username/blocked", getBlocked); //TODO: Undefined
 router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
 router.get("/:username/interacted", getInteracted);
+router.get('/:username/getPublicUsers', getPublicUsers);
 
 // SET ROUTER
 router.post("/followStatus", followStatus);
@@ -139,6 +141,23 @@ async function getName(req, res) {
   // Send data back
   return res.status(200).json(data);
 }
+
+async function getPrivacy(req, res) {
+  const username = req.params.username;
+  const query = {
+    name: "get-post",
+    text: "SELECT private FROM users WHERE username = $1",
+    values: [username],
+  };
+
+  const result = await db.query(query);
+  const { rows } = result;
+  const data = rows[0];
+
+  // Send data back
+  return res.status(200).json(data);
+}
+
 async function getPassword(key, type) {
   let query = "";
   if (type === "username") {
@@ -828,6 +847,32 @@ async function unfollowTopic(req, res) {
       const msg = {
         "success": false,
         "message": `Topic was not removed!`,
+      };
+      res.status(500).send(msg);
+    });
+}
+
+async function getPublicUsers (req, res) {
+  const { username } = req.params;
+
+  //following
+  const query = {
+    name: "get-public-users",
+    text: `select username, private 
+          from users
+          where username != $1 and private = false`,
+    values: [username],
+  };
+  db.query(query)
+    .then((data) => {
+      console.log('data.rows[0', data.rows);
+      res.status(200).send(data.rows);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      const msg = {
+        "success": false,
+        "message": `No public users found`,
       };
       res.status(500).send(msg);
     });
