@@ -93,7 +93,7 @@ async function getPostsByUsername(req, res) {
   const query = {
     name: "get-all-posts-by-username",
     text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date, p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes , p.upvote_users, 
-    p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = $1 AND p.username = u.username;`,
+    p.downvote_users, p.comment_ids  FROM posts as p, users as u WHERE p.username = $1 AND p.username = u.username AND u.username = $1 ORDER BY p.date DESC;`,
     values: [username],
   };
 
@@ -626,7 +626,7 @@ async function removefollow(req, res) {
 }
 
 async function signUp(req, res) {
-  const { email, password, username, dob, name, gender } = req.body;
+  const { email, password, username, dob, name, gender, education } = req.body;
   console.log("req.body", req.body, Date.now());
 
   bcrypt.hash(password, saltRounds, (err, hashPw) => {
@@ -636,8 +636,8 @@ async function signUp(req, res) {
     const query = {
       name: "create-user",
       text:
-        "INSERT INTO Users (username, email, password, date_of_birth, name, gender ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      values: [username, email, hashPw, dob, name, gender],
+        "INSERT INTO Users (username, email, password, date_of_birth, name, gender, education ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      values: [username, email, hashPw, dob, name, gender, education],
     };
 
     console.log("query", query);
