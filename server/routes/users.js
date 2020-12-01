@@ -145,7 +145,7 @@ async function getName(req, res) {
 async function getPrivacy(req, res) {
   const username = req.params.username;
   const query = {
-    name: "get-post",
+    name: "get-privacy",
     text: "SELECT private FROM users WHERE username = $1",
     values: [username],
   };
