@@ -1,3 +1,7 @@
+import { io } from 'socket.io-client';
+
+const socket = io("http://localhost:8080/");
+
 const initialState = {
     conversations: [],
     selectedConversation: {}
@@ -22,15 +26,40 @@ const conversationsReducer = (state = initialState, action) => {
             newState.selectedConversation = action.payload.selectedConversation;
 
             return newState;
-        }
+        } 
         case 'NEW_MESSAGE_ADDED': {
             const newState = { ...state };
+            console.log('newState', newState);
+            
             newState.selectedConversation = { ...newState.selectedConversation };
             console.log(newState.selectedConversation);
+
             newState.selectedConversation.messages.unshift(
                 {
                     messageText: action.textMessage,
-                    createdAt: 'Apr 16',
+                    createdAt: Date.now(),
+                    sender: localStorage.getItem("username"),
+                    isMyMessage: true
+                },
+            )
+
+            socket.emit('sendMessage', newState.selectedConversation)
+
+
+            return newState;
+        }
+        case 'NEW_MESSAGE_DETECTED': {
+            console.log('NEW_MESSAGE_DETECTED');
+            const newState = { ...state };
+            console.log('NEW State detected', newState);
+            newState.selectedConversation = { ...newState.selectedConversation };
+            console.log(newState.selectedConversation);
+
+            newState.selectedConversation.messages.unshift(
+                {
+                    messageText: action.textMessage,
+                    createdAt: Date.now(),
+                    sender: localStorage.getItem("username"),
                     isMyMessage: true
                 },
             )

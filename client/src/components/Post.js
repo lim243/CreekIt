@@ -36,6 +36,8 @@ const Hashtag = styled.a`
   color: blue;
 `;
 
+const processString = require('react-process-string');
+
 class Post extends React.Component {
   constructor(props) {
     super(props);
@@ -167,6 +169,31 @@ class Post extends React.Component {
         />
       );
     }
+
+
+
+    let config = [{
+      regex: /(http|https):\/\/(\S+)\.([a-z]{2,}?)(.*?)( |\,|$|\.)/gim,
+            fn: (key, result) => <span key={key}>
+                                     <a target="_blank" href={`${result[1]}://${result[2]}.${result[3]}${result[4]}`}>https://{result[2]}.{result[3]}{result[4]}</a>{result[5]}
+                                 </span>
+        }, {
+            regex: /(\S+)\.([a-z]{2,}?)(.*?)( |\,|$|\.)/gim,
+            fn: (key, result) => <span key={key}>
+                                     <a target="_blank" href={`http://${result[1]}.${result[2]}${result[3]}`}>{result[1]}.{result[2]}{result[3]}</a>{result[4]}
+                                 </span>
+        }, {
+            regex: /\#([a-z0-9_\-]+?)( |\,|$|\.)/gim,
+            fn: (key, result) => {
+                                let tag = result[1]
+                                let after = result[2]
+                                return <a key = {key} href={`/feed/topic/${tag}`}>#{tag} </a>
+                                }
+    }]
+
+    let processed = processString(config)(this.props.post)
+
+
     if (this.props.anonymous === true) {
       return (
         <Styles>
@@ -200,10 +227,11 @@ class Post extends React.Component {
                 {hashtagValue}
               </Hashtag>
             )}
-          >
+            >
             {this.props.post}
             </ReactHashtag>*/}
-          <p>{this.props.post}</p>
+          <p>{processed}</p>
+          {/*<p>{this.props.post}</p>*/}
           {this.props.image === undefined ? null : (
           <img
               src={this.props.image}
@@ -270,7 +298,8 @@ class Post extends React.Component {
           >
             {this.props.post}
             </ReactHashtag>*/}
-          <p>{this.props.post}</p>
+          <p>{processed}</p>
+          {/*<p>{this.props.post}</p>*/}
           {/* {console.log(this.props.image)} */}
           {this.props.image === undefined ? null : (
           <img

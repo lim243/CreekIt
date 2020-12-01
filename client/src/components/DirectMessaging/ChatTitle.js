@@ -9,7 +9,7 @@ const ChatTitle = ({ selectedConversation, onDeleteConversation }) => {
         chatTitleContents = (
             <>
                 <span>{ selectedConversation.title }</span>
-                <button onClick={() => { onDeleteConversation(); } } >Delete</button>
+                <button onClick={() => { onDeleteConversation(selectedConversation.id); } } >Delete</button>
             </>
         );
     }
