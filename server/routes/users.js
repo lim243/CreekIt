@@ -317,7 +317,22 @@ async function getFollowed(req, res) {
       };
     });
 } // TODO: Undefined yet
-async function getBlocked(req, res) {} // TODO: Undefined yet
+async function getBlocked(req, res) {
+
+  const {username} = req.params
+  const query = {
+    name: "get-blocked-by-username",
+    text: "select blocked from users where username = $1",
+    values: [username],
+    //rowMode: "array",
+  };
+
+  const res1 = await db.query(query)
+
+  res.status(200).send(res1.rows[0]);
+
+
+} // TODO: Undefined yet
 async function getTopics(req, res) {
   let username = req.params.username;
   console.log("username", username);
@@ -903,20 +918,31 @@ async function unsavePost(req, res) {
 
 async function block(req, res) {
   let user1 = req.body.user1;
-  let user2 = req.body.user2;
+  let user2 = req.body.user2; // this should be me
   //following
   const query = {
     name: "block",
     text:
-      "update users set blocked = array_append(blocked,cast($1 AS character varying)) where username  = $2 AND NOT ($1 = any(blocked)) returning username;",
-    //text: "INSERT INTO Users (username, email, password) VALUES ($1, $1,$2)",
+      `update users 
+      set blocked = array_append(blocked,cast($1 AS character varying)),
+      followed = array_remove(followed, cast($1 AS character varying))
+      where username  = $2 AND NOT ($1 = any(blocked)) returning username;`,
     values: [user1, user2],
   };
-  db.query(query)
-    .then((data) => {
-      console.log("data", data);
-      res.status(200).send(data);
-    })
+  const res1 = await db.query(query)
+
+  const query2 = {
+    name: "remove-following-from-user2",
+    text:
+      `update users 
+      set following = array_remove(following, cast($2 AS character varying))
+      where username  = $1 AND NOT ($2 = any(blocked)) returning username;`,
+    values: [user1, user2],
+  };
+
+  const res2 = await db.query(query2)
+
+  res.status(200).send(res1.rows);
 }
 
 async function getPublicUsers (req, res) {
@@ -948,7 +974,7 @@ async function getPublicUsers (req, res) {
 
 async function unblock(req, res) {
   let user1 = req.body.user1;
-  let user2 = req.body.user2;
+  let user2 = req.body.user2; // This is me
   //following
   const query = {
     name: "unblock",

@@ -41,10 +41,10 @@ class Posts extends React.Component {
   fetchPosts = (username) => {
     // const username = localStorage.getItem("username");
     const accessToken = localStorage.getItem("token");
-    console.log("username", username);
+    // console.log("username", username);
     const authString = "Bearer ".concat(accessToken);
     const header = { Authorization: authString };
-    console.log("accessToken", { accessToken });
+    // console.log("accessToken", { accessToken });
     axios
       .get(`http://localhost:5000/api/v1/users/${username}/posts`, { headers: header })
       .then((res) => {
@@ -156,10 +156,26 @@ class MyProfile extends React.Component {
     if (global_username.length > 0) {
       this.setState({ currentUser: false });
       this.fetchUser(global_username);
+      this.fetchBlocked(global_username)
     } else {
       this.setState({ currentUser: true });
       this.fetchUser(localStorage.getItem("username"));
+      
     }
+  }
+
+  // TODO: fetch another user's blocked and set this.state.blocked = true
+
+  fetchBlocked = (username) => {
+    axios
+      .get(`http://localhost:5000/api/v1/users/${username}/blocked`)
+      .then(res => {
+        const target_blocked = res.data.blocked;
+        const i_am_blocked = target_blocked.some(ele => ele === localStorage.getItem("username"))
+
+        this.setState({blocked: i_am_blocked})
+      })
+      
   }
 
   fetchUser = (username) => {
