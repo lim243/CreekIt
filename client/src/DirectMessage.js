@@ -8,7 +8,7 @@ import ChatForm from './components/DirectMessaging/ChatForm.js';
 import {conversationChanged, newMessageAdded, conversationDeleted, conversationsRequested} from './components/DirectMessaging/actionIndex'
 import { connect } from 'react-redux';
 import NoConversations from './components/DirectMessaging/NoConversations';
-
+import axios from 'axios'
 
 import './DirectMessage.css';
 import Sidebar from './components/SideBar.js';
@@ -16,8 +16,6 @@ import Sidebar from './components/SideBar.js';
 import { io } from 'socket.io-client';
 
 const socket = io("http://localhost:8080/");
-socket.emit("sendMessage", "Hi");
-console.log('HI');
 
 const DirectMessage= ({
     conversations,
@@ -25,7 +23,7 @@ const DirectMessage= ({
     conversationChanged,
     onMessageSubmitted,
     onDeleteConversation,
-    loadConversations
+    loadConversations, 
 })=> {
 
     useEffect(() => {
@@ -55,7 +53,7 @@ const DirectMessage= ({
             <ChatTitle selectedConversation={selectedConversation} onDeleteConversation={onDeleteConversation}/>
             {conversationContent}
             <ChatForm selectedConversation={selectedConversation}
-                onMessageSubmitted={onMessageSubmitted} /> 
+                onMessageSubmitted={onMessageSubmitted}/> 
         </div>
         </div>
     );
@@ -70,15 +68,18 @@ const mapStateToProps = state => {
   
 const mapDispatchToProps = dispatch => ({
     conversationChanged: conversationId => dispatch(conversationChanged(conversationId)),
-    onMessageSubmitted: messageText => { dispatch(newMessageAdded(messageText)); },
-    onDeleteConversation: () => { dispatch(conversationDeleted()); },
-    loadConversations: () => { dispatch(conversationsRequested())},
+    // onMessageSubmitted: messageText => { dispatch(newMessageAdded(messageText)); },
     // TODO: Andrew's version
+    // TODO: Get convo id?
+    // How did you connect state from dispatch to the reducer in newconvo
     onMessageSubmitted: messageText => { 
-        socket.emit("sendMessage", messageText);
         dispatch(newMessageAdded(messageText)); 
     },
-    onDeleteConversation: () => { dispatch(conversationDeleted()); }
+    loadConversations: () => { dispatch(conversationsRequested())},
+    onDeleteConversation: (conversationId) => { 
+        axios.post(`http://localhost:5000/api/v1/messages/delete/${conversationId}`).then(res => console.log('res', res))
+        dispatch(conversationDeleted()); 
+    }
 });
 
 export default connect(

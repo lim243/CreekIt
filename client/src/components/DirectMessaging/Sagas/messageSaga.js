@@ -1,4 +1,5 @@
-import { put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import axios from 'axios'
 
 const messageDetails = {
     '1': [
@@ -173,14 +174,38 @@ const messageDetails = {
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
+const fetchConversationById = (convoId) => {
+    return axios.request({
+        method: "get",
+        url: `http://localhost:5000/api/v1/messages/convo/${convoId}`
+    });
+};
+
+const checkIsMyMessage = (messages) => {
+    const username = localStorage.getItem("username")
+    messages.forEach(msg => {
+        if (msg.sender === username) {
+            msg.isMyMessage = true
+        } else {
+            msg.isMyMessage = false
+        }
+    })
+    return messages
+}
+
 const messagesSaga = function*(action) {
     const { conversationId } = action.payload;
-    const messages = messageDetails[conversationId];
+    // const messages = messageDetails[conversationId];
+    // console.log('conversationId', conversationId);
+    const {data} = yield call(fetchConversationById, conversationId)
+    // console.log('MESSAGE SAGA DATA', data);
+
+    const parsed_messages = checkIsMyMessage(data.messages)
 
     yield put({
         type: 'MESSAGES_LOADED',
         payload: {
-            messages,
+            messages: parsed_messages,
             conversationId
         }
     });
