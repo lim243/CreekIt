@@ -147,7 +147,8 @@ class MyProfile extends React.Component {
       test_username: "",
       following: {},
       followed: {},
-      blocked: false // blocked
+      blocked: false, // blocked
+      blockButtonState: false
     };
   }
 
@@ -157,14 +158,24 @@ class MyProfile extends React.Component {
       this.setState({ currentUser: false });
       this.fetchUser(global_username);
       this.fetchBlocked(global_username)
+      this.checkBlockButton(localStorage.getItem("username"), global_username)
     } else {
       this.setState({ currentUser: true });
       this.fetchUser(localStorage.getItem("username"));
       
     }
   }
-
-  // TODO: fetch another user's blocked and set this.state.blocked = true
+  checkBlockButton = (username, target_username) => {
+    axios
+      .get(`http://localhost:5000/api/v1/users/${username}/blocked`)
+      .then(res => {
+        const target_blocked = res.data.blocked;
+        console.log('target_blocked', target_blocked);
+        const i_am_blocked = target_blocked.some(ele => ele === target_username)
+        console.log('i_am_blocked', i_am_blocked);
+        this.setState({blockButtonState: i_am_blocked})
+      })
+  }
 
   fetchBlocked = (username) => {
     axios
@@ -222,7 +233,8 @@ class MyProfile extends React.Component {
               gender={user.gender}
               education={user.education}
               followButton={this.state.currentUser}
-              block = {user.block}
+              blockButton={this.state.currentUser}
+              block = {this.state.blockButtonState} 
               postNum={(user.posts && user.posts.length) || 0}
               following={(user.following && user.following.length) || 0}
               followers={(user.followed && user.followed.length) || 0}

@@ -206,15 +206,32 @@ class ProfileInfo extends React.Component {
   }
   fetchBlock = () => {
     const global_username = window.location.href.split("/").pop(-1);
-    let uname = global_username;
+    
+    console.log('this.props.block', this.props.block);
     if (this.props.block && global_username && this.props.block.some(item => item === global_username)){
       this.setState({block: "Unblock"});
-
     }
     else {
       this.setState({block: "Block"});
     }
   };
+
+  displayBlockButton = () => {
+    console.log('this.props.blockButton, this.state.block', this.props.blockButton, this.state.block, this.props.block);
+    if (this.props.blockButton) {
+      return null
+    } else if (this.props.block === true) {
+      return (
+        <button onClick={this.unblockHandler} className='interaction'>
+          {"Unblock"}{" "}
+        </button>) 
+    } else {
+      return (
+        <button onClick={this.blockHandler} className='interaction'>
+          {"Block"}{" "}
+        </button>)
+    }
+  }
 
   setFollowStatus = () => {
     const global_username = window.location.href.split("/").pop(-1);
@@ -435,10 +452,9 @@ class ProfileInfo extends React.Component {
       </Styles>
       );
     }
-    console.log("username",localStorage.getItem("username"));
+
     return (
       <Styles>
-        {console.log("this.props", this.props)}
         <div>
           <Avatar
             src={this.props.profile_picture}
@@ -461,13 +477,7 @@ class ProfileInfo extends React.Component {
             </button>
           )}
           {/* Handling Blocking Other Users Button */}
-          {this.state.block === "Unblock" ? (<button onClick={this.unblockHandler} className='interaction'>
-              {this.state.block}{" "}
-            </button>) : (
-            <button onClick={this.blockHandler} className='interaction'>
-              {this.state.block}{" "}
-            </button>
-          )}
+          {this.displayBlockButton()}
           <br></br>
           <br></br>
           <p className='bio'>{this.props.bio} </p>
