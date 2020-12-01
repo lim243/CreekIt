@@ -31,6 +31,7 @@ router.get("/:username/topics", getTopics); //TODO: Undefined
 router.get("/:username/posts", getPosts); //TODO: Undefined
 router.get("/:username/interacted", getInteracted);
 router.get('/:username/getPublicUsers', getPublicUsers);
+router.get('/:username/saved', getSaved);
 
 // SET ROUTER
 router.post("/followStatus", followStatus);
@@ -378,6 +379,26 @@ async function getInteracted(req, res) {
   const msg = {
     success: true,
     payload: rows,
+  };
+  return res.status(200).json(msg);
+}
+async function getSaved(req, res) {
+  const username = req.params.username;
+
+  console.log("username", username);
+  const query = {
+    name: "get-saved",
+    text: "select saved from users where username = $1",
+    values: [username],
+    //rowMode: "array",
+  };
+
+  const { rows } = await db.query(query);
+  // Send data back
+  console.log("rows",rows[0].saved);
+  const msg = {
+    success: true,
+    payload: rows[0].saved,
   };
   return res.status(200).json(msg);
 }
