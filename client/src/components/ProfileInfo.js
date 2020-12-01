@@ -126,7 +126,36 @@ class ProfileInfo extends React.Component {
 
   // Block Handling -- Base this off followHandler
   blockHandler = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    console.log("CLICKED");
+    let uname = "";
+    uname = global_username;
+    const body = { user1: uname, user2: localStorage.getItem("username") }
+    axios
+    .post(`http://localhost:5000/api/v1/users/block`, body)
+    .then((res) => {
+      console.log("res", res);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
     this.setState({ block: "Unblock" });
+  }
+  unblockHandler = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    console.log("CLICKED");
+    let uname = "";
+    uname = global_username;
+    const body = { user1: uname, user2: localStorage.getItem("username") }
+    axios
+    .post(`http://localhost:5000/api/v1/users/unblock`, body)
+    .then((res) => {
+      console.log("res", res);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+    this.setState({ block: "Block" });
   }
 
   followHandler = () => {
@@ -173,7 +202,20 @@ class ProfileInfo extends React.Component {
     this.fetchfollowing();
     this.fetchtopics();
     this.setFollowStatus();
+    this.fetchBlock();
   }
+  fetchBlock = () => {
+    const global_username = window.location.href.split("/").pop(-1);
+    let uname = global_username;
+    if (this.props.block && global_username && this.props.block.some(item => item === global_username)){
+      this.setState({block: "Unblock"});
+
+    }
+    else {
+      this.setState({block: "Block"});
+    }
+  };
+
   setFollowStatus = () => {
     const global_username = window.location.href.split("/").pop(-1);
 
@@ -297,6 +339,103 @@ class ProfileInfo extends React.Component {
         />
       );
     }
+    else if (localStorage.getItem("username") === null) {
+      return (
+        <Styles>
+        {console.log("this.props", this.props)}
+        <div>
+          <Avatar
+            src={this.props.profile_picture}
+            name={this.props.name}
+            size='80'
+            round='100px'
+            className='avatar'
+          />
+          <h5 style={{ fontWeight: "bold" }} className=''>
+            {this.props.name}
+          </h5>
+          <p className='username'>@{this.props.username}</p>
+          {/* Handling Blocking Other Users Button */}
+          <br></br>
+          <br></br>
+          <p className='bio'>{this.props.bio} </p>
+          {this.props.private === false &&
+          <div>
+          <br></br>
+          <p className='age'>Age: {this.props.age} </p>
+          <p className='gender'>Gender: {this.props.gender} </p>
+          <p className='education'>Education: {this.props.education} </p>
+          </div>
+          }
+          <button className='listButton' onClick={(e) => this.modalOpen(e)}>
+            <p className='stats'>Followers: {this.props.followers} </p>
+          </button>
+
+          <Modal
+            style={customStyles}
+            isOpen={this.state.modal}
+            onRequestClose={this.modalClose}
+          >
+            <button onClick={this.modalClose}>close</button>
+            <div>List of Followers</div>{" "}
+            {/* Map thru a list of followers here :::::: use a href */}
+            {this.state.listFollow.map((item, index) => (
+              <div>
+                <Links username={item.username} path={item.path} key={index} />
+                <br></br>
+              </div>
+            ))}
+          </Modal>
+
+          <button className='listButton' onClick={(e) => this.modalOpen2(e)}>
+            <p className='stats'>Following: {this.props.following} </p>
+          </button>
+
+          <Modal
+            style={customStyles}
+            isOpen={this.state.modal2}
+            onRequestClose={this.modalClose2}
+          >
+            <button onClick={this.modalClose2}>close</button>
+            <div>List of Following</div>{" "}
+            {/* Map thru a list of following here :::::: use a href */}
+            {this.state.listFollowing.map((item, index) => (
+              <div>
+                <Links username={item.username} path={item.path} key={index} />
+                <br></br>
+              </div>
+            ))}
+          </Modal>
+
+          <button className='listButton' onClick={(e) => this.modalOpen3(e)}>
+            <p className='stats'>Topics: {this.props.topics} </p>
+          </button>
+
+          <Modal
+            style={customStyles}
+            isOpen={this.state.modal3}
+            onRequestClose={this.modalClose3}
+          >
+            <button onClick={this.modalClose3}>close</button>
+            <div>List of Topics</div>{" "}
+            {/* Map thru a list of topics here :::::: use a href */}
+            {this.state.listTopics.map((item, index) => (
+              <div>
+                <Links username={item.topic} path={item.path} key={index} />
+                <br></br>
+              </div>
+            ))}
+          </Modal>
+
+          {/* <p className='stats'>Followers: {this.props.followers} </p>
+          <p className='stats'>Following: {this.props.following} </p> */}
+
+          <p className='stats'>Posts: {this.props.postNum} </p>
+        </div>
+      </Styles>
+      );
+    }
+    console.log("username",localStorage.getItem("username"));
     return (
       <Styles>
         {console.log("this.props", this.props)}
@@ -322,7 +461,9 @@ class ProfileInfo extends React.Component {
             </button>
           )}
           {/* Handling Blocking Other Users Button */}
-          {this.props.followButton === true ? null : (
+          {this.state.block === "Unblock" ? (<button onClick={this.unblockHandler} className='interaction'>
+              {this.state.block}{" "}
+            </button>) : (
             <button onClick={this.blockHandler} className='interaction'>
               {this.state.block}{" "}
             </button>
