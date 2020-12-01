@@ -119,7 +119,7 @@ class Post extends React.Component {
 
 
     let config = [{
-      /*regex: /(http|https):\/\/(\S+)\.([a-z]{2,}?)(.*?)( |\,|$|\.)/gim,
+      regex: /(http|https):\/\/(\S+)\.([a-z]{2,}?)(.*?)( |\,|$|\.)/gim,
             fn: (key, result) => <span key={key}>
                                      <a target="_blank" href={`${result[1]}://${result[2]}.${result[3]}${result[4]}`}>https://{result[2]}.{result[3]}{result[4]}</a>{result[5]}
                                  </span>
@@ -128,12 +128,12 @@ class Post extends React.Component {
             fn: (key, result) => <span key={key}>
                                      <a target="_blank" href={`http://${result[1]}.${result[2]}${result[3]}`}>{result[1]}.{result[2]}{result[3]}</a>{result[4]}
                                  </span>
-        }, {*/
+        }, {
             regex: /\#([a-z0-9_\-]+?)( |\,|$|\.)/gim,
             fn: (key, result) => {
                                 let tag = result[1]
                                 let after = result[2]
-                                return <a key = {key} href={`feed/topic/${tag}`}>#{tag} </a>
+                                return <a key = {key} href={`/feed/topic/${tag}`}>#{tag} </a>
                                 }
     }]
 
