@@ -1,6 +1,6 @@
 #chat-title {
-    display: grid;
-    grid: 36px / 1fr 36px;
+    display: flex;
+    flex-direction: row;
     align-content: center;
     align-items: center;
     grid-area: chat-title;
@@ -20,4 +20,10 @@
 #chat-title button {
     width: 65px;
     font-size: 1rem;
+    position: absolute;
+    right: 15%;
+}
+
+.avatar  {
+    margin-left: 10px;
 }
