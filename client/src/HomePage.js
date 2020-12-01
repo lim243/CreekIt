@@ -12,6 +12,8 @@ import { LoggedIn } from "./LoggedIn";
 import Feed from "./Feed";
 import NavigationBar from "./components/NavigationBar";
 import NotFound from "./components/NotFound";
+import DirectMessage from "./DirectMessage";
+import Saved from "./Saved";
 
 class HomePage extends React.PureComponent {
   constructor(props) {
@@ -56,6 +58,8 @@ class HomePage extends React.PureComponent {
                     <Route path='/account' component={LoggedIn} />
                     <Route path='/reset' component={Reset} />
                     <Route path='/feed' component={Feed} />
+                    <Route path='/messages' component={DirectMessage} />
+                    <Route path='/saved' component={Saved} />
                   </Switch>
                 </div>
               </div>

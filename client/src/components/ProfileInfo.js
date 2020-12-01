@@ -75,6 +75,7 @@ class ProfileInfo extends React.Component {
       followers: "",
       topics: "",
       unfollow: "Follow",
+      block: "Block",
       modal: "",
       modal2: "",
       modal3: "",
@@ -122,6 +123,11 @@ class ProfileInfo extends React.Component {
     console.log("CLICKED");
     this.setState({ redirect: true });
   };
+
+  // Block Handling -- Base this off followHandler
+  blockHandler = () => {
+    this.setState({ block: "Unblock" });
+  }
 
   followHandler = () => {
     // handled following and set the button to followed
@@ -313,6 +319,12 @@ class ProfileInfo extends React.Component {
           ) : (
             <button onClick={this.followHandler} className='interaction'>
               {this.state.unfollow}{" "}
+            </button>
+          )}
+          {/* Handling Blocking Other Users Button */}
+          {this.props.followButton === true ? null : (
+            <button onClick={this.blockHandler} className='interaction'>
+              {this.state.block}{" "}
             </button>
           )}
           <br></br>

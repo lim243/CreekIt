@@ -3,6 +3,7 @@ import Post from "./components/Post";
 import styled from "styled-components";
 import MakePost from "./components/MakePost";
 import axios from "axios";
+import Sidebar from "./components/SideBar";
 
 const GridWrapper = styled.div`
   display: block;
@@ -12,7 +13,7 @@ const GridWrapper = styled.div`
   padding-top: 75px;
   width: 500px;
 `;
-class Timeline extends React.Component {
+class Saved extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,15 +25,16 @@ class Timeline extends React.Component {
     this.fetchPosts();
   }
 
+  // Fetch All Saved Posts Here
   fetchPosts = () => {
-    let uname = localStorage.getItem("username");
-    console.log("uname", uname);
-    axios
-      .get("http://localhost:5000/api/v1/posts/" + uname + "/somepost/")
-      .then((res) => {
-        console.log("res", res.data.payload);
-        this.setState({ posts: res.data.payload });
-      });
+    // let uname = localStorage.getItem("username");
+    // console.log("uname", uname);
+    // axios
+    //   .get("http://localhost:5000/api/v1/posts/" + uname + "/somepost/")
+    //   .then((res) => {
+    //     console.log("res", res.data.payload);
+    //     this.setState({ posts: res.data.payload });
+    //   });
   };
   render() {
     console.log("this.state", this.state);
@@ -40,11 +42,9 @@ class Timeline extends React.Component {
     //These are just hard-coded example. We would need to fetch the database to get the feed
     return (
       <Fragment>
+          <Sidebar/>
         <GridWrapper>
-          <MakePost />
-          <br></br>
-          <br></br>
-          <br></br>
+        {this.state.posts[0] === undefined ? (<h1>No Saved Posts</h1>) : <h2>Saved Posts</h2>}  
           <br></br>
           {this.state.posts.map((item, index) => (
             <Post
@@ -70,4 +70,4 @@ class Timeline extends React.Component {
   }
 }
 
-export default Timeline;
+export default Saved;

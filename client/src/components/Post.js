@@ -55,6 +55,7 @@ class Post extends React.Component {
         name: "Anonymous Panda",
         username: "anonymous",
       },
+      image: "" //../logo192.png to test
     };
   }
 
@@ -176,6 +177,13 @@ class Post extends React.Component {
             {this.props.post}
             </ReactHashtag>*/}
           <p>{processed}</p>
+          {/*<p>{this.props.post}</p>*/}
+          {this.props.image === undefined ? null : (
+          <img
+              src={this.props.image}
+              alt=''
+              style={{ width: "150px", height: "150px" }}
+          />)}
           <div>
             <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
             <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />
@@ -231,6 +239,14 @@ class Post extends React.Component {
             {this.props.post}
             </ReactHashtag>*/}
           <p>{processed}</p>
+          {/*<p>{this.props.post}</p>*/}
+          {/* {console.log(this.props.image)} */}
+          {this.props.image === undefined ? null : (
+          <img
+              src={this.props.image}
+              alt=''
+              style={{ width: "150px", height: "150px" }}
+          />)}
           <div>
             <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
             <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />

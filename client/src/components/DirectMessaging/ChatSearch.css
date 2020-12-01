@@ -1,0 +1,13 @@
+#search-container {
+    display: grid;
+    align-items: center;
+    grid-area: search-container;
+    background: #7ecaa0;
+    padding: 20px 20px;
+    border-radius: 10px 0 0 0;
+    box-shadow: 0 1px 3px -1px rgba(0,0,0,0.75);
+    z-index: 1;
+    color: rgb(18, 19, 19);
+
+}
+  

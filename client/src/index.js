@@ -5,14 +5,28 @@ import './index.css';
 import  HomePage from './HomePage';
 import * as serviceWorker from './serviceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { Feed } from './Feed';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './components/DirectMessaging/Sagas/sagaIndex';
+import rootReducer from './components/DirectMessaging/Reducers/reducerIndex';
+
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+    rootReducer,
+    applyMiddleware(sagaMiddleware)
+);
+
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
+  <Provider store={store}>
   <React.StrictMode>
     <BrowserRouter>
       <HomePage />
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 
