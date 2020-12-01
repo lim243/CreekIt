@@ -18,11 +18,13 @@ class Timeline extends React.Component {
     super(props);
     this.state = {
       posts: [],
+      saved: [],
     };
   }
 
   componentDidMount() {
     this.fetchPosts();
+    this.fetchSaved();
   }
 
   fetchPosts = () => {
@@ -33,6 +35,16 @@ class Timeline extends React.Component {
       .then((res) => {
         console.log("res", res.data.payload);
         this.setState({ posts: res.data.payload });
+      });
+  };
+  fetchSaved = () => {
+    let uname = localStorage.getItem("username");
+    console.log("uname", uname);
+    axios
+      .get("http://localhost:5000/api/v1/users/" + uname + "/saved/")
+      .then((res) => {
+        console.log("res", res.data.payload);
+        this.setState({ saved: res.data.payload });
       });
   };
   render() {
@@ -63,7 +75,7 @@ class Timeline extends React.Component {
               topic={item.topic}
               profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
               image={item.image} // Added This for Image
-              saved={item.saved}
+              saved={this.state.saved}
             />
           ))}
         </GridWrapper>
