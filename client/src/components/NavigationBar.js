@@ -91,7 +91,7 @@ class NavigationBar extends React.Component {
   };
 
   render() {
-    if (true) {
+    if (this.props.isAuthenticated) {
       return (
         <Styles>
           <div className='sticky'>

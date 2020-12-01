@@ -1,5 +1,6 @@
 import React from 'react';
-import { Nav, Navbar, Form, FormControl } from 'react-bootstrap';
+import { Nav, Navbar, Form, FormControl,Button } from 'react-bootstrap';
+import {  withRouter } from "react-router-dom";
 import styled from 'styled-components';
 
 const Styles = styled.div`
@@ -26,23 +27,67 @@ const Styles = styled.div`
       width: 100%
   }
 `;
+/*handleChange = (event) => {
+  console.log("event.target.value", event.target.value);
+  this.setState({ search: event.target.value });
+};
 
-export const Navigation = () => (
-  <Styles>
-      <div className="sticky">
-    <Navbar expand="lg">
-      <Navbar.Brand href="/sign-in">CreekIt</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ml-auto">
-          <Nav.Item><Nav.Link href="/help">FAQ</Nav.Link></Nav.Item> 
-          <Nav.Item><Nav.Link href="/sign-up">Create Account</Nav.Link></Nav.Item>
-          <Nav.Item><Nav.Link href="/sign-in">Sign In</Nav.Link></Nav.Item>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
-    </div>
-  </Styles>
-)
+handleSubmit = (event) => {
+  console.log("Hi", this.props);
 
-export default Navigation;
+  const searchString = this.state.search;
+  if (searchString.startsWith("#")) {
+    // Search Topic
+    this.props.history.push(`/feed/topic/${searchString.substring(1)}`);
+  } else {
+    // Search User
+    this.props.history.push(`/feed/myprofile/${searchString}`);
+  }
+
+  window.location.reload();
+};*/
+
+class Navigation extends React.Component  {
+  constructor(props) {
+    super(props);
+    this.state = {
+      search: "",
+      redirectUser: false,
+      redirectTopic: false,
+    };
+  }
+  handleChange = (event) => {
+    console.log("event.target.value", event.target.value);
+    this.setState({ search: event.target.value });
+  };
+  render() {
+    return(
+    <Styles>
+        <div className="sticky">
+      <Navbar expand="lg">
+        <Navbar.Brand href="/sign-in">CreekIt</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ml-auto">
+          <Form inline className='form-center'>
+                  <FormControl
+                    type='text'
+                    placeholder='Search'
+                    className=''
+                    onChange={this.handleChange}
+                  />
+                  <Button className='searchButton' onClick={this.handleSubmit}>
+                    Search
+                  </Button>
+              </Form>
+            <Nav.Item><Nav.Link href="/help">FAQ</Nav.Link></Nav.Item> 
+            <Nav.Item><Nav.Link href="/sign-up">Create Account</Nav.Link></Nav.Item>
+            <Nav.Item><Nav.Link href="/sign-in">Sign In</Nav.Link></Nav.Item>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      </div>
+    </Styles>)
+  }
+}
+export default withRouter(Navigation);
