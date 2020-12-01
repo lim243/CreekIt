@@ -915,11 +915,8 @@ async function block(req, res) {
   db.query(query)
     .then((data) => {
       console.log("data", data);
-      //res.status(200).send("success");
-            "message": `Cannot add following`,
-      };
-    });
-  res.status(200).send("success");
+      res.status(200).send(data);
+    })
 }
 
 async function getPublicUsers (req, res) {
