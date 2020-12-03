@@ -55,7 +55,6 @@ async function getSavedPosts(req, res) {
       values: [uname],
   };
   const { rows } = await db.query(query);
-  console.log("row for saved post",rows);
 
   // Send data back
   const msg = {
@@ -78,11 +77,8 @@ async function getPost(req, res) {
     values: [pid],
   };
 
-  console.log("query", query);
 
   const { rows } = await db.query(query);
-  console.log("rows", rows);
-
   // Send data back
   const msg = {
     success: true,
@@ -93,7 +89,6 @@ async function getPost(req, res) {
 
 async function getTopics(req, res) {
   const { topic } = req.body;
-  console.log("topic", topic);
 
   const query = {
     name: "get-topics",
@@ -127,7 +122,6 @@ async function getUpvotesUsers(req, res) {
   };
 
   const { rows } = await db.query(query);
-  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -201,7 +195,6 @@ async function createPost(req, res) {
     values: [username, date, body, topic, anonymous,newimg],
   };
   const { rows } = await db.query(query1);
-  console.log(rows);
   let id = rows[0].id;
   const query2 = {
     name: "append-post",
@@ -231,7 +224,6 @@ async function setTopic(req, res) {
   };
 
   const { rows } = await db.query(query);
-  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -257,10 +249,7 @@ async function setUpvote(req, res) {
     values: [pid, username],
   };
 
-  console.log("query", query);
-
   const { rows } = await db.query(query);
-  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -288,7 +277,6 @@ async function setDownvote(req, res) {
   };
 
   const { rows } = await db.query(query);
-  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
@@ -324,11 +312,10 @@ async function setSaved(req, res) {
 async function addPostComments(req, res) {
   const pid = req.params.pid;
   const { username, body, anonymous } = req.body;
-  console.log("req.body", req.body);
   // Date
   date = Date.now();
   const query = {
-    name: "create-post",
+    name: "add comments",
     text: `WITH src as (
         INSERT INTO public.comments
         (username, date, body, parent_id, anonymous) 
@@ -342,8 +329,6 @@ async function addPostComments(req, res) {
   };
 
   const { rows } = await db.query(query);
-
-  console.log("rows", result);
   // Send data back
   const msg = {
     success: true,
