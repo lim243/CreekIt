@@ -64,6 +64,7 @@ handleClose1 = () => {
 // Image URL is stores under this.state.image
 addImage = () => {
   console.log("ADDDDDDD");
+  this.handleClose1();
 }
 submitPost(data) {
     axios
