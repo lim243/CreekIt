@@ -74,7 +74,7 @@ class Saved extends React.Component {
               downvotes={item.downvotes}
               topic={item.topic}
               profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
-              image={item.image} // Added This for Image
+              image={"data:image/png;base64,".concat(item.image)}
               saved={this.state.saved}
             />
           ))}

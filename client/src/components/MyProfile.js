@@ -62,6 +62,7 @@ class Posts extends React.Component {
         {this.state.posts.map((item, index) => (
           <Post
             profile_picture={"data:image/png;base64,".concat(item.profile_picture)}
+            image={"data:image/png;base64,".concat(item.image)}
             index={index}
             key={index}
             name={item.name}

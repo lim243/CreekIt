@@ -65,7 +65,7 @@ handleClose1 = () => {
 addImage = () => {
   console.log("ADDDDDDD");
 }
-  submitPost(data) {
+submitPost(data) {
     axios
       .post("http://localhost:5000/api/v1/posts/new", data)
       .then((res) => {
@@ -86,6 +86,7 @@ addImage = () => {
                   localStorage.setItem("token", response.data.accessToken);
                 }
               })
+    this.setState({image: null})
   }
 
   handleChange(event) {
@@ -116,8 +117,9 @@ addImage = () => {
         username: localStorage.getItem("username"),
         topic: tag,
         anonymous: this.state.checked,
+        img: this.state.image
       };
-
+      console.log("data",data);
       this.submitPost(data);
       this.forceUpdate();
       // TODO: After POST, we have to make hashtag and URL be hyperlinks and also anonymous mode
@@ -185,6 +187,7 @@ addImage = () => {
             <Modal.Body>
               <ImageUploader
                 withIcon={true}
+                withPreview={true}
                 buttonText='Choose image'
                 onChange={this.onDrop}
                 imgExtension={['.jpg', '.png']}
