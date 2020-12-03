@@ -237,8 +237,10 @@ class Post extends React.Component {
           <img
               src={this.props.image}
               alt=''
-              style={{ width: "150px", height: "150px" }}
+              style={{ maxWidth: "400px", height: "200px" }}
           />)}
+          <br></br>
+          <br></br>
           <div>
             <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
             <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />
@@ -306,8 +308,10 @@ class Post extends React.Component {
           <img
               src={this.props.image}
               alt=''
-              style={{ width: "150px", height: "150px" }}
+              style={{ maxWidth: "400px", height: "200px" }}
           />)}
+          <br></br>
+          <br></br>
           <div>
             <Upvote upvotes={this.props.upvotes} postId={this.props.postId} />
             <Downvote downvotes={this.props.downvotes} postId={this.props.postId} />
