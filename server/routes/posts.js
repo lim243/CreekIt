@@ -187,9 +187,11 @@ async function getComments(req, res) {
 
 async function createPost(req, res) {
   const { username, body, topic, anonymous,img } = req.body;
-  console.log("img",img[0]);
-  newimg = img[0].split(",")[1]
-  console.log("req.body", req.body);
+  let newimg = null
+  if (img){
+     newimg = img[0].split(",")[1]
+  }
+
   // Date
   date = Date.now();
   const query1 = {
@@ -309,10 +311,8 @@ async function setSaved(req, res) {
     values: [pid, username],
   };
 
-  console.log("query", query);
 
   const { rows } = await db.query(query);
-  console.log("rows", rows);
   // Send data back
   const msg = {
     success: true,
