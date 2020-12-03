@@ -58,6 +58,7 @@ class Post extends React.Component {
       },
       image: "" //../logo192.png to test
     };
+    console.log("image",this.props.image);
 
   }
   fetchsave = () => {
@@ -232,7 +233,7 @@ class Post extends React.Component {
             </ReactHashtag>*/}
           <p>{processed}</p>
           {/*<p>{this.props.post}</p>*/}
-          {this.props.image === undefined ? null : (
+          {this.props.image === undefined || this.props.image === "data:image/png;base64,null" ? null : (
           <img
               src={this.props.image}
               alt=''
@@ -301,7 +302,7 @@ class Post extends React.Component {
           <p>{processed}</p>
           {/*<p>{this.props.post}</p>*/}
           {/* {console.log(this.props.image)} */}
-          {this.props.image === undefined ? null : (
+          {this.props.image === undefined || this.props.image === "data:image/png;base64,null"  ? null : (
           <img
               src={this.props.image}
               alt=''

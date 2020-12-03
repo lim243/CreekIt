@@ -12,7 +12,6 @@ router.get("/:pid", getPost);
 router.get("/:pid/upvotes", getUpvotesUsers);
 router.get("/:pid/downvotes", getDownvoteUsers);
 router.get("/:pid/comments", getComments);
-
 router.post("/new", createPost);
 router.post("/:pid/save", setSaved);
 router.post("/:pid/upvote", setUpvote);
@@ -31,7 +30,7 @@ async function getAllPosts(req, res) {
   const query = {
     name: "get-all-post",
     text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.anonymous,
-      p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, u.saved, p.comment_ids
+      p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, u.saved, p.comment_ids, encode(p.pic,'base64') as image
       FROM posts as p, users as u WHERE (p.username = u.username AND p.username in (select unnest(following) from users where username = $1)) OR (p.username = u.username AND p.username = $1 ) ORDER BY p.date DESC`,
       values: [uname],
   };
@@ -51,7 +50,7 @@ async function getSavedPosts(req, res) {
   const query = {
     name: "get-saved-post",
     text: `SELECT p.id as post_id, p.username, u.name, encode(u.profile_picture,'base64') as profile_picture, p.date as date, p.anonymous,
-    p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, u.saved, p.comment_ids
+    p.body, p.topic, array_length(p.upvote_users, 1) as upvotes, array_length(p.downvote_users, 1) as downvotes, p.upvote_users, p.downvote_users, u.saved, p.comment_ids, encode(p.pic,'base64') as image
     FROM posts as p INNER JOIN users as u on p.username = u.username WHERE (p.id in (select unnest(saved) from users where username = $1)) ORDER BY p.date DESC;`,
       values: [uname],
   };
@@ -187,16 +186,17 @@ async function getComments(req, res) {
  */
 
 async function createPost(req, res) {
-  const { username, body, topic, anonymous } = req.body;
+  const { username, body, topic, anonymous,img } = req.body;
+  console.log("img",img[0]);
+  newimg = img[0].split(",")[1]
   console.log("req.body", req.body);
   // Date
   date = Date.now();
-
   const query1 = {
     name: "create-post",
     text:
-      "INSERT INTO posts (username, date, body, topic, anonymous) VALUES ($1, to_timestamp($2/1000.0), $3, $4, $5) RETURNING id",
-    values: [username, date, body, topic, anonymous],
+      "INSERT INTO posts (username, date, body, topic, anonymous,pic) VALUES ($1, to_timestamp($2/1000.0), $3, $4, $5, decode($6,'base64')) RETURNING id",
+    values: [username, date, body, topic, anonymous,newimg],
   };
   const { rows } = await db.query(query1);
   console.log(rows);
