@@ -160,8 +160,8 @@ async function getComments(req, res) {
   const query = {
     name: "get-all-post-comments",
     text: `SELECT u.name, c.username as username, c.date as date, 
-    encode(u.profile_picture) as profile_picture,
-    c.body , array_length(c.upvote_users, 1) as upvotes, array_length(c.downvote_users, 1) as downvotes, c.upvotes_user ,
+    encode(u.profile_picture, 'base64') as profile_picture,
+    c.body , array_length(c.upvote_users, 1) as upvotes, array_length(c.downvote_users, 1) as downvotes, c.upvote_users ,
     c.downvote_users  , c.parent_id , c.anonymous
     FROM public.posts as p, public.comments as c, public.users as u
     where p.id = $1 and p.id = c.parent_id 
@@ -328,7 +328,7 @@ async function addPostComments(req, res) {
   // Date
   date = Date.now();
   const query = {
-    name: "create-post",
+    name: "create-comment-post",
     text: `WITH src as (
         INSERT INTO public.comments
         (username, date, body, parent_id, anonymous) 
